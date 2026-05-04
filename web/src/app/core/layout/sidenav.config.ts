@@ -33,3 +33,25 @@ export const SECONDARY_NAV: NavItem[] = [
     roles: [Roles.Manager, Roles.Coordinator] },
   { label: 'nav.admin',         icon: 'pi-cog',          route: '/admin', roles: [Roles.Manager] },
 ];
+
+/**
+ * When the user is *only* a ClientUser (no staff roles), the shell switches to this
+ * focused nav. They see only their own pending acceptance queue and the certificate
+ * detail view.
+ */
+export const CLIENT_NAV: NavItem[] = [
+  { label: 'nav.dashboard',    icon: 'pi-home',          route: '/my-certificates' },
+  { label: 'nav.certificates', icon: 'pi-file-check',    route: '/my-certificates' },
+];
+
+export function pickPrimaryNav(roles: readonly string[]): NavItem[] {
+  const staffRoles: string[] = [Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer];
+  const isStaff = roles.some(r => staffRoles.includes(r));
+  return isStaff ? PRIMARY_NAV : CLIENT_NAV;
+}
+
+export function pickSecondaryNav(roles: readonly string[]): NavItem[] {
+  const staffRoles: string[] = [Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer];
+  const isStaff = roles.some(r => staffRoles.includes(r));
+  return isStaff ? SECONDARY_NAV : [];
+}

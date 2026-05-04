@@ -96,7 +96,10 @@ export class LoginPage {
     this.auth.login(this.form.getRawValue()).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigate(['/dashboard']);
+        // Client-only users land on their focused portal; staff see the full dashboard.
+        const staffRoles = ['Manager', 'Coordinator', 'Inspector', 'TechReviewer'];
+        const isStaff = this.auth.roles().some((r) => staffRoles.includes(r));
+        this.router.navigate([isStaff ? '/dashboard' : '/my-certificates']);
       },
       error: (err) => {
         this.loading.set(false);

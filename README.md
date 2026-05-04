@@ -1,12 +1,18 @@
 # TÜV Rheinland Arabia — Inspection Management System
 
-Multi-tenant inspection management webapp for Saudi Aramco contractors. Implements Third Party Inspection (TPI), Blue Sticker, and (later) Operator Assessment workflows per SRS-IMS-2026-001.
+Full-stack multi-tenant inspection management webapp for Saudi Aramco contractors, implementing all three SRS-IMS-2026-001 services end-to-end:
 
-**Stack:** .NET 10 / ASP.NET Core / EF Core / SQL Server / ASP.NET Identity + JWT — Angular 20 (standalone components, signals) + PrimeNG (Aura theme).
+1. **Third Party Inspection (TPI)** — equipment + certificates with 11-state lifecycle, PDF output
+2. **Blue Sticker** — Aramco-mandated periodic inspection with auto-issued QR-coded stickers
+3. **Operator Assessment** — operator competency assessments + auto-issued QR-coded cards
 
-**Status:** Phases A → F delivered. **All three SRS services live**: Third Party Inspection, Blue Sticker, and Operator Assessment. Includes auth, clients, equipment with 56 TPI types seeded, certificates with full state-machine workflow, approvals, dashboard, audit log, outbox-driven emails, users admin, inline checklist editor, QuestPDF certificate generation, Blue Sticker stock + auto-issue on Approved + QR + public verification page, **operator candidates registry + assessments with 5-state lifecycle + auto-issued competency cards (TUVR-YY-NNNNNN) + public card verification page (PII-masked)**.
+Plus the operational layer (Job Requests / Job Orders / Timesheets / Surveys), reporting (incl. the weekly Aramco Contractor Cranes Tracking xlsx), bilingual EN/AR shell with RTL support, and a focused client-portal flow for ClientUser-only logins.
 
-**Architecture:** Clean Architecture (Domain / Application / Infrastructure / Contracts / Api). Custom CQRS, [Stateless](https://github.com/dotnet-state-machine/stateless) for the certificate state machine, hash-chained `AuditLog` via EF interceptor, multi-tenancy via `ITenantContext` + global query filter, NSwag-generated Angular API clients.
+**Stack:** .NET 10 / ASP.NET Core / EF Core / SQL Server / ASP.NET Identity + JWT — Angular 20 (standalone components, signals) + PrimeNG (Aura theme) + ngx-translate. EPPlus for Excel I/O, QuestPDF for certificate PDFs, QRCoder for QR images, Stateless for state machines, FluentValidation, Serilog, NSwag/OpenAPI.
+
+**Status:** Phases A → J delivered.
+
+**Architecture:** Clean Architecture (Domain / Application / Infrastructure / Contracts / Api). Custom CQRS handlers (no MediatR — avoids commercial licensing), Stateless library for certificate (11 states) and assessment (5 states) state machines, hash-chained `AuditLog` via EF interceptor in a separate DbContext, multi-tenancy via `ITenantContext` + global query filter, outbox processor as a hosted BackgroundService, NetArchTest enforcing module boundaries.
 
 ## Prerequisites
 
@@ -87,9 +93,39 @@ web                                # Angular SPA (separate workspace)
 | Public sticker verification | `/verify/{stickerNo}` — mobile-first, anonymous, mask-equipment-ID, no PII |
 | Operator Assessment | Candidates registry, assessments with Stateless state machine (Draft → Submitted → Approved/Rejected), score editor, transition timeline |
 | Competency cards | Auto-issued (`TUVR-YY-NNNNNN`) on Assessment.Approve when result=Pass; QR PNG + public `/verify-card/{cardNo}` page with PII masking (name → "Mohammed A.", ID → ••••••6789) |
+| Job Requests | Inbound queue (JR2026-NNNN) — coordinator accepts and converts to a Job Order (JOD2026-NNNN); reject with reason |
+| Job Orders | Work assignment record (JOD2026-NNNN) with assigned-inspector list and lifecycle status |
+| Timesheets / DWR | Daily Work Reports (DWR2026-NNNNN) — per-inspector hours, equipment count, operators count; submit → approve cycle |
+| Surveys | Pre-visit site surveys (SUR2026-NNNN) for scoping a future Job Order |
+| Reports | Monthly stats with stacked-bar visualisation, inspector productivity (certs + hours), due-soon and overdue lists |
+| Aramco weekly export | EPPlus-rendered xlsx in SRS §5.5.7 layout: 18 standard columns, frozen header, branded title bar — endpoint `/api/reports/aramco-weekly?cutoff=YYYY-MM-DD` |
+| Multi-language | EN / AR with full RTL reflow, ngx-translate v17 with HTTP-loaded JSON catalogues; language toggle persisted to localStorage |
+| Client portal | ClientUser-only sidebar collapses to a focused **My Certificates** page; pending acceptance queue with **Accept** / **Raise issue** actions firing the existing `ClientAccept` / `ClientReject` state-machine triggers |
 | OpenAPI | NSwag spec at `/swagger/v1/swagger.json`, UI at `/swagger` |
 
 Tests: 12 passing (5 state-machine units, 6 architecture rules, 1 placeholder integration).
+
+## API surface (selected)
+
+| Resource | Endpoints |
+|---|---|
+| Auth | `POST /api/auth/login`, `POST /api/auth/refresh`, `POST /api/auth/logout`, `GET /api/auth/me` |
+| Admin users | `GET/POST/PUT /api/admin/users`, `POST /api/admin/users/{id}/reset-password`, `GET /api/admin/users/roles` |
+| Clients | `GET/POST/PUT/DELETE /api/clients` |
+| Equipment | `GET/POST/PUT /api/equipment`, `POST /api/equipment/import`; `GET /api/equipment-types` |
+| Certificates | `GET/POST/PUT /api/certificates`, `POST /api/certificates/{id}/transitions/{trigger}`, `GET /api/certificates/{id}/pdf` |
+| Approvals | `GET /api/approvals/{pending\|rejected\|mine}`, `GET /api/approvals/counts` |
+| Stickers | `GET /api/stickers`, `POST /api/stickers/procure`, `POST /api/stickers/{id}/void`, `GET /api/stickers/stock-summary` |
+| Candidates | `GET/POST/PUT /api/candidates` |
+| Assessments | `GET/POST/PUT /api/assessments`, `POST /api/assessments/{id}/transitions/{trigger}` |
+| Cards | `GET /api/cards` |
+| Job Requests | `GET/POST/PUT /api/job-requests`, `POST /api/job-requests/{id}/{accept\|reject\|convert}` |
+| Job Orders | `GET/POST/PUT /api/job-orders` |
+| DWR | `GET/POST/PUT /api/dwr`, `POST /api/dwr/{id}/{submit\|approve\|reject}` |
+| Surveys | `GET/POST/PUT /api/surveys`, `POST /api/surveys/{id}/submit` |
+| Reports | `GET /api/reports/{monthly-stats\|inspector-productivity\|due-soon\|overdue}`, `GET /api/reports/aramco-weekly` |
+| Dashboard | `GET /api/dashboard/kpis`, `GET /api/dashboard/activity` |
+| **Public (no auth)** | `GET /api/public/stickers/{stickerNo}`, `GET /api/public/qr/{stickerNo}.png`, `GET /api/public/cards/{cardNo}`, `GET /api/public/qr/cards/{cardNo}.png` |
 
 ## Documentation
 

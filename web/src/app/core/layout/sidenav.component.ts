@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
-import { NavItem, PRIMARY_NAV, SECONDARY_NAV } from './sidenav.config';
+import { NavItem, pickPrimaryNav, pickSecondaryNav } from './sidenav.config';
 
 @Component({
   selector: 'tuv-sidenav',
@@ -115,8 +115,8 @@ export class Sidenav {
   readonly collapsed = input<boolean>(false);
   @Output() toggle = new EventEmitter<void>();
 
-  protected primary = computed(() => filterByRole(PRIMARY_NAV, this.auth.roles()));
-  protected secondary = computed(() => filterByRole(SECONDARY_NAV, this.auth.roles()));
+  protected primary = computed(() => filterByRole(pickPrimaryNav(this.auth.roles()), this.auth.roles()));
+  protected secondary = computed(() => filterByRole(pickSecondaryNav(this.auth.roles()), this.auth.roles()));
 }
 
 function filterByRole(items: NavItem[], roles: string[]): NavItem[] {

@@ -29,6 +29,11 @@ export const routes: Routes = [
           import('./features/dashboard/dashboard.page').then((m) => m.DashboardPage),
       },
       {
+        path: 'my-certificates',
+        loadComponent: () =>
+          import('./features/client-portal/my-certificates.page').then((m) => m.MyCertificatesPage),
+      },
+      {
         path: 'clients',
         canActivate: [roleGuard(Roles.Manager, Roles.Coordinator)],
         loadComponent: () =>
