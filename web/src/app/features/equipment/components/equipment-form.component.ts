@@ -14,6 +14,7 @@ import {
   EquipmentType,
 } from '../../../core/models/equipment.models';
 import { ClientListItem } from '../../../core/models/client.models';
+import { PhotoUploader } from '../../../shared/components/photo-uploader.component';
 
 @Component({
   selector: 'tuv-equipment-form',
@@ -27,6 +28,7 @@ import { ClientListItem } from '../../../core/models/client.models';
     InputNumberModule,
     SelectModule,
     ButtonModule,
+    PhotoUploader,
   ],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSave()" class="form">
@@ -108,6 +110,13 @@ import { ClientListItem } from '../../../core/models/client.models';
         <textarea pTextarea rows="2" formControlName="location" placeholder="Site / area"></textarea>
       </div>
 
+      <div class="row">
+        <label>Reference photo</label>
+        <tuv-photo-uploader
+          [photoKey]="form.controls.photoKey.value"
+          (photoKeyChange)="form.controls.photoKey.setValue($event)" />
+      </div>
+
       <div class="actions">
         <p-button type="button" severity="secondary" label="Cancel" (onClick)="cancel.emit()" />
         <p-button type="submit" label="{{ editing ? 'Save changes' : 'Create equipment' }}"
@@ -162,6 +171,7 @@ export class EquipmentForm {
     swl: [null as string | null],
     location: [null as string | null],
     status: [EquipmentStatus.Active as number],
+    photoKey: [null as string | null],
   });
 
   ngOnChanges() {
@@ -178,6 +188,7 @@ export class EquipmentForm {
         swl: this.editing.swl,
         location: this.editing.location,
         status: this.editing.status,
+        photoKey: this.editing.photoKey,
       });
     }
   }

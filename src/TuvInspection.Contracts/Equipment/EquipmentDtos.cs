@@ -86,6 +86,7 @@ public sealed record UpdateEquipmentRequest(
     int? YearOfManufacture,
     string? Swl,
     string? Location,
-    EquipmentStatusDto Status);
+    EquipmentStatusDto Status,
+    string? PhotoKey);
 
 public sealed record EquipmentImportResult(int Imported, int Skipped, IReadOnlyList<string> Errors);

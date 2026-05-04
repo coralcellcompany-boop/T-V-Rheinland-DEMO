@@ -26,6 +26,7 @@ import { NotifyService } from '../../../shared/services/notify.service';
 import { showHttpError } from '../../../shared/services/api-error.handler';
 import { TransitionTimeline } from '../components/transition-timeline.component';
 import { ChecklistEditor } from '../components/checklist-editor.component';
+import { PhotoGallery } from '../components/photo-gallery.component';
 import { PublicStickerApi } from '../../../core/api/stickers.api';
 import {
   AvailableTransition,
@@ -39,7 +40,7 @@ import {
     CommonModule, FormsModule, DatePipe, RouterLink,
     ButtonModule, CardModule, DialogModule, TextareaModule,
     InputTextModule, SelectModule, TooltipModule,
-    PageHeader, StatusPill, TransitionTimeline, ChecklistEditor,
+    PageHeader, StatusPill, TransitionTimeline, ChecklistEditor, PhotoGallery,
   ],
   template: `
     @if (loading()) {
@@ -121,6 +122,21 @@ import {
             (save)="saveChecklist($event)" />
         </section>
 
+        <!-- Photos -->
+        <section class="photos card">
+          <header class="block-header">
+            <h3>Photos</h3>
+            <span class="muted" *ngIf="!isMutable()">
+              <i class="pi pi-lock"></i>
+              Read-only — certificate is in {{ stateName(c.state) }} state.
+            </span>
+          </header>
+          <tuv-photo-gallery
+            [value]="c.photosJson"
+            [readonly]="!isMutable()"
+            (valueChange)="savePhotos($event)" />
+        </section>
+
         <!-- Timeline -->
         <section class="timeline card">
           <h3>Lifecycle timeline</h3>
@@ -158,11 +174,12 @@ import {
       .back:hover { text-decoration: underline; }
       .grid {
         display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;
-        grid-template-areas: 'summary actions' 'checklist checklist' 'timeline timeline';
+        grid-template-areas: 'summary actions' 'checklist checklist' 'photos photos' 'timeline timeline';
       }
       .summary { grid-area: summary; }
       .actions { grid-area: actions; }
       .checklist { grid-area: checklist; }
+      .photos { grid-area: photos; }
       .timeline { grid-area: timeline; }
       .block-header {
         display: flex; justify-content: space-between; align-items: baseline;
@@ -216,7 +233,7 @@ import {
       textarea { width: 100%; }
 
       @media (max-width: 1080px) {
-        .grid { grid-template-columns: 1fr; grid-template-areas: 'summary' 'actions' 'checklist' 'timeline'; }
+        .grid { grid-template-columns: 1fr; grid-template-areas: 'summary' 'actions' 'checklist' 'photos' 'timeline'; }
       }
     `,
   ],
@@ -342,9 +359,21 @@ export class CertificateDetailPage implements OnInit {
   }
 
   saveChecklist(json: string) {
+    this.partialUpdate({ checklistJson: json }, 'Checklist saved.');
+  }
+
+  savePhotos(json: string) {
+    this.partialUpdate({ photosJson: json }, 'Photos updated.');
+  }
+
+  private partialUpdate(patch: Partial<{
+    inspectionDate: string; reportIssueDate: string; nextDueDate: string | null;
+    inspectionType: number; loadTest: number; result: number;
+    standards: string | null; stickerNo: string | null;
+    checklistJson: string | null; findingsJson: string | null; photosJson: string | null;
+  }>, successMsg: string) {
     const c = this.cert();
     if (!c) return;
-    // Send a full update body — only the checklistJson is changing.
     this.api.update(c.id, {
       inspectionDate: c.inspectionDate,
       reportIssueDate: c.reportIssueDate,
@@ -354,14 +383,12 @@ export class CertificateDetailPage implements OnInit {
       result: c.result,
       standards: c.standards,
       stickerNo: c.stickerNo,
-      checklistJson: json,
+      checklistJson: c.checklistJson,
       findingsJson: c.findingsJson,
       photosJson: c.photosJson,
+      ...patch,
     }).subscribe({
-      next: (updated) => {
-        this.cert.set(updated);
-        this.notify.success('Checklist saved.');
-      },
+      next: (updated) => { this.cert.set(updated); this.notify.success(successMsg); },
       error: (err) => showHttpError(this.notify, err),
     });
   }

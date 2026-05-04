@@ -163,6 +163,7 @@ public sealed class UpdateEquipmentHandler : ICommandHandler<UpdateEquipmentComm
         entity.UpdateIdentification(command.Body.IdNo, command.Body.SerialNo);
         entity.UpdateSpec(command.Body.Manufacturer, command.Body.Model, command.Body.YearOfManufacture, command.Body.Swl);
         entity.UpdateLocation(command.Body.Location);
+        entity.SetPhoto(command.Body.PhotoKey);
         switch (command.Body.Status)
         {
             case EquipmentStatusDto.Active: entity.Reactivate(); break;
