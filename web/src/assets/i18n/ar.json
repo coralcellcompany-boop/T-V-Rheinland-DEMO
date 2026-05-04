@@ -1,0 +1,73 @@
+{
+  "app": {
+    "brand": "تي يو في راينلاند",
+    "subtitle": "العربية · التفتيش"
+  },
+  "nav": {
+    "workspace": "مساحة العمل",
+    "administration": "الإدارة",
+    "dashboard": "لوحة التحكم",
+    "certificates": "الشهادات",
+    "approvals": "الموافقات",
+    "equipment": "المعدات",
+    "clients": "العملاء",
+    "stickers": "الملصقات",
+    "candidates": "المرشحون",
+    "assessments": "التقييمات",
+    "jobRequests": "طلبات العمل",
+    "jobOrders": "أوامر العمل",
+    "timesheets": "الجداول الزمنية",
+    "surveys": "المسوحات",
+    "reports": "التقارير",
+    "admin": "المسؤول"
+  },
+  "topbar": {
+    "search": "ابحث في الشهادات والمعدات والعملاء…",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "signOut": "تسجيل الخروج",
+    "language": "اللغة",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "auth": {
+    "title": "تي يو في راينلاند العربية",
+    "subtitle": "نظام إدارة التفتيش",
+    "username": "البريد الإلكتروني أو اسم المستخدم",
+    "password": "كلمة المرور",
+    "signIn": "تسجيل الدخول",
+    "signInFailed": "فشل تسجيل الدخول."
+  },
+  "dashboard": {
+    "welcome": "أهلاً بعودتك، {name}.",
+    "morning": "إليك ملخصك الصباحي.",
+    "afternoon": "إليك لقطة بعد الظهر.",
+    "evening": "إليك ما حدث اليوم.",
+    "browseCerts": "تصفّح الشهادات",
+    "openApprovals": "فتح الموافقات",
+    "snapshot": "اللقطة",
+    "recent": "النشاط الأخير",
+    "kpi": {
+      "total": "إجمالي الشهادات",
+      "pending": "بانتظار الموافقة",
+      "rejected": "المرفوضة",
+      "dueSoon": "مستحقة خلال 30 يوماً",
+      "expired": "منتهية",
+      "equipment": "المعدات النشطة",
+      "clients": "العملاء"
+    }
+  },
+  "common": {
+    "search": "بحث",
+    "filter": "تصفية",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "create": "إنشاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "download": "تنزيل",
+    "newRecord": "جديد",
+    "loading": "جارٍ التحميل…",
+    "noData": "لا توجد بيانات"
+  }
+}

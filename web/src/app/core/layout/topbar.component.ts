@@ -3,27 +3,35 @@ import { Component, EventEmitter, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
+import { TooltipModule } from 'primeng/tooltip';
 import { MenuItem } from 'primeng/api';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
+import { LanguageService } from '../i18n/language.service';
 
 @Component({
   selector: 'tuv-topbar',
   standalone: true,
-  imports: [CommonModule, ButtonModule, MenuModule],
+  imports: [CommonModule, ButtonModule, MenuModule, TooltipModule, TranslateModule],
   template: `
     <header class="topbar">
-      <button class="hamburger" (click)="menu.emit()" aria-label="Toggle menu">
+      <button class="hamburger" (click)="menu.emit()" [attr.aria-label]="'common.filter' | translate">
         <i class="pi pi-bars"></i>
       </button>
 
       <div class="search">
         <i class="pi pi-search"></i>
-        <input type="text" placeholder="Search certificates, equipment, clients…" />
+        <input type="text" [placeholder]="'topbar.search' | translate" />
         <kbd>⌘K</kbd>
       </div>
 
       <div class="right">
-        <button class="icon-btn" pTooltip="Notifications">
+        <button class="icon-btn lang" (click)="toggleLanguage()"
+          [pTooltip]="'topbar.language' | translate">
+          <span class="lang-code">{{ lang.current() === 'en' ? 'AR' : 'EN' }}</span>
+        </button>
+
+        <button class="icon-btn" [pTooltip]="'Notifications'">
           <i class="pi pi-bell"></i>
         </button>
 
@@ -77,6 +85,8 @@ import { AuthService } from '../auth/auth.service';
         position: relative;
       }
       .icon-btn:hover { background: #f1f5f9; color: #0f172a; }
+      .icon-btn.lang { font-weight: 700; }
+      .lang-code { font-size: 0.78rem; letter-spacing: 0.05em; }
 
       .user {
         display: flex; align-items: center; gap: 0.6rem;
@@ -94,12 +104,16 @@ import { AuthService } from '../auth/auth.service';
       .meta { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
       .meta .name { font-size: 0.85rem; font-weight: 600; color: #0f172a; }
       .meta .role { font-size: 0.72rem; color: #64748b; }
+
+      :host-context([dir='rtl']) .right { margin-left: 0; margin-right: auto; }
     `,
   ],
 })
 export class Topbar {
   protected auth = inject(AuthService);
+  protected lang = inject(LanguageService);
   private router = inject(Router);
+  private translate = inject(TranslateService);
 
   @Output() menu = new EventEmitter<void>();
 
@@ -109,25 +123,32 @@ export class Topbar {
     return ((parts[0]?.[0] ?? '') + (parts[1]?.[0] ?? '')).toUpperCase() || 'U';
   };
 
-  protected userMenuItems: MenuItem[] = [
-    {
-      label: 'Profile',
-      icon: 'pi pi-user',
-      command: () => this.router.navigate(['/profile']),
-    },
-    {
-      label: 'Settings',
-      icon: 'pi pi-cog',
-      command: () => this.router.navigate(['/admin']),
-    },
-    { separator: true },
-    {
-      label: 'Sign out',
-      icon: 'pi pi-sign-out',
-      command: () => {
-        this.auth.logout();
-        this.router.navigate(['/login']);
+  protected toggleLanguage() {
+    this.lang.toggle();
+    // Refresh menu labels too
+    this.userMenuItems = this.buildUserMenu();
+  }
+
+  protected userMenuItems: MenuItem[] = this.buildUserMenu();
+
+  private buildUserMenu(): MenuItem[] {
+    return [
+      {
+        label: this.translate.instant('topbar.profile'),
+        icon: 'pi pi-user',
+        command: () => this.router.navigate(['/profile']),
       },
-    },
-  ];
+      {
+        label: this.translate.instant('topbar.settings'),
+        icon: 'pi pi-cog',
+        command: () => this.router.navigate(['/admin']),
+      },
+      { separator: true },
+      {
+        label: this.translate.instant('topbar.signOut'),
+        icon: 'pi pi-sign-out',
+        command: () => { this.auth.logout(); this.router.navigate(['/login']); },
+      },
+    ];
+  }
 }

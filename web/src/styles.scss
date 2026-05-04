@@ -36,6 +36,11 @@ a { color: #1d4ed8; }
   background: #f8fafc !important;
 }
 
+/* RTL-specific tweaks: PrimeNG components mostly auto-flip via [dir='rtl'] but some
+   custom flex layouts have margin-left: auto that needs flipping manually. */
+[dir='rtl'] body { font-family: 'Inter', system-ui, sans-serif; }
+[dir='rtl'] .pi-arrow-right::before { content: "\e91c"; } /* swap arrow visually if needed */
+
 /* Subtle entrance for routed views */
 @media (prefers-reduced-motion: no-preference) {
   router-outlet + * {

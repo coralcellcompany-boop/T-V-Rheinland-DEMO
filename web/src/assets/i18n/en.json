@@ -1,0 +1,73 @@
+{
+  "app": {
+    "brand": "TÜV Rheinland",
+    "subtitle": "Arabia · Inspection"
+  },
+  "nav": {
+    "workspace": "Workspace",
+    "administration": "Administration",
+    "dashboard": "Dashboard",
+    "certificates": "Certificates",
+    "approvals": "Approvals",
+    "equipment": "Equipment",
+    "clients": "Clients",
+    "stickers": "Stickers",
+    "candidates": "Candidates",
+    "assessments": "Assessments",
+    "jobRequests": "Job Requests",
+    "jobOrders": "Job Orders",
+    "timesheets": "Timesheets",
+    "surveys": "Surveys",
+    "reports": "Reports",
+    "admin": "Admin"
+  },
+  "topbar": {
+    "search": "Search certificates, equipment, clients…",
+    "profile": "Profile",
+    "settings": "Settings",
+    "signOut": "Sign out",
+    "language": "Language",
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "auth": {
+    "title": "TÜV Rheinland Arabia",
+    "subtitle": "Inspection Management System",
+    "username": "Email or username",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signInFailed": "Sign-in failed."
+  },
+  "dashboard": {
+    "welcome": "Welcome back, {name}.",
+    "morning": "Here is your morning briefing.",
+    "afternoon": "Here is the afternoon snapshot.",
+    "evening": "Here is what happened today.",
+    "browseCerts": "Browse certificates",
+    "openApprovals": "Open approvals",
+    "snapshot": "Snapshot",
+    "recent": "Recent activity",
+    "kpi": {
+      "total": "Total certificates",
+      "pending": "Pending approval",
+      "rejected": "Rejected",
+      "dueSoon": "Due in 30 days",
+      "expired": "Expired",
+      "equipment": "Active equipment",
+      "clients": "Clients"
+    }
+  },
+  "common": {
+    "search": "Search",
+    "filter": "Filter",
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "download": "Download",
+    "newRecord": "New",
+    "loading": "Loading…",
+    "noData": "No data"
+  }
+}

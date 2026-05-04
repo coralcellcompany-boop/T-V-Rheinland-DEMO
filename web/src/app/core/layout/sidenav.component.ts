@@ -2,42 +2,43 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output, computed, inject, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
 import { NavItem, PRIMARY_NAV, SECONDARY_NAV } from './sidenav.config';
 
 @Component({
   selector: 'tuv-sidenav',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, TooltipModule],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TooltipModule, TranslateModule],
   template: `
     <aside class="sidenav" [class.collapsed]="collapsed()">
       <div class="brand">
         <div class="logo">T<span>R</span></div>
         <div class="name" *ngIf="!collapsed()">
-          <strong>TÜV Rheinland</strong>
-          <span>Arabia · Inspection</span>
+          <strong>{{ 'app.brand' | translate }}</strong>
+          <span>{{ 'app.subtitle' | translate }}</span>
         </div>
       </div>
 
       <nav class="nav">
-        <span class="group" *ngIf="!collapsed()">Workspace</span>
+        <span class="group" *ngIf="!collapsed()">{{ 'nav.workspace' | translate }}</span>
         <a *ngFor="let item of primary()"
            [routerLink]="item.route"
            routerLinkActive="active"
-           [pTooltip]="collapsed() ? item.label : ''"
+           [pTooltip]="collapsed() ? (item.label | translate) : ''"
            tooltipPosition="right">
           <i class="pi" [ngClass]="item.icon"></i>
-          <span class="label">{{ item.label }}</span>
+          <span class="label">{{ item.label | translate }}</span>
         </a>
 
-        <span class="group" *ngIf="secondary().length && !collapsed()">Administration</span>
+        <span class="group" *ngIf="secondary().length && !collapsed()">{{ 'nav.administration' | translate }}</span>
         <a *ngFor="let item of secondary()"
            [routerLink]="item.route"
            routerLinkActive="active"
-           [pTooltip]="collapsed() ? item.label : ''"
+           [pTooltip]="collapsed() ? (item.label | translate) : ''"
            tooltipPosition="right">
           <i class="pi" [ngClass]="item.icon"></i>
-          <span class="label">{{ item.label }}</span>
+          <span class="label">{{ item.label | translate }}</span>
         </a>
       </nav>
 

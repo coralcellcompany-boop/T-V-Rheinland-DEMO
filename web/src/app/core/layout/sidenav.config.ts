@@ -1,35 +1,35 @@
 import { Roles } from '../models/auth.models';
 
 export interface NavItem {
-  label: string;
+  label: string;        // translation key under "nav.*"
   icon: string;
   route: string;
-  roles?: readonly string[];   // empty = all authenticated
+  roles?: readonly string[];
   badge?: 'pending' | 'expired';
 }
 
 export const PRIMARY_NAV: NavItem[] = [
-  { label: 'Dashboard',     icon: 'pi-home',           route: '/dashboard' },
-  { label: 'Certificates',  icon: 'pi-file-check',     route: '/certificates' },
-  { label: 'Approvals',     icon: 'pi-thumbs-up',      route: '/approvals',
+  { label: 'nav.dashboard',     icon: 'pi-home',         route: '/dashboard' },
+  { label: 'nav.certificates',  icon: 'pi-file-check',   route: '/certificates' },
+  { label: 'nav.approvals',     icon: 'pi-thumbs-up',    route: '/approvals',
     roles: [Roles.Manager, Roles.Coordinator, Roles.TechReviewer], badge: 'pending' },
-  { label: 'Equipment',     icon: 'pi-wrench',         route: '/equipment' },
-  { label: 'Clients',       icon: 'pi-building',       route: '/clients',
+  { label: 'nav.equipment',     icon: 'pi-wrench',       route: '/equipment' },
+  { label: 'nav.clients',       icon: 'pi-building',     route: '/clients',
     roles: [Roles.Manager, Roles.Coordinator] },
-  { label: 'Stickers',      icon: 'pi-qrcode',         route: '/stickers',
+  { label: 'nav.stickers',      icon: 'pi-qrcode',       route: '/stickers',
     roles: [Roles.Manager, Roles.Coordinator] },
-  { label: 'Candidates',    icon: 'pi-id-card',        route: '/candidates',
+  { label: 'nav.candidates',    icon: 'pi-id-card',      route: '/candidates',
     roles: [Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer] },
-  { label: 'Assessments',   icon: 'pi-verified',       route: '/assessments' },
-  { label: 'Job Requests',  icon: 'pi-inbox',          route: '/job-requests',
+  { label: 'nav.assessments',   icon: 'pi-verified',     route: '/assessments' },
+  { label: 'nav.jobRequests',   icon: 'pi-inbox',        route: '/job-requests',
     roles: [Roles.Manager, Roles.Coordinator] },
-  { label: 'Job Orders',    icon: 'pi-briefcase',      route: '/job-orders' },
-  { label: 'Timesheets',    icon: 'pi-clock',          route: '/timesheets' },
-  { label: 'Surveys',       icon: 'pi-map-marker',     route: '/surveys' },
+  { label: 'nav.jobOrders',     icon: 'pi-briefcase',    route: '/job-orders' },
+  { label: 'nav.timesheets',    icon: 'pi-clock',        route: '/timesheets' },
+  { label: 'nav.surveys',       icon: 'pi-map-marker',   route: '/surveys' },
 ];
 
 export const SECONDARY_NAV: NavItem[] = [
-  { label: 'Reports',       icon: 'pi-chart-line',     route: '/reports',
+  { label: 'nav.reports',       icon: 'pi-chart-line',   route: '/reports',
     roles: [Roles.Manager, Roles.Coordinator] },
-  { label: 'Admin',         icon: 'pi-cog',            route: '/admin', roles: [Roles.Manager] },
+  { label: 'nav.admin',         icon: 'pi-cog',          route: '/admin', roles: [Roles.Manager] },
 ];

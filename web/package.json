@@ -28,6 +28,8 @@
     "@angular/forms": "^20.2.0",
     "@angular/platform-browser": "^20.2.0",
     "@angular/router": "^20.2.0",
+    "@ngx-translate/core": "^17.0.0",
+    "@ngx-translate/http-loader": "^17.0.0",
     "@primeng/themes": "^20.4.0",
     "@primeuix/themes": "^2.0.3",
     "primeicons": "^7.0.0",
