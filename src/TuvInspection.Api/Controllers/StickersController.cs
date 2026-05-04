@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.Common.Cqrs;
 using TuvInspection.Application.Stickers;
 using TuvInspection.Contracts.Common;
 using TuvInspection.Contracts.Stickers;
 using TuvInspection.Domain.Identity;
+using TuvInspection.Infrastructure.Stickers;
 
 namespace TuvInspection.Api.Controllers;
 
@@ -15,7 +17,17 @@ namespace TuvInspection.Api.Controllers;
 public class StickersController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
-    public StickersController(IDispatcher dispatcher) => _dispatcher = dispatcher;
+    private readonly QrCodeService _qr;
+    private readonly StickerPdfRenderer _pdf;
+    private readonly IConfiguration _config;
+
+    public StickersController(IDispatcher dispatcher, QrCodeService qr, StickerPdfRenderer pdf, IConfiguration config)
+    {
+        _dispatcher = dispatcher;
+        _qr = qr;
+        _pdf = pdf;
+        _config = config;
+    }
 
     [HttpGet]
     public Task<PagedResult<StickerListItemDto>> List(
@@ -42,4 +54,25 @@ public class StickersController : ControllerBase
     [Authorize(Roles = Roles.Manager)]
     public Task<StickerListItemDto> Void(Guid id, [FromBody] VoidStickerRequest body, CancellationToken ct) =>
         _dispatcher.Send(new VoidStickerCommand(id, body.Reason), ct);
+
+    /// <summary>Print a batch of unallocated stickers — one A4 page with up to 24 stickers,
+    /// each with its public-PDF QR. Manager/Coordinator only.</summary>
+    [HttpGet("print-batch")]
+    public async Task<IActionResult> PrintBatch(
+        [FromQuery] StickerStateDto? state,
+        [FromQuery] int max = 24,
+        CancellationToken ct = default)
+    {
+        var clamped = Math.Clamp(max, 1, 96);
+        var page = await _dispatcher.Query(
+            new ListStickersQuery(state ?? StickerStateDto.Unallocated, null, 1, clamped), ct);
+        var apiBase = _config["Public:ApiBaseUrl"]?.TrimEnd('/') ?? "http://localhost:5282";
+        var rows = page.Items.Select(s =>
+        {
+            var url = $"{apiBase}/api/public/stickers/{Uri.EscapeDataString(s.StickerNo)}.pdf";
+            return (s.StickerNo, _qr.PngFor(url));
+        }).ToList();
+        var bytes = _pdf.RenderPrintBatch(rows);
+        return File(bytes, "application/pdf", $"sticker-batch-{DateTime.UtcNow:yyyyMMddHHmm}.pdf");
+    }
 }

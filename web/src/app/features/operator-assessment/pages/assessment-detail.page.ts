@@ -69,7 +69,14 @@ interface AvailableTrigger {
             </div>
             <div class="qr-meta">
               <strong>{{ ax.issuedCardNo }}</strong>
-              <span>Competency card · <a [href]="verifyUrl(ax.issuedCardNo)" target="_blank" rel="noopener">open verification page</a></span>
+              <span>Competency card</span>
+              <span class="links">
+                <a [href]="pdfUrl(ax.issuedCardNo)" target="_blank" rel="noopener">
+                  <i class="pi pi-file-pdf"></i> Open card PDF
+                </a>
+                ·
+                <a [href]="verifyUrl(ax.issuedCardNo)" target="_blank" rel="noopener">verification page</a>
+              </span>
             </div>
           </div>
         </section>
@@ -237,6 +244,7 @@ export class AssessmentDetailPage implements OnInit {
 
   protected qrUrl = (no: string) => this.cardsApi.qrUrl(no);
   protected verifyUrl = (no: string) => `/verify-card/${encodeURIComponent(no)}`;
+  protected pdfUrl = (no: string) => this.cardsApi.publicPdfUrl(no);
 
   protected stateName = (s: number) => AssessmentStateName[s] ?? 'Unknown';
   protected resultLabel = (r: number) => AssessmentResultLabel[r];

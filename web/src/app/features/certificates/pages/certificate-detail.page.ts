@@ -78,7 +78,13 @@ import {
             </div>
             <div class="qr-meta">
               <strong>{{ c.stickerNo }}</strong>
-              <span>Scan or <a [href]="verifyUrl(c.stickerNo)" target="_blank" rel="noopener">open verification page</a></span>
+              <span class="links">
+                <a [href]="stickerPdfUrl(c.stickerNo)" target="_blank" rel="noopener">
+                  <i class="pi pi-file-pdf"></i> Open verification PDF
+                </a>
+                · <a [href]="verifyUrl(c.stickerNo)" target="_blank" rel="noopener">verification page</a>
+              </span>
+              <span class="muted">Scan QR to open the PDF on a phone.</span>
             </div>
           </div>
         </section>
@@ -266,6 +272,7 @@ export class CertificateDetailPage implements OnInit {
 
   protected qrUrl = (no: string) => this.stickersApi.qrUrl(no);
   protected verifyUrl = (no: string) => `/verify/${encodeURIComponent(no)}`;
+  protected stickerPdfUrl = (no: string) => this.stickersApi.publicPdfUrl(no);
 
   protected loading = signal(true);
   protected cert = signal<CertificateDetail | null>(null);

@@ -45,6 +45,9 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
   template: `
     <tuv-page-header title="Blue Stickers" icon="pi-qrcode"
       subtitle="Sticker stock register. Auto-issued when an Aramco-categorized certificate is approved.">
+      <p-button icon="pi pi-print" label="Print batch" severity="secondary"
+        [outlined]="true" [loading]="printingBatch()" (onClick)="printBatch()"
+        pTooltip="Print up to 24 unallocated stickers per A4 page (each with QR)." />
       <p-button *ngIf="canProcure()" icon="pi pi-plus" label="Procure stock"
         (onClick)="procureDialog = true" />
     </tuv-page-header>
@@ -221,6 +224,8 @@ export class StickersListPage {
   protected voidTarget = signal<StickerListItem | null>(null);
   protected voidReason = '';
 
+  protected printingBatch = signal(false);
+
   protected canProcure = () => this.auth.hasRole(Roles.Manager);
   protected canVoid = (s: StickerListItem) =>
     this.auth.hasRole(Roles.Manager) && s.state !== 4 && s.state !== 5 && s.state !== 3;
@@ -321,6 +326,23 @@ export class StickersListPage {
       error: (err) => {
         this.voiding.set(false);
         showHttpError(this.notify, err);
+      },
+    });
+  }
+
+  printBatch() {
+    const state = this.filterState ?? 0; // default to Unallocated
+    this.printingBatch.set(true);
+    this.api.printBatch(state, 24).subscribe({
+      next: (blob) => {
+        this.printingBatch.set(false);
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+      },
+      error: (err) => {
+        this.printingBatch.set(false);
+        showHttpError(this.notify, err, 'Could not generate sticker batch.');
       },
     });
   }

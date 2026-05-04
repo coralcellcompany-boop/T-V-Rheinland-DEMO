@@ -167,3 +167,20 @@ public sealed record CompetencyCardPublicViewDto(
     DateOnly? ValidUntil,
     bool IsValidNow,
     CompetencyCardStateDto State);
+
+public sealed record CompetencyCardDetailDto(
+    Guid Id,
+    string CardNo,
+    Guid AssessmentId,
+    string AssessmentNo,
+    Guid CandidateId,
+    string CandidateName,
+    string CandidateIdNumber,
+    string? CandidateNationality,
+    Guid ClientId,
+    string ClientName,
+    CompetencyCategoryDto Category,
+    DateOnly IssuedOn,
+    DateOnly? ValidUntil,
+    CompetencyCardStateDto State,
+    string? StatusReason);

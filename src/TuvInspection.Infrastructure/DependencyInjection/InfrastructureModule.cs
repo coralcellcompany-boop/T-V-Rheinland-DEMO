@@ -135,10 +135,12 @@ public static class InfrastructureModule
         // Stickers
         services.AddScoped<StickerNumberGenerator>();
         services.AddSingleton<QrCodeService>();
+        services.AddSingleton<StickerPdfRenderer>();
 
         // Operator Assessment
         services.AddScoped<AssessmentNoGenerator>();
         services.AddScoped<CompetencyCardNoGenerator>();
+        services.AddSingleton<CompetencyCardPdfRenderer>();
 
         // Job Management
         services.AddScoped<JobRequestNoGenerator>();

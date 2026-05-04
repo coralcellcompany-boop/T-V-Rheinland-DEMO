@@ -35,6 +35,11 @@ export class StickersApi {
   void(id: string, reason: string): Observable<StickerListItem> {
     return this.http.post<StickerListItem>(`${this.base}/${id}/void`, { reason });
   }
+
+  printBatch(state: number, max = 24): Observable<Blob> {
+    let p = new HttpParams().set('state', String(state)).set('max', String(max));
+    return this.http.get(`${this.base}/print-batch`, { params: p, responseType: 'blob' });
+  }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -48,5 +53,9 @@ export class PublicStickerApi {
 
   qrUrl(stickerNo: string): string {
     return `${this.base}/qr/${encodeURIComponent(stickerNo)}.png`;
+  }
+
+  publicPdfUrl(stickerNo: string): string {
+    return `${this.base}/stickers/${encodeURIComponent(stickerNo)}.pdf`;
   }
 }

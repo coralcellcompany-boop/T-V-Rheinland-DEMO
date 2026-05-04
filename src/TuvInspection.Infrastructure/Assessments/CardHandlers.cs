@@ -112,3 +112,62 @@ public sealed class GetCompetencyCardPublicViewHandler
         return len <= 4 ? id : new string('•', len - 4) + id[^4..];
     }
 }
+
+public sealed class GetCompetencyCardByIdHandler : IQueryHandler<GetCompetencyCardByIdQuery, CompetencyCardDetailDto?>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    public GetCompetencyCardByIdHandler(AppDbContext db, ITenantContext tenant) { _db = db; _tenant = tenant; }
+
+    public Task<CompetencyCardDetailDto?> Handle(GetCompetencyCardByIdQuery q, CancellationToken ct) =>
+        CardHandlerHelpers.LoadDetail(_db, _tenant, c => c.Id == q.Id, ct);
+}
+
+public sealed class GetCompetencyCardByNoHandler : IQueryHandler<GetCompetencyCardByNoQuery, CompetencyCardDetailDto?>
+{
+    private readonly AppDbContext _db;
+    public GetCompetencyCardByNoHandler(AppDbContext db) { _db = db; }
+
+    public Task<CompetencyCardDetailDto?> Handle(GetCompetencyCardByNoQuery q, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(q.CardNo)) return Task.FromResult<CompetencyCardDetailDto?>(null);
+        var no = q.CardNo.Trim().ToUpperInvariant();
+        // Public lookup — bypass tenant filter for verification scenarios.
+        return CardHandlerHelpers.LoadDetail(_db, tenant: null, c => c.CardNo == no, ct);
+    }
+}
+
+internal static class CardHandlerHelpers
+{
+    public static async Task<CompetencyCardDetailDto?> LoadDetail(
+        AppDbContext db, ITenantContext? tenant,
+        System.Linq.Expressions.Expression<Func<CompetencyCard, bool>> predicate,
+        CancellationToken ct)
+    {
+        IQueryable<CompetencyCard> query = db.CompetencyCards.AsNoTracking();
+        if (tenant is not null && !tenant.IsInRole(Roles.Manager))
+            query = query.Where(c => tenant.AssignedClientIds.Contains(c.ClientId));
+
+        var card = await query.FirstOrDefaultAsync(predicate, ct);
+        if (card is null) return null;
+
+        var assessment = await db.Assessments.IgnoreQueryFilters().AsNoTracking()
+            .Where(a => a.Id == card.AssessmentId)
+            .Select(a => new { a.AssessmentNo }).FirstAsync(ct);
+        var candidate = await db.Candidates.IgnoreQueryFilters().AsNoTracking()
+            .Where(c => c.Id == card.CandidateId)
+            .Select(c => new { c.FullName, c.IdentificationNumber, c.Nationality }).FirstAsync(ct);
+        var clientName = await db.Clients.IgnoreQueryFilters().AsNoTracking()
+            .Where(cl => cl.Id == card.ClientId).Select(cl => cl.Name).FirstAsync(ct);
+
+        return new CompetencyCardDetailDto(
+            card.Id, card.CardNo,
+            card.AssessmentId, assessment.AssessmentNo,
+            card.CandidateId, candidate.FullName, candidate.IdentificationNumber, candidate.Nationality,
+            card.ClientId, clientName,
+            (CompetencyCategoryDto)card.Category,
+            card.IssuedOn, card.ValidUntil,
+            (CompetencyCardStateDto)card.State,
+            card.StatusReason);
+    }
+}

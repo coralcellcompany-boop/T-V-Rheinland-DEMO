@@ -48,3 +48,7 @@ public sealed record ListCompetencyCardsQuery(
     int PageSize) : IQuery<PagedResult<CompetencyCardListItemDto>>;
 
 public sealed record GetCompetencyCardPublicViewQuery(string CardNo) : IQuery<CompetencyCardPublicViewDto?>;
+
+public sealed record GetCompetencyCardByIdQuery(Guid Id) : IQuery<CompetencyCardDetailDto?>;
+
+public sealed record GetCompetencyCardByNoQuery(string CardNo) : IQuery<CompetencyCardDetailDto?>;

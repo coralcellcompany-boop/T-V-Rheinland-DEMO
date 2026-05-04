@@ -68,6 +68,10 @@ export class CompetencyCardsApi {
     Object.entries(filters).forEach(([k, v]) => { if (v !== undefined && v !== null && v !== '') p = p.set(k, String(v)); });
     return this.http.get<PagedResult<CompetencyCardListItem>>(this.base, { params: p });
   }
+
+  pdf(id: string): Observable<Blob> {
+    return this.http.get(`${this.base}/${id}/pdf`, { responseType: 'blob' });
+  }
 }
 
 @Injectable({ providedIn: 'root' })
@@ -79,4 +83,5 @@ export class PublicCardApi {
     return this.http.get<CompetencyCardPublicView>(`${this.base}/cards/${encodeURIComponent(cardNo)}`);
   }
   qrUrl(cardNo: string): string { return `${this.base}/qr/cards/${encodeURIComponent(cardNo)}.png`; }
+  publicPdfUrl(cardNo: string): string { return `${this.base}/cards/${encodeURIComponent(cardNo)}.pdf`; }
 }
