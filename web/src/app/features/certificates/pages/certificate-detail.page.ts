@@ -27,6 +27,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
 import { TransitionTimeline } from '../components/transition-timeline.component';
 import { ChecklistEditor } from '../components/checklist-editor.component';
 import { PhotoGallery } from '../components/photo-gallery.component';
+import { SignaturesPanel } from '../components/signatures-panel.component';
 import { PublicStickerApi } from '../../../core/api/stickers.api';
 import {
   AvailableTransition,
@@ -40,7 +41,7 @@ import {
     CommonModule, FormsModule, DatePipe, RouterLink,
     ButtonModule, CardModule, DialogModule, TextareaModule,
     InputTextModule, SelectModule, TooltipModule,
-    PageHeader, StatusPill, TransitionTimeline, ChecklistEditor, PhotoGallery,
+    PageHeader, StatusPill, TransitionTimeline, ChecklistEditor, PhotoGallery, SignaturesPanel,
   ],
   template: `
     @if (loading()) {
@@ -118,6 +119,7 @@ import {
           </header>
           <tuv-checklist-editor
             [value]="c.checklistJson"
+            [equipmentTypeId]="c.equipmentTypeId"
             [readonly]="!isMutable()"
             (save)="saveChecklist($event)" />
         </section>
@@ -135,6 +137,21 @@ import {
             [value]="c.photosJson"
             [readonly]="!isMutable()"
             (valueChange)="savePhotos($event)" />
+        </section>
+
+        <!-- Signatures -->
+        <section class="signatures card">
+          <header class="block-header">
+            <h3>Signatures</h3>
+            <span class="muted" *ngIf="!isMutable()">
+              <i class="pi pi-lock"></i>
+              Read-only — certificate is in {{ stateName(c.state) }} state.
+            </span>
+          </header>
+          <tuv-signatures-panel
+            [value]="c.signaturesJson"
+            [readonly]="!isMutable()"
+            (valueChange)="saveSignatures($event)" />
         </section>
 
         <!-- Timeline -->
@@ -174,12 +191,13 @@ import {
       .back:hover { text-decoration: underline; }
       .grid {
         display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;
-        grid-template-areas: 'summary actions' 'checklist checklist' 'photos photos' 'timeline timeline';
+        grid-template-areas: 'summary actions' 'checklist checklist' 'photos photos' 'signatures signatures' 'timeline timeline';
       }
       .summary { grid-area: summary; }
       .actions { grid-area: actions; }
       .checklist { grid-area: checklist; }
       .photos { grid-area: photos; }
+      .signatures { grid-area: signatures; }
       .timeline { grid-area: timeline; }
       .block-header {
         display: flex; justify-content: space-between; align-items: baseline;
@@ -233,7 +251,7 @@ import {
       textarea { width: 100%; }
 
       @media (max-width: 1080px) {
-        .grid { grid-template-columns: 1fr; grid-template-areas: 'summary' 'actions' 'checklist' 'photos' 'timeline'; }
+        .grid { grid-template-columns: 1fr; grid-template-areas: 'summary' 'actions' 'checklist' 'photos' 'signatures' 'timeline'; }
       }
     `,
   ],
@@ -366,11 +384,16 @@ export class CertificateDetailPage implements OnInit {
     this.partialUpdate({ photosJson: json }, 'Photos updated.');
   }
 
+  saveSignatures(json: string) {
+    this.partialUpdate({ signaturesJson: json }, 'Signatures updated.');
+  }
+
   private partialUpdate(patch: Partial<{
     inspectionDate: string; reportIssueDate: string; nextDueDate: string | null;
     inspectionType: number; loadTest: number; result: number;
     standards: string | null; stickerNo: string | null;
-    checklistJson: string | null; findingsJson: string | null; photosJson: string | null;
+    checklistJson: string | null; findingsJson: string | null;
+    photosJson: string | null; signaturesJson: string | null;
   }>, successMsg: string) {
     const c = this.cert();
     if (!c) return;
@@ -386,6 +409,7 @@ export class CertificateDetailPage implements OnInit {
       checklistJson: c.checklistJson,
       findingsJson: c.findingsJson,
       photosJson: c.photosJson,
+      signaturesJson: c.signaturesJson,
       ...patch,
     }).subscribe({
       next: (updated) => { this.cert.set(updated); this.notify.success(successMsg); },

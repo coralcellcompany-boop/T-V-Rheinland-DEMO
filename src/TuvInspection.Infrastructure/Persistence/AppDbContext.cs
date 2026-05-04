@@ -15,6 +15,7 @@ using TuvInspection.Domain.Timesheets;
 using TuvInspection.Infrastructure.Identity;
 using EquipmentEntity = TuvInspection.Domain.Equipment.Equipment;
 using EquipmentType = TuvInspection.Domain.Equipment.EquipmentType;
+using DefectCode = TuvInspection.Domain.Equipment.DefectCode;
 
 namespace TuvInspection.Infrastructure.Persistence;
 
@@ -35,6 +36,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Client> Clients => Set<Client>();
     public DbSet<EquipmentType> EquipmentTypes => Set<EquipmentType>();
     public DbSet<EquipmentEntity> Equipment => Set<EquipmentEntity>();
+    public DbSet<DefectCode> DefectCodes => Set<DefectCode>();
     public DbSet<InspectionCertificate> Certificates => Set<InspectionCertificate>();
     public DbSet<CertificateStateTransition> CertificateTransitions => Set<CertificateStateTransition>();
     public DbSet<JobOrder> JobOrders => Set<JobOrder>();

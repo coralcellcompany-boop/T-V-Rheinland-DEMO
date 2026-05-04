@@ -6,6 +6,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
+import { DefectPicker } from './defect-picker.component';
+import { DefectCode } from '../../../core/api/defects.api';
 
 export type ChecklistResult = 'Pass' | 'Fail' | 'NA' | 'NotSet';
 
@@ -43,6 +45,7 @@ const RESULT_OPTIONS = [
   imports: [
     CommonModule, FormsModule,
     ButtonModule, InputTextModule, SelectModule, TextareaModule, TooltipModule,
+    DefectPicker,
   ],
   template: `
     <div class="header">
@@ -61,10 +64,19 @@ const RESULT_OPTIONS = [
         </span>
       </div>
       <div class="header-actions">
+        <p-button *ngIf="!readonly" icon="pi pi-list" severity="secondary" size="small"
+          label="Add from defect catalogue"
+          [outlined]="true"
+          (onClick)="openPicker()" />
         <p-button *ngIf="!readonly" icon="pi pi-plus" severity="secondary" size="small"
           label="Add row" (onClick)="addRow()" />
       </div>
     </div>
+
+    <tuv-defect-picker
+      [(open)]="pickerOpen"
+      [equipmentTypeId]="equipmentTypeId"
+      (picked)="onDefectPicked($event)" />
 
     @if (items().length === 0) {
       <div class="empty">
@@ -183,11 +195,13 @@ const RESULT_OPTIONS = [
 export class ChecklistEditor {
   @Input() set value(json: string | null) { this.parse(json); }
   @Input() readonly = false;
+  @Input() equipmentTypeId: string | null = null;
   @Output() save = new EventEmitter<string>();
 
   protected readonly resultOptions = RESULT_OPTIONS;
   protected readonly items = signal<ChecklistItem[]>([]);
   protected readonly saving = signal(false);
+  protected pickerOpen = false;
 
   protected counts = computed(() => {
     let pass = 0, fail = 0, na = 0, pending = 0;
@@ -224,5 +238,19 @@ export class ChecklistEditor {
     const doc: ChecklistDoc = { items: this.items() };
     this.save.emit(JSON.stringify(doc));
     setTimeout(() => this.saving.set(false), 600);
+  }
+
+  openPicker() { this.pickerOpen = true; }
+
+  onDefectPicked(d: DefectCode) {
+    const next = this.items().length + 1;
+    const row: ChecklistItem = {
+      itemNo: String(next),
+      acceptanceCriteria: d.description,
+      referenceStandard: d.code,
+      result: 'Fail',
+      remark: `Defect ${d.code} (${d.severity})`,
+    };
+    this.items.update((rows) => [...rows, row]);
   }
 }

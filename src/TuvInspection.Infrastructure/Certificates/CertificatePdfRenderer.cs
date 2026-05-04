@@ -105,7 +105,8 @@ public sealed class CertificatePdfRenderer
             }
 
             // Sign-off
-            col.Item().PaddingTop(20).Element(SignOff);
+            var sigs = ParseSignatures(cert.SignaturesJson);
+            col.Item().PaddingTop(20).Element(box => SignOff(box, sigs));
         });
     }
 
@@ -214,31 +215,86 @@ public sealed class CertificatePdfRenderer
         });
     }
 
-    private static void SignOff(IContainer container)
+    private static void SignOff(IContainer container, IReadOnlyList<SignatureEntry> sigs)
     {
+        var slots = new[] { "Inspector", "Reviewed by (TÜV)", "Receiver (Client)" };
         container.Row(row =>
         {
-            row.RelativeItem().Column(c =>
+            for (int i = 0; i < slots.Length; i++)
             {
-                c.Item().Text("Inspector").FontSize(8).FontColor("#64748b");
-                c.Item().PaddingTop(28).LineHorizontal(0.5f).LineColor("#94a3b8");
-                c.Item().PaddingTop(2).Text("Signature / Stamp").FontSize(8).FontColor("#94a3b8");
-            });
-            row.ConstantItem(20);
-            row.RelativeItem().Column(c =>
-            {
-                c.Item().Text("Reviewed by (TÜV)").FontSize(8).FontColor("#64748b");
-                c.Item().PaddingTop(28).LineHorizontal(0.5f).LineColor("#94a3b8");
-                c.Item().PaddingTop(2).Text("Signature / Date").FontSize(8).FontColor("#94a3b8");
-            });
-            row.ConstantItem(20);
-            row.RelativeItem().Column(c =>
-            {
-                c.Item().Text("Receiver (Client)").FontSize(8).FontColor("#64748b");
-                c.Item().PaddingTop(28).LineHorizontal(0.5f).LineColor("#94a3b8");
-                c.Item().PaddingTop(2).Text("Signature / Date").FontSize(8).FontColor("#94a3b8");
-            });
+                if (i > 0) row.ConstantItem(20);
+                var label = slots[i];
+                var sig = sigs.FirstOrDefault(s =>
+                    string.Equals(s.Role, label, StringComparison.OrdinalIgnoreCase) ||
+                    LabelMatches(s.Role, label));
+                row.RelativeItem().Column(c =>
+                {
+                    c.Item().Text(label).FontSize(8).FontColor("#64748b");
+                    if (sig is not null && TryDecodeImage(sig.DataUrl, out var bytes))
+                    {
+                        c.Item().PaddingTop(4).Height(48).Image(bytes).FitArea();
+                        c.Item().PaddingTop(2).LineHorizontal(0.5f).LineColor("#94a3b8");
+                        c.Item().PaddingTop(2).Text(text =>
+                        {
+                            text.Span(string.IsNullOrWhiteSpace(sig.Name) ? "Signed" : sig.Name).Bold().FontSize(8);
+                            if (sig.AtUtc is { } at)
+                            {
+                                text.Span("  ·  ").FontColor("#94a3b8").FontSize(8);
+                                text.Span(at.ToString("dd MMM yyyy HH:mm")).FontSize(8).FontColor("#64748b");
+                            }
+                        });
+                    }
+                    else
+                    {
+                        c.Item().PaddingTop(28).LineHorizontal(0.5f).LineColor("#94a3b8");
+                        c.Item().PaddingTop(2).Text("Signature / Date").FontSize(8).FontColor("#94a3b8");
+                    }
+                });
+            }
         });
+    }
+
+    private static bool LabelMatches(string role, string label)
+    {
+        if (string.IsNullOrWhiteSpace(role)) return false;
+        var r = role.Replace(" ", "").ToLowerInvariant();
+        return label switch
+        {
+            "Inspector" => r.Contains("inspector"),
+            "Reviewed by (TÜV)" => r.Contains("review") || r.Contains("tuv") || r.Contains("tüv") || r.Contains("approver") || r.Contains("manager"),
+            "Receiver (Client)" => r.Contains("client") || r.Contains("receiver") || r.Contains("customer"),
+            _ => false,
+        };
+    }
+
+    private static bool TryDecodeImage(string? dataUrl, out byte[] bytes)
+    {
+        bytes = Array.Empty<byte>();
+        if (string.IsNullOrWhiteSpace(dataUrl)) return false;
+        var idx = dataUrl.IndexOf("base64,", StringComparison.OrdinalIgnoreCase);
+        var payload = idx >= 0 ? dataUrl[(idx + 7)..] : dataUrl;
+        try { bytes = Convert.FromBase64String(payload); return bytes.Length > 0; }
+        catch { return false; }
+    }
+
+    private static IReadOnlyList<SignatureEntry> ParseSignatures(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return Array.Empty<SignatureEntry>();
+        try
+        {
+            var arr = JsonSerializer.Deserialize<List<SignatureEntry>>(json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            return arr ?? new();
+        }
+        catch { return Array.Empty<SignatureEntry>(); }
+    }
+
+    private sealed class SignatureEntry
+    {
+        public string Role { get; set; } = "";
+        public string? Name { get; set; }
+        public string? DataUrl { get; set; }
+        public DateTime? AtUtc { get; set; }
     }
 
     // ----- enums to labels -----

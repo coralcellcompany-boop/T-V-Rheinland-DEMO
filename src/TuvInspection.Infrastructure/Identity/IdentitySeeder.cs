@@ -40,6 +40,7 @@ public sealed class IdentitySeeder
 
         // Seed master data (idempotent).
         await EquipmentTypeSeed.SeedAsync(_db, ct);
+        await DefectCodeSeed.SeedAsync(_db, ct);
 
         // Roles
         foreach (var role in Roles.All)

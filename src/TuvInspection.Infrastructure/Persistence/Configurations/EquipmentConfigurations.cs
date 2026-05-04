@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TuvInspection.Domain.Equipment;
 using EquipmentEntity = TuvInspection.Domain.Equipment.Equipment;
 using EquipmentType = TuvInspection.Domain.Equipment.EquipmentType;
 using AramcoCategory = TuvInspection.Domain.Equipment.AramcoCategory;
@@ -50,5 +51,22 @@ public class EquipmentConfiguration : IEntityTypeConfiguration<EquipmentEntity>
             .WithMany().HasForeignKey(x => x.EquipmentTypeId).OnDelete(DeleteBehavior.Restrict);
 
         e.Ignore(x => x.DomainEvents);
+    }
+}
+
+public class DefectCodeConfiguration : IEntityTypeConfiguration<DefectCode>
+{
+    public void Configure(EntityTypeBuilder<DefectCode> e)
+    {
+        e.ToTable("DefectCodes");
+        e.HasKey(x => x.Id);
+        e.Property(x => x.Id).ValueGeneratedNever();
+        e.Property(x => x.Code).IsRequired().HasMaxLength(40);
+        e.Property(x => x.Description).IsRequired().HasMaxLength(500);
+        e.Property(x => x.Severity).IsRequired().HasMaxLength(20);
+        e.HasIndex(x => new { x.EquipmentTypeId, x.Code }).IsUnique();
+        e.HasOne<EquipmentType>().WithMany()
+            .HasForeignKey(x => x.EquipmentTypeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

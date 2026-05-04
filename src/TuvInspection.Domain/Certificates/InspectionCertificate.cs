@@ -32,6 +32,8 @@ public class InspectionCertificate : AggregateRoot<Guid>, IAuditable, ITenantSco
     public string? ChecklistJson { get; private set; }
     public string? FindingsJson { get; private set; }
     public string? PhotosJson { get; private set; }
+    /// <summary>JSON array of base64 PNG signatures, one per role (Inspector/TechReviewer/Client).</summary>
+    public string? SignaturesJson { get; private set; }
 
     public DateTime CreatedAtUtc { get; set; }
     public string? CreatedById { get; set; }
@@ -83,6 +85,18 @@ public class InspectionCertificate : AggregateRoot<Guid>, IAuditable, ITenantSco
     public void UpdateChecklist(string? checklistJson) { EnsureMutable(); ChecklistJson = checklistJson; }
     public void UpdateFindings(string? findingsJson) { EnsureMutable(); FindingsJson = findingsJson; }
     public void UpdatePhotos(string? photosJson) { EnsureMutable(); PhotosJson = photosJson; }
+
+    /// <summary>
+    /// Signatures can be captured at multiple lifecycle points (inspector signs at submission,
+    /// TechReviewer at review, client at acceptance) so this is allowed in any non-terminal state.
+    /// </summary>
+    public void UpdateSignatures(string? signaturesJson)
+    {
+        if (State is CertificateState.Voided or CertificateState.Expired or CertificateState.Archived)
+            throw new InvalidOperationException(
+                $"Signatures cannot be added in terminal state {State}.");
+        SignaturesJson = signaturesJson;
+    }
 
     /// <summary>Called by the sticker auto-issue hook when this cert hits Approved.</summary>
     public void LinkSticker(Guid stickerId, string stickerNo)

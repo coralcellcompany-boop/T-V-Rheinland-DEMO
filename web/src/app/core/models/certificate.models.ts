@@ -90,6 +90,7 @@ export interface CertificateDetail {
   clientName: string;
   equipmentId: string;
   equipmentIdNo: string;
+  equipmentTypeId: string;
   equipmentTypeName: string;
   jobOrderId: string | null;
   inspectionDate: string;
@@ -104,6 +105,7 @@ export interface CertificateDetail {
   checklistJson: string | null;
   findingsJson: string | null;
   photosJson: string | null;
+  signaturesJson: string | null;
   createdAtUtc: string;
   updatedAtUtc: string | null;
   transitions: CertificateTransition[];
@@ -130,6 +132,7 @@ export interface UpdateCertificateRequest {
   checklistJson?: string | null;
   findingsJson?: string | null;
   photosJson?: string | null;
+  signaturesJson?: string | null;
 }
 
 export interface ApprovalQueueCounts {

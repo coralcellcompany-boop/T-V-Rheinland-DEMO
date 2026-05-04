@@ -58,6 +58,7 @@ public sealed record CertificateDetailDto(
     string ClientName,
     Guid EquipmentId,
     string EquipmentIdNo,
+    Guid EquipmentTypeId,
     string EquipmentTypeName,
     Guid? JobOrderId,
     DateOnly InspectionDate,
@@ -72,6 +73,7 @@ public sealed record CertificateDetailDto(
     string? ChecklistJson,
     string? FindingsJson,
     string? PhotosJson,
+    string? SignaturesJson,
     DateTime CreatedAtUtc,
     DateTime? UpdatedAtUtc,
     IReadOnlyList<CertificateTransitionDto> Transitions);
@@ -95,7 +97,8 @@ public sealed record UpdateCertificateRequest(
     string? StickerNo,
     string? ChecklistJson,
     string? FindingsJson,
-    string? PhotosJson);
+    string? PhotosJson,
+    string? SignaturesJson);
 
 public sealed record TransitionRequest(string? Comments);
 

@@ -85,19 +85,20 @@ public sealed class GetCertificateByIdHandler
             .Where(cl => cl.Id == c.ClientId).Select(cl => cl.Name).FirstAsync(ct);
         var equip = await _db.Equipment.IgnoreQueryFilters()
             .Where(e => e.Id == c.EquipmentId)
-            .Join(_db.EquipmentTypes, e => e.EquipmentTypeId, t => t.Id, (e, t) => new { e.IdNo, TypeName = t.Name })
+            .Join(_db.EquipmentTypes, e => e.EquipmentTypeId, t => t.Id,
+                (e, t) => new { e.IdNo, TypeId = t.Id, TypeName = t.Name })
             .FirstAsync(ct);
 
         return new CertificateDetailDto(
             c.Id, c.CertificateNo, c.ClientId, clientName,
-            c.EquipmentId, equip.IdNo, equip.TypeName,
+            c.EquipmentId, equip.IdNo, equip.TypeId, equip.TypeName,
             c.JobOrderId, c.InspectionDate, c.ReportIssueDate, c.NextDueDate,
             (CertificateInspectionTypeDto)c.InspectionType,
             (LoadTestKindDto)c.LoadTest,
             (InspectionResultDto)c.Result,
             (CertificateStateDto)c.State,
             c.Standards, c.StickerNo,
-            c.ChecklistJson, c.FindingsJson, c.PhotosJson,
+            c.ChecklistJson, c.FindingsJson, c.PhotosJson, c.SignaturesJson,
             c.CreatedAtUtc, c.UpdatedAtUtc,
             c.Transitions.OrderBy(t => t.AtUtc).Select(t => t.ToDto()).ToList());
     }
@@ -259,6 +260,7 @@ public sealed class UpdateCertificateHandler : ICommandHandler<UpdateCertificate
         cert.UpdateChecklist(command.Body.ChecklistJson);
         cert.UpdateFindings(command.Body.FindingsJson);
         cert.UpdatePhotos(command.Body.PhotosJson);
+        cert.UpdateSignatures(command.Body.SignaturesJson);
 
         cert.UpdatedAtUtc = _clock.UtcNow;
         cert.UpdatedById = _tenant.UserId;
