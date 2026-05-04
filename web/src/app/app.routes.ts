@@ -99,6 +99,12 @@ export const routes: Routes = [
           import('./features/job-management/pages/surveys.page').then((m) => m.SurveysPage),
       },
       {
+        path: 'reports',
+        canActivate: [roleGuard(Roles.Manager, Roles.Coordinator)],
+        loadComponent: () =>
+          import('./features/reports/reports.page').then((m) => m.ReportsPage),
+      },
+      {
         path: 'admin',
         canActivate: [roleGuard(Roles.Manager)],
         loadComponent: () =>

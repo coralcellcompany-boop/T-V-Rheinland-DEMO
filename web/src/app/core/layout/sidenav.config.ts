@@ -29,5 +29,7 @@ export const PRIMARY_NAV: NavItem[] = [
 ];
 
 export const SECONDARY_NAV: NavItem[] = [
+  { label: 'Reports',       icon: 'pi-chart-line',     route: '/reports',
+    roles: [Roles.Manager, Roles.Coordinator] },
   { label: 'Admin',         icon: 'pi-cog',            route: '/admin', roles: [Roles.Manager] },
 ];

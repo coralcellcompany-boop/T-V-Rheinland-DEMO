@@ -21,6 +21,7 @@ using TuvInspection.Infrastructure.Email;
 using TuvInspection.Infrastructure.Certificates;
 using TuvInspection.Infrastructure.Equipment;
 using TuvInspection.Infrastructure.JobManagement;
+using TuvInspection.Infrastructure.Reports;
 using TuvInspection.Infrastructure.Stickers;
 using TuvInspection.Infrastructure.Identity;
 using TuvInspection.Infrastructure.Outbox;
@@ -144,6 +145,9 @@ public static class InfrastructureModule
         services.AddScoped<JobOrderNoGenerator>();
         services.AddScoped<DwrNoGenerator>();
         services.AddScoped<SurveyNoGenerator>();
+
+        // Reports + Aramco weekly export
+        services.AddScoped<AramcoWeeklyExporter>();
 
         return services;
     }
