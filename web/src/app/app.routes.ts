@@ -78,6 +78,27 @@ export const routes: Routes = [
           import('./features/operator-assessment/pages/assessment-detail.page').then((m) => m.AssessmentDetailPage),
       },
       {
+        path: 'job-requests',
+        canActivate: [roleGuard(Roles.Manager, Roles.Coordinator)],
+        loadComponent: () =>
+          import('./features/job-management/pages/job-requests.page').then((m) => m.JobRequestsPage),
+      },
+      {
+        path: 'job-orders',
+        loadComponent: () =>
+          import('./features/job-management/pages/job-orders.page').then((m) => m.JobOrdersPage),
+      },
+      {
+        path: 'timesheets',
+        loadComponent: () =>
+          import('./features/job-management/pages/timesheets.page').then((m) => m.TimesheetsPage),
+      },
+      {
+        path: 'surveys',
+        loadComponent: () =>
+          import('./features/job-management/pages/surveys.page').then((m) => m.SurveysPage),
+      },
+      {
         path: 'admin',
         canActivate: [roleGuard(Roles.Manager)],
         loadComponent: () =>

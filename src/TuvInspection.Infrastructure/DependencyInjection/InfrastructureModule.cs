@@ -20,6 +20,7 @@ using TuvInspection.Infrastructure.Cqrs;
 using TuvInspection.Infrastructure.Email;
 using TuvInspection.Infrastructure.Certificates;
 using TuvInspection.Infrastructure.Equipment;
+using TuvInspection.Infrastructure.JobManagement;
 using TuvInspection.Infrastructure.Stickers;
 using TuvInspection.Infrastructure.Identity;
 using TuvInspection.Infrastructure.Outbox;
@@ -137,6 +138,12 @@ public static class InfrastructureModule
         // Operator Assessment
         services.AddScoped<AssessmentNoGenerator>();
         services.AddScoped<CompetencyCardNoGenerator>();
+
+        // Job Management
+        services.AddScoped<JobRequestNoGenerator>();
+        services.AddScoped<JobOrderNoGenerator>();
+        services.AddScoped<DwrNoGenerator>();
+        services.AddScoped<SurveyNoGenerator>();
 
         return services;
     }

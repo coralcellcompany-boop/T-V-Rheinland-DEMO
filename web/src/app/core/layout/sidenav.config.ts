@@ -21,6 +21,11 @@ export const PRIMARY_NAV: NavItem[] = [
   { label: 'Candidates',    icon: 'pi-id-card',        route: '/candidates',
     roles: [Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer] },
   { label: 'Assessments',   icon: 'pi-verified',       route: '/assessments' },
+  { label: 'Job Requests',  icon: 'pi-inbox',          route: '/job-requests',
+    roles: [Roles.Manager, Roles.Coordinator] },
+  { label: 'Job Orders',    icon: 'pi-briefcase',      route: '/job-orders' },
+  { label: 'Timesheets',    icon: 'pi-clock',          route: '/timesheets' },
+  { label: 'Surveys',       icon: 'pi-map-marker',     route: '/surveys' },
 ];
 
 export const SECONDARY_NAV: NavItem[] = [

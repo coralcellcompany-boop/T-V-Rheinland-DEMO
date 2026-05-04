@@ -7,8 +7,11 @@ using TuvInspection.Domain.Certificates;
 using TuvInspection.Domain.Clients;
 using TuvInspection.Domain.Identity;
 using TuvInspection.Domain.JobOrders;
+using TuvInspection.Domain.JobRequests;
 using TuvInspection.Domain.Outbox;
 using TuvInspection.Domain.Stickers;
+using TuvInspection.Domain.Surveys;
+using TuvInspection.Domain.Timesheets;
 using TuvInspection.Infrastructure.Identity;
 using EquipmentEntity = TuvInspection.Domain.Equipment.Equipment;
 using EquipmentType = TuvInspection.Domain.Equipment.EquipmentType;
@@ -42,6 +45,9 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Assessment> Assessments => Set<Assessment>();
     public DbSet<AssessmentTransition> AssessmentTransitions => Set<AssessmentTransition>();
     public DbSet<CompetencyCard> CompetencyCards => Set<CompetencyCard>();
+    public DbSet<JobRequest> JobRequests => Set<JobRequest>();
+    public DbSet<DailyWorkReport> DailyWorkReports => Set<DailyWorkReport>();
+    public DbSet<Survey> Surveys => Set<Survey>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -60,6 +66,12 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(c.ClientId));
         builder.Entity<Assessment>().HasQueryFilter(a =>
             _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(a.ClientId));
+        builder.Entity<JobRequest>().HasQueryFilter(r =>
+            _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(r.ClientId));
+        builder.Entity<DailyWorkReport>().HasQueryFilter(d =>
+            _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(d.ClientId));
+        builder.Entity<Survey>().HasQueryFilter(s =>
+            _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(s.ClientId));
     }
 
     public Task<int> SaveChanges(CancellationToken ct) => SaveChangesAsync(ct);
