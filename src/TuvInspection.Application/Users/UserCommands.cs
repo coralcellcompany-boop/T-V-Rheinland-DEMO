@@ -1,0 +1,14 @@
+using TuvInspection.Application.Common.Cqrs;
+using TuvInspection.Contracts.Users;
+
+namespace TuvInspection.Application.Users;
+
+public sealed record ListUsersQuery(string? Search) : IQuery<IReadOnlyList<UserListItemDto>>;
+
+public sealed record GetUserByIdQuery(string Id) : IQuery<UserListItemDto?>;
+
+public sealed record CreateUserCommand(CreateUserRequest Body) : ICommand<UserListItemDto>;
+
+public sealed record UpdateUserCommand(string Id, UpdateUserRequest Body) : ICommand<UserListItemDto>;
+
+public sealed record ResetUserPasswordCommand(string Id, ResetPasswordRequest Body) : ICommand<Unit>;

@@ -1,0 +1,42 @@
+# Local dev infrastructure for TuvInspection.
+# - SQL Server 2022 (no native ARM64 image; runs under Rosetta 2 on Apple Silicon)
+# - MailHog (SMTP capture for outbox/email work in Phase C)
+#
+# Bring up with:  docker compose up -d
+# Connection string for the API:
+#   Server=localhost,1433;Database=TuvInspection;User Id=sa;Password=Tuv_Local_Dev_2026!;TrustServerCertificate=True
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    container_name: tuv-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Tuv_Local_Dev_2026!"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: tuv-mailhog
+    ports:
+      - "1025:1025"   # SMTP
+      - "8025:8025"   # Web UI: http://localhost:8025
+    restart: unless-stopped
+
+volumes:
+  mssql-data:

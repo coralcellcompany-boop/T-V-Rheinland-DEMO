@@ -1,0 +1,33 @@
+namespace TuvInspection.Contracts.Users;
+
+public sealed record UserListItemDto(
+    string Id,
+    string UserName,
+    string? Email,
+    string? FullName,
+    string? SapNo,
+    string? CertNo,
+    bool IsActive,
+    bool IsLockedOut,
+    IReadOnlyList<string> Roles,
+    IReadOnlyList<Guid> AssignedClientIds,
+    DateTime CreatedAtUtc);
+
+public sealed record CreateUserRequest(
+    string Email,
+    string FullName,
+    string? SapNo,
+    string? CertNo,
+    string Password,
+    IReadOnlyList<string> Roles,
+    IReadOnlyList<Guid>? AssignedClientIds);
+
+public sealed record UpdateUserRequest(
+    string FullName,
+    string? SapNo,
+    string? CertNo,
+    bool IsActive,
+    IReadOnlyList<string> Roles,
+    IReadOnlyList<Guid> AssignedClientIds);
+
+public sealed record ResetPasswordRequest(string NewPassword);

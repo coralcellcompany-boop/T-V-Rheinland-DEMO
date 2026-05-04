@@ -1,0 +1,49 @@
+# .NET
+bin/
+obj/
+out/
+*.user
+*.suo
+.vs/
+.vscode/launch.json
+*.pdb
+*.dll.config
+TestResults/
+coverage*/
+*.coverage
+*.coveragexml
+
+# EF Core generated SQL scripts (commit only the ones we ship)
+src/**/Migrations/*.Designer.cs.bak
+
+# JetBrains
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node / Angular
+node_modules/
+web/dist/
+web/.angular/
+web/coverage/
+web/npm-debug.log*
+web/yarn-error.log
+
+# Logs
+logs/
+*.log
+
+# Local secrets
+appsettings.Development.local.json
+appsettings.Local.json
+.env
+.env.local
+
+# Generated API clients (regenerated from OpenAPI)
+web/src/app/shared/api/generated/
+
+# Docker volumes
+.data/

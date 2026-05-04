@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TuvInspection.Api/TuvInspection.Api.csproj" />
+    <Project Path="src/TuvInspection.Application/TuvInspection.Application.csproj" />
+    <Project Path="src/TuvInspection.Contracts/TuvInspection.Contracts.csproj" />
+    <Project Path="src/TuvInspection.Domain/TuvInspection.Domain.csproj" />
+    <Project Path="src/TuvInspection.Infrastructure/TuvInspection.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TuvInspection.ArchitectureTests/TuvInspection.ArchitectureTests.csproj" />
+    <Project Path="tests/TuvInspection.IntegrationTests/TuvInspection.IntegrationTests.csproj" />
+    <Project Path="tests/TuvInspection.UnitTests/TuvInspection.UnitTests.csproj" />
+  </Folder>
+</Solution>

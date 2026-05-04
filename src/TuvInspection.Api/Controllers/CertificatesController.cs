@@ -1,0 +1,81 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TuvInspection.Application.Certificates;
+using TuvInspection.Application.Common.Cqrs;
+using TuvInspection.Contracts.Certificates;
+using TuvInspection.Contracts.Common;
+using TuvInspection.Domain.Identity;
+using TuvInspection.Infrastructure.Certificates;
+
+namespace TuvInspection.Api.Controllers;
+
+[ApiController]
+[Authorize]
+[Route("api/certificates")]
+[Produces("application/json")]
+public class CertificatesController : ControllerBase
+{
+    private readonly IDispatcher _dispatcher;
+    private readonly CertificatePdfRenderer _pdfRenderer;
+
+    public CertificatesController(IDispatcher dispatcher, CertificatePdfRenderer pdfRenderer)
+    {
+        _dispatcher = dispatcher;
+        _pdfRenderer = pdfRenderer;
+    }
+
+    [HttpGet]
+    public Task<PagedResult<CertificateListItemDto>> List(
+        [FromQuery] Guid? clientId,
+        [FromQuery] Guid? equipmentId,
+        [FromQuery] CertificateStateDto? state,
+        [FromQuery] CertificateInspectionTypeDto? inspectionType,
+        [FromQuery] InspectionResultDto? result,
+        [FromQuery] string? search,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 25,
+        CancellationToken ct = default) =>
+        _dispatcher.Query(new ListCertificatesQuery(
+            clientId, equipmentId, state, inspectionType, result, search, page, pageSize), ct);
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<CertificateDetailDto>> GetById(Guid id, CancellationToken ct)
+    {
+        var dto = await _dispatcher.Query(new GetCertificateByIdQuery(id), ct);
+        return dto is null ? NotFound() : Ok(dto);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = $"{Roles.Inspector},{Roles.Manager},{Roles.Coordinator}")]
+    public async Task<ActionResult<CertificateDetailDto>> Create(
+        [FromBody] CreateCertificateRequest body, CancellationToken ct)
+    {
+        var dto = await _dispatcher.Send(new CreateCertificateCommand(body), ct);
+        return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = $"{Roles.Inspector},{Roles.Manager},{Roles.Coordinator}")]
+    public Task<CertificateDetailDto> Update(Guid id, [FromBody] UpdateCertificateRequest body,
+        CancellationToken ct) =>
+        _dispatcher.Send(new UpdateCertificateCommand(id, body), ct);
+
+    [HttpPost("{id:guid}/transitions/{trigger}")]
+    public Task<CertificateDetailDto> Transition(
+        Guid id, string trigger,
+        [FromBody] TransitionRequest? body, CancellationToken ct)
+    {
+        if (!Enum.TryParse<CertificateTriggerDto>(trigger, ignoreCase: true, out var t))
+            throw new ArgumentException($"Unknown trigger '{trigger}'.");
+        return _dispatcher.Send(new FireCertificateTriggerCommand(id, t, body?.Comments), ct);
+    }
+
+    [HttpGet("{id:guid}/pdf")]
+    public async Task<IActionResult> GetPdf(Guid id, CancellationToken ct)
+    {
+        var dto = await _dispatcher.Query(new GetCertificateByIdQuery(id), ct);
+        if (dto is null) return NotFound();
+        var bytes = _pdfRenderer.Render(dto);
+        return File(bytes, "application/pdf", $"{dto.CertificateNo}.pdf");
+    }
+}
