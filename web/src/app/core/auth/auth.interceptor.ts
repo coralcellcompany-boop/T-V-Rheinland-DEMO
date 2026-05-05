@@ -12,8 +12,12 @@ import { AuthService } from './auth.service';
 
 /**
  * Attaches the JWT to outbound requests. On 401, attempts a one-shot refresh and replays the
- * original request; if refresh fails, redirects to /login.
+ * original request; if refresh fails or the retry also returns 401, logs out and redirects to
+ * /login. The X-Retry header guards against infinite refresh loops when the backend rejects
+ * the freshly-minted token (which would otherwise trap the page in an endless spinner).
  */
+const RETRY_HEADER = 'X-Auth-Retry';
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const router = inject(Router);
@@ -23,7 +27,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authed).pipe(
     catchError((err: HttpErrorResponse) => {
-      if (err.status !== 401 || isAuthEndpoint(req)) return throwError(() => err);
+      if (err.status !== 401 || isAuthEndpoint(req) || req.headers.has(RETRY_HEADER)) {
+        // 401 on a retried request means the new token was also rejected — bail out.
+        if (err.status === 401 && req.headers.has(RETRY_HEADER)) {
+          auth.logout();
+          router.navigate(['/login']);
+        }
+        return throwError(() => err);
+      }
       return refreshAndRetry(auth, router, req, next);
     })
   );
@@ -36,7 +47,12 @@ function refreshAndRetry(
   next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> {
   return auth.refresh().pipe(
-    switchMap((res) => next(withBearer(req, res.accessToken))),
+    switchMap((res) => {
+      const retried = req.clone({
+        setHeaders: { Authorization: `Bearer ${res.accessToken}`, [RETRY_HEADER]: '1' },
+      });
+      return next(retried);
+    }),
     catchError((refreshErr) => {
       auth.logout();
       router.navigate(['/login']);
