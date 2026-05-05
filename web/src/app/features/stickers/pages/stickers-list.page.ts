@@ -290,8 +290,10 @@ export class StickersListPage {
 
   constructor() {
     this.refreshSummary();
+    let first = true;
     effect(() => {
       const s = this.searchSig();
+      if (first) { first = false; return; }
       this.refresh(1, this.pageSize(), s);
     });
   }

@@ -226,7 +226,13 @@ export class CandidatesListPage {
       next: (r) => this.clients.set(r.items),
       error: (err) => showHttpError(this.notify, err),
     });
-    effect(() => { const s = this.searchSig(); this.refresh(1, this.pageSize(), s); });
+    // Skip first run — p-table's onLazyLoad covers initial fetch.
+    let first = true;
+    effect(() => {
+      const s = this.searchSig();
+      if (first) { first = false; return; }
+      this.refresh(1, this.pageSize(), s);
+    });
   }
 
   onFilterChange() { this.refresh(1, this.pageSize(), this.searchSig()); }

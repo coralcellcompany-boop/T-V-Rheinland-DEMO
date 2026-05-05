@@ -210,7 +210,12 @@ export class AssessmentsListPage {
       next: (r) => this.candidates.set(r.items),
       error: (err) => showHttpError(this.notify, err),
     });
-    effect(() => { const s = this.searchSig(); this.refresh(1, this.pageSize(), s); });
+    let first = true;
+    effect(() => {
+      const s = this.searchSig();
+      if (first) { first = false; return; }
+      this.refresh(1, this.pageSize(), s);
+    });
   }
 
   onFilterChange() { this.refresh(1, this.pageSize(), this.searchSig()); }
