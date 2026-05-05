@@ -17,7 +17,7 @@ import { PageHeader } from '../../../shared/components/page-header.component';
 import { StatusPill } from '../../../shared/components/status-pill.component';
 import { EmptyState } from '../../../shared/components/empty-state.component';
 
-import { UsersApi } from '../../../core/api/users.api';
+import { UpdateUserLicenseRequest, UserLicense, UsersApi } from '../../../core/api/users.api';
 import { ClientsApi } from '../../../core/api/clients.api';
 import { ClientListItem } from '../../../core/models/client.models';
 import { UserListItem } from '../../../core/models/user.models';
@@ -97,6 +97,8 @@ import { UserForm } from '../components/user-form.component';
               <td class="actions">
                 <p-button icon="pi pi-pencil" severity="secondary" [text]="true" rounded
                   (onClick)="openEdit(u)" pTooltip="Edit" />
+                <p-button icon="pi pi-id-card" severity="secondary" [text]="true" rounded
+                  (onClick)="openLicense(u)" pTooltip="Inspector licence" />
                 <p-button icon="pi pi-key" severity="secondary" [text]="true" rounded
                   (onClick)="openReset(u)" pTooltip="Reset password" />
               </td>
@@ -132,6 +134,59 @@ import { UserForm } from '../components/user-form.component';
           [disabled]="!newPassword || newPassword.length < 12" (onClick)="confirmReset()" />
       </ng-template>
     </p-dialog>
+
+    <p-dialog [(visible)]="licenseDialog" [modal]="true" [style]="{ width: '560px' }"
+      header="Inspector licence" [closable]="!savingLicense()">
+      @if (licenseTarget(); as t) {
+        <p>Licence on file for <strong>{{ t.fullName ?? t.userName }}</strong>.</p>
+        @if (licenseLoading()) {
+          <div class="loader">Loading licence…</div>
+        } @else {
+          <div class="lic-form">
+            <label>Licence number
+              <input pInputText [(ngModel)]="licenseEdit.licenseNumber"
+                placeholder="e.g. SA-INSP-2026-0042" maxlength="80" />
+            </label>
+            <label>Issuing authority
+              <input pInputText [(ngModel)]="licenseEdit.licenseAuthority"
+                placeholder="e.g. SASO / TÜV Rheinland" maxlength="150" />
+            </label>
+            <label>Scope
+              <input pInputText [(ngModel)]="licenseEdit.licenseScope"
+                placeholder="e.g. TPI cranes / Aramco categories CR01–CR04" maxlength="300" />
+            </label>
+            <div class="dates">
+              <label>Valid from
+                <input pInputText type="date" [(ngModel)]="licenseEdit.validFrom" />
+              </label>
+              <label>Valid until
+                <input pInputText type="date" [(ngModel)]="licenseEdit.validUntil" />
+              </label>
+            </div>
+            @if (licenseStatus(); as s) {
+              <div class="lic-status" [class.expired]="!s.isValidNow"
+                [class.warning]="s.isValidNow && (s.daysUntilExpiry ?? 999) <= 30">
+                <i class="pi"
+                  [class.pi-check-circle]="s.isValidNow && (s.daysUntilExpiry ?? 999) > 30"
+                  [class.pi-exclamation-triangle]="s.isValidNow && (s.daysUntilExpiry ?? 999) <= 30"
+                  [class.pi-times-circle]="!s.isValidNow"></i>
+                @if (s.isValidNow) {
+                  Valid · {{ s.daysUntilExpiry }} day(s) until expiry.
+                } @else {
+                  Not valid (no number on file or expiry passed).
+                }
+              </div>
+            }
+          </div>
+        }
+      }
+      <ng-template pTemplate="footer">
+        <p-button severity="secondary" label="Close" (onClick)="closeLicense()"
+          [disabled]="savingLicense()" />
+        <p-button label="Save" icon="pi pi-save" [loading]="savingLicense()"
+          (onClick)="saveLicense()" />
+      </ng-template>
+    </p-dialog>
   `,
   styles: [
     `
@@ -150,6 +205,18 @@ import { UserForm } from '../components/user-form.component';
       .chip[data-role='Coordinator']  { background: #e0f2fe; color: #075985; border-color: #bae6fd; }
       .chip[data-role='Inspector']    { background: #dcfce7; color: #047857; border-color: #86efac; }
       .chip[data-role='TechReviewer'] { background: #f3e8ff; color: #6d28d9; border-color: #e9d5ff; }
+      .lic-form { display: flex; flex-direction: column; gap: 0.6rem; padding: 0.5rem 0; }
+      .lic-form label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.78rem; color: #475569; font-weight: 500; }
+      .lic-form input { width: 100%; }
+      .lic-form .dates { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+      .lic-status {
+        display: flex; gap: 0.45rem; align-items: center;
+        padding: 0.55rem 0.7rem; border-radius: 8px;
+        background: #ecfdf5; color: #065f46; font-size: 0.85rem;
+      }
+      .lic-status .pi { font-size: 1rem; }
+      .lic-status.warning { background: #fef3c7; color: #92400e; }
+      .lic-status.expired { background: #fee2e2; color: #991b1b; }
       .chip[data-role='ClientUser']   { background: #fee2e2; color: #b91c1c; border-color: #fca5a5; }
       .actions { display: flex; gap: 0.2rem; }
 
@@ -185,6 +252,13 @@ export class UsersAdminPage {
   protected newPassword = '';
   protected resetting = signal(false);
 
+  protected licenseDialog = false;
+  protected licenseTarget = signal<UserListItem | null>(null);
+  protected licenseLoading = signal(false);
+  protected savingLicense = signal(false);
+  protected licenseEdit: UpdateUserLicenseRequest = blankLicense();
+  protected licenseStatus = signal<UserLicense | null>(null);
+
   constructor() {
     this.api.roles().subscribe({ next: (r) => this.roles.set(r) });
     this.clientsApi.list({ pageSize: 200 }).subscribe({
@@ -209,6 +283,51 @@ export class UsersAdminPage {
   openNew() { this.editing.set(null); this.drawerOpen = true; }
   openEdit(u: UserListItem) { this.editing.set(u); this.drawerOpen = true; }
   closeDrawer() { this.drawerOpen = false; this.editing.set(null); }
+
+  openLicense(u: UserListItem) {
+    this.licenseTarget.set(u);
+    this.licenseEdit = blankLicense();
+    this.licenseStatus.set(null);
+    this.licenseDialog = true;
+    this.licenseLoading.set(true);
+    this.api.getLicense(u.id).subscribe({
+      next: (l) => {
+        this.licenseLoading.set(false);
+        this.licenseStatus.set(l);
+        this.licenseEdit = {
+          licenseNumber: l.licenseNumber,
+          licenseAuthority: l.licenseAuthority,
+          licenseScope: l.licenseScope,
+          validFrom: l.validFrom,
+          validUntil: l.validUntil,
+        };
+      },
+      error: (err) => { this.licenseLoading.set(false); showHttpError(this.notify, err); },
+    });
+  }
+
+  closeLicense() {
+    this.licenseDialog = false;
+    this.licenseTarget.set(null);
+    this.licenseEdit = blankLicense();
+  }
+
+  saveLicense() {
+    const t = this.licenseTarget();
+    if (!t) return;
+    this.savingLicense.set(true);
+    this.api.updateLicense(t.id, this.licenseEdit).subscribe({
+      next: (l) => {
+        this.savingLicense.set(false);
+        this.licenseStatus.set(l);
+        this.notify.success('Licence saved.');
+      },
+      error: (err) => {
+        this.savingLicense.set(false);
+        showHttpError(this.notify, err);
+      },
+    });
+  }
 
   onSave(payload: any) {
     const editing = this.editing();
@@ -261,4 +380,14 @@ export class UsersAdminPage {
       },
     });
   }
+}
+
+function blankLicense(): UpdateUserLicenseRequest {
+  return {
+    licenseNumber: null,
+    licenseAuthority: null,
+    licenseScope: null,
+    validFrom: null,
+    validUntil: null,
+  };
 }

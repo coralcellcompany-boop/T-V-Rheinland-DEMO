@@ -35,6 +35,8 @@ export interface StickerStockSummary {
   issued: number;
   voided: number;
   expired: number;
+  lowStockThreshold: number;
+  isLowStock: boolean;
 }
 
 export interface StickerPublicView {

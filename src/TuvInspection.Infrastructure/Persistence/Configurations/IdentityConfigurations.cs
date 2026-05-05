@@ -13,6 +13,9 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
         e.Property(x => x.SapNo).HasMaxLength(50);
         e.Property(x => x.CertNo).HasMaxLength(50);
         e.Property(x => x.AssignedClientIdsCsv).HasMaxLength(4000).IsRequired();
+        e.Property(x => x.LicenseNumber).HasMaxLength(80);
+        e.Property(x => x.LicenseAuthority).HasMaxLength(150);
+        e.Property(x => x.LicenseScope).HasMaxLength(300);
     }
 }
 

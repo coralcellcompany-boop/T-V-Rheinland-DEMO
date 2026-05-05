@@ -38,4 +38,30 @@ export class UsersApi {
   roles(): Observable<string[]> {
     return this.http.get<string[]>(`${this.base}/roles`);
   }
+
+  getLicense(id: string): Observable<UserLicense> {
+    return this.http.get<UserLicense>(`${this.base}/${id}/license`);
+  }
+
+  updateLicense(id: string, body: UpdateUserLicenseRequest): Observable<UserLicense> {
+    return this.http.put<UserLicense>(`${this.base}/${id}/license`, body);
+  }
+}
+
+export interface UserLicense {
+  licenseNumber: string | null;
+  licenseAuthority: string | null;
+  licenseScope: string | null;
+  validFrom: string | null;
+  validUntil: string | null;
+  isValidNow: boolean;
+  daysUntilExpiry: number | null;
+}
+
+export interface UpdateUserLicenseRequest {
+  licenseNumber: string | null;
+  licenseAuthority: string | null;
+  licenseScope: string | null;
+  validFrom: string | null;
+  validUntil: string | null;
 }

@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { DrawerModule } from 'primeng/drawer';
+import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 import { catchError, debounceTime, distinctUntilChanged, of, Subject, switchMap } from 'rxjs';
@@ -42,6 +43,7 @@ import { ClientForm } from '../components/client-form.component';
     IconFieldModule,
     InputIconModule,
     DrawerModule,
+    DialogModule,
     PageHeader,
     StatusPill,
     EmptyState,
@@ -57,10 +59,38 @@ import { ClientForm } from '../components/client-form.component';
         <input pInputText placeholder="Search by name or code"
           [(ngModel)]="searchInput" (ngModelChange)="search$.next($event)" />
       </p-iconfield>
+      <p-button *ngIf="canEdit()" icon="pi pi-upload" severity="secondary"
+        [outlined]="true" label="Import"
+        (onClick)="openImport()" />
       <p-button *ngIf="canEdit()"
         icon="pi pi-plus" label="New client"
         (onClick)="openNew()" />
     </tuv-page-header>
+
+    <p-dialog [(visible)]="importOpen" [modal]="true" [style]="{ width: '460px' }"
+      header="Import clients from Excel" [closable]="!importing()">
+      <div class="form">
+        <p>The first row must be the header. Required columns:
+          <code>Name</code>, <code>Code</code>. Optional: <code>Address</code>,
+          <code>ContactName</code>, <code>ContactPhone</code>, <code>ContactEmail</code>.
+          Existing client codes are skipped.</p>
+        <input type="file" accept=".xlsx" (change)="onImportFileChange($event)" />
+        @if (importResult(); as r) {
+          <div class="result">
+            <strong>Imported {{ r.imported }}</strong>, skipped {{ r.skipped }}.
+            @if (r.errors.length) {
+              <ul>
+                @for (e of r.errors.slice(0, 10); track e) { <li>{{ e }}</li> }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button severity="secondary" label="Close"
+          (onClick)="importOpen = false" [disabled]="importing()" />
+      </ng-template>
+    </p-dialog>
 
     <div class="card">
       @if (loading()) {
@@ -178,6 +208,10 @@ export class ClientsListPage {
   protected drawerOpen = false;
   protected editing = signal<ClientDetail | null>(null);
 
+  protected importOpen = false;
+  protected importing = signal(false);
+  protected importResult = signal<{ imported: number; skipped: number; errors: string[] } | null>(null);
+
   protected canEdit = () => this.auth.hasRole(Roles.Manager);
   protected contractStatusLabel = (s: number) => ContractStatusLabel[s] ?? 'Unknown';
   protected hasService = (c: ClientListItem, bit: number) => (c.allowedServices & bit) !== 0;
@@ -215,6 +249,34 @@ export class ClientsListPage {
   openNew() {
     this.editing.set(null);
     this.drawerOpen = true;
+  }
+
+  openImport() {
+    this.importResult.set(null);
+    this.importOpen = true;
+  }
+
+  onImportFileChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.importing.set(true);
+    this.api.import(file).subscribe({
+      next: (r) => {
+        this.importing.set(false);
+        this.importResult.set(r);
+        if (r.imported > 0) {
+          this.notify.success(`Imported ${r.imported} client(s).`);
+          this.refresh(1, this.pageSize(), this.searchSig());
+        }
+        input.value = '';
+      },
+      error: (err) => {
+        this.importing.set(false);
+        showHttpError(this.notify, err);
+        input.value = '';
+      },
+    });
   }
 
   openEdit(row: ClientListItem) {

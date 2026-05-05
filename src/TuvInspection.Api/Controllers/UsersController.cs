@@ -49,4 +49,16 @@ public class UsersController : ControllerBase
 
     [HttpGet("roles")]
     public ActionResult<IReadOnlyList<string>> GetRoles() => Ok(TuvInspection.Domain.Identity.Roles.All);
+
+    [HttpGet("{id}/license")]
+    public async Task<ActionResult<UserLicenseDto>> GetLicense(string id, CancellationToken ct)
+    {
+        var dto = await _dispatcher.Query(new GetUserLicenseQuery(id), ct);
+        return dto is null ? NotFound() : Ok(dto);
+    }
+
+    [HttpPut("{id}/license")]
+    public Task<UserLicenseDto> UpdateLicense(string id,
+        [FromBody] UpdateUserLicenseRequest body, CancellationToken ct) =>
+        _dispatcher.Send(new UpdateUserLicenseCommand(id, body), ct);
 }

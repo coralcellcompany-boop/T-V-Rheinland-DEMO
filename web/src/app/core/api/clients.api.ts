@@ -38,4 +38,11 @@ export class ClientsApi {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.base}/${id}`);
   }
+
+  import(file: File): Observable<{ imported: number; skipped: number; errors: string[] }> {
+    const fd = new FormData();
+    fd.append('file', file);
+    return this.http.post<{ imported: number; skipped: number; errors: string[] }>(
+      `${this.base}/import`, fd);
+  }
 }

@@ -4,7 +4,9 @@ using TuvInspection.Application.Assessments;
 using TuvInspection.Application.Common.Cqrs;
 using TuvInspection.Contracts.Assessments;
 using TuvInspection.Contracts.Common;
+using TuvInspection.Contracts.Equipment;
 using TuvInspection.Domain.Identity;
+using TuvInspection.Infrastructure.Assessments;
 
 namespace TuvInspection.Api.Controllers;
 
@@ -15,7 +17,12 @@ namespace TuvInspection.Api.Controllers;
 public class CandidatesController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
-    public CandidatesController(IDispatcher dispatcher) => _dispatcher = dispatcher;
+    private readonly CandidateImportService _importer;
+    public CandidatesController(IDispatcher dispatcher, CandidateImportService importer)
+    {
+        _dispatcher = dispatcher;
+        _importer = importer;
+    }
 
     [HttpGet]
     public Task<PagedResult<CandidateListItemDto>> List(
@@ -47,4 +54,16 @@ public class CandidatesController : ControllerBase
     public Task<CandidateDetailDto> Update(Guid id, [FromBody] UpdateCandidateRequest body,
         CancellationToken ct) =>
         _dispatcher.Send(new UpdateCandidateCommand(id, body), ct);
+
+    [HttpPost("import")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+    [RequestSizeLimit(10 * 1024 * 1024)]
+    public async Task<ActionResult<EquipmentImportResult>> Import(
+        [FromQuery] Guid clientId, IFormFile file, CancellationToken ct)
+    {
+        if (file is null || file.Length == 0) return BadRequest("No file uploaded.");
+        await using var stream = file.OpenReadStream();
+        var result = await _importer.Import(clientId, stream, ct);
+        return Ok(result);
+    }
 }

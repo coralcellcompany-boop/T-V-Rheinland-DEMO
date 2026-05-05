@@ -195,3 +195,62 @@ public sealed class ResetUserPasswordHandler : ICommandHandler<ResetUserPassword
         return Unit.Value;
     }
 }
+
+public sealed class GetUserLicenseHandler : IQueryHandler<GetUserLicenseQuery, UserLicenseDto?>
+{
+    private readonly UserManager<ApplicationUser> _users;
+    private readonly IClock _clock;
+    public GetUserLicenseHandler(UserManager<ApplicationUser> users, IClock clock)
+    { _users = users; _clock = clock; }
+
+    public async Task<UserLicenseDto?> Handle(GetUserLicenseQuery q, CancellationToken ct)
+    {
+        var u = await _users.FindByIdAsync(q.Id);
+        return u is null ? null : ToDto(u, _clock);
+    }
+
+    public static UserLicenseDto ToDto(ApplicationUser u, IClock clock)
+    {
+        var today = DateOnly.FromDateTime(clock.UtcNow);
+        var isValid = u.LicenseValidUntil is { } until
+            && (u.LicenseValidFrom is null || u.LicenseValidFrom.Value <= today)
+            && until >= today
+            && !string.IsNullOrWhiteSpace(u.LicenseNumber);
+        var days = u.LicenseValidUntil is { } d ? d.DayNumber - today.DayNumber : (int?)null;
+        return new UserLicenseDto(
+            u.LicenseNumber, u.LicenseAuthority, u.LicenseScope,
+            u.LicenseValidFrom, u.LicenseValidUntil, isValid, days);
+    }
+}
+
+public sealed class UpdateUserLicenseHandler : ICommandHandler<UpdateUserLicenseCommand, UserLicenseDto>
+{
+    private readonly UserManager<ApplicationUser> _users;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+    public UpdateUserLicenseHandler(UserManager<ApplicationUser> users, ITenantContext tenant, IClock clock)
+    { _users = users; _tenant = tenant; _clock = clock; }
+
+    public async Task<UserLicenseDto> Handle(UpdateUserLicenseCommand command, CancellationToken ct)
+    {
+        if (!_tenant.IsInRole(Roles.Manager))
+            throw new UnauthorizedAccessException("Only Manager may edit licence information.");
+
+        var u = await _users.FindByIdAsync(command.Id)
+            ?? throw new KeyNotFoundException($"User {command.Id} not found.");
+
+        if (command.Body.ValidFrom is { } from && command.Body.ValidUntil is { } until && until < from)
+            throw new ArgumentException("Licence valid-until must be on or after valid-from.");
+
+        u.LicenseNumber = string.IsNullOrWhiteSpace(command.Body.LicenseNumber) ? null : command.Body.LicenseNumber.Trim();
+        u.LicenseAuthority = string.IsNullOrWhiteSpace(command.Body.LicenseAuthority) ? null : command.Body.LicenseAuthority.Trim();
+        u.LicenseScope = string.IsNullOrWhiteSpace(command.Body.LicenseScope) ? null : command.Body.LicenseScope.Trim();
+        u.LicenseValidFrom = command.Body.ValidFrom;
+        u.LicenseValidUntil = command.Body.ValidUntil;
+
+        var result = await _users.UpdateAsync(u);
+        if (!result.Succeeded) throw new ArgumentException(CreateUserHandler.JoinErrors(result));
+
+        return GetUserLicenseHandler.ToDto(u, _clock);
+    }
+}

@@ -13,6 +13,13 @@ public class ApplicationUser : IdentityUser
 
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+
+    // ── Inspector licence (SRS §6 H7) ────────────────────────────────────────
+    public string? LicenseNumber { get; set; }
+    public string? LicenseAuthority { get; set; }
+    public string? LicenseScope { get; set; }
+    public DateOnly? LicenseValidFrom { get; set; }
+    public DateOnly? LicenseValidUntil { get; set; }
 }
 
 public class ApplicationRole : IdentityRole

@@ -125,8 +125,10 @@ public static class InfrastructureModule
         services.AddHostedService<OutboxProcessor>();
         services.AddScoped<IOutboxMessageHandler<ClientSentCertificateEmail>, ClientSentEmailHandler>();
 
-        // Excel import service
+        // Excel import services
         services.AddScoped<EquipmentImportService>();
+        services.AddScoped<TuvInspection.Infrastructure.Clients.ClientImportService>();
+        services.AddScoped<TuvInspection.Infrastructure.Assessments.CandidateImportService>();
 
         // Certificate number generator + PDF renderer
         services.AddScoped<CertificateNoGenerator>();

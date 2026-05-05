@@ -34,6 +34,13 @@ export class CandidatesApi {
   get(id: string): Observable<CandidateDetail> { return this.http.get<CandidateDetail>(`${this.base}/${id}`); }
   create(body: CreateCandidateRequest): Observable<CandidateDetail> { return this.http.post<CandidateDetail>(this.base, body); }
   update(id: string, body: UpdateCandidateRequest): Observable<CandidateDetail> { return this.http.put<CandidateDetail>(`${this.base}/${id}`, body); }
+
+  import(clientId: string, file: File): Observable<{ imported: number; skipped: number; errors: string[] }> {
+    const fd = new FormData();
+    fd.append('file', file);
+    return this.http.post<{ imported: number; skipped: number; errors: string[] }>(
+      `${this.base}/import?clientId=${encodeURIComponent(clientId)}`, fd);
+  }
 }
 
 @Injectable({ providedIn: 'root' })

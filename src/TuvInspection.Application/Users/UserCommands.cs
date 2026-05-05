@@ -12,3 +12,7 @@ public sealed record CreateUserCommand(CreateUserRequest Body) : ICommand<UserLi
 public sealed record UpdateUserCommand(string Id, UpdateUserRequest Body) : ICommand<UserListItemDto>;
 
 public sealed record ResetUserPasswordCommand(string Id, ResetPasswordRequest Body) : ICommand<Unit>;
+
+public sealed record GetUserLicenseQuery(string Id) : IQuery<UserLicenseDto?>;
+
+public sealed record UpdateUserLicenseCommand(string Id, UpdateUserLicenseRequest Body) : ICommand<UserLicenseDto>;

@@ -4,7 +4,9 @@ using TuvInspection.Application.Clients;
 using TuvInspection.Application.Common.Cqrs;
 using TuvInspection.Contracts.Clients;
 using TuvInspection.Contracts.Common;
+using TuvInspection.Contracts.Equipment;
 using TuvInspection.Domain.Identity;
+using TuvInspection.Infrastructure.Clients;
 
 namespace TuvInspection.Api.Controllers;
 
@@ -15,7 +17,12 @@ namespace TuvInspection.Api.Controllers;
 public class ClientsController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
-    public ClientsController(IDispatcher dispatcher) => _dispatcher = dispatcher;
+    private readonly ClientImportService _importer;
+    public ClientsController(IDispatcher dispatcher, ClientImportService importer)
+    {
+        _dispatcher = dispatcher;
+        _importer = importer;
+    }
 
     [HttpGet]
     public Task<PagedResult<ClientListItemDto>> List(
@@ -52,5 +59,16 @@ public class ClientsController : ControllerBase
     {
         await _dispatcher.Send(new DeleteClientCommand(id), ct);
         return NoContent();
+    }
+
+    [HttpPost("import")]
+    [Authorize(Roles = Roles.Manager)]
+    [RequestSizeLimit(10 * 1024 * 1024)]
+    public async Task<ActionResult<EquipmentImportResult>> Import(IFormFile file, CancellationToken ct)
+    {
+        if (file is null || file.Length == 0) return BadRequest("No file uploaded.");
+        await using var stream = file.OpenReadStream();
+        var result = await _importer.Import(stream, ct);
+        return Ok(result);
     }
 }

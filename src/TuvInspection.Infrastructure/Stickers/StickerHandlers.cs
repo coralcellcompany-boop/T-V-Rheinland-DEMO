@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
 using TuvInspection.Application.Common.Time;
@@ -63,7 +64,9 @@ public sealed class GetStickerStockSummaryHandler
     : IQueryHandler<GetStickerStockSummaryQuery, StickerStockSummaryDto>
 {
     private readonly AppDbContext _db;
-    public GetStickerStockSummaryHandler(AppDbContext db) => _db = db;
+    private readonly Microsoft.Extensions.Configuration.IConfiguration _config;
+    public GetStickerStockSummaryHandler(AppDbContext db, Microsoft.Extensions.Configuration.IConfiguration config)
+    { _db = db; _config = config; }
 
     public async Task<StickerStockSummaryDto> Handle(GetStickerStockSummaryQuery q, CancellationToken ct)
     {
@@ -72,11 +75,20 @@ public sealed class GetStickerStockSummaryHandler
             .Select(g => new { g.Key, Count = g.Count() })
             .ToListAsync(ct);
         int Get(StickerState s) => counts.FirstOrDefault(c => c.Key == s)?.Count ?? 0;
+        var unallocated = Get(StickerState.Unallocated);
+
+        // Threshold is configurable so a contract that ramps up sticker volumes can raise it
+        // without a code change. Default 50 — small enough that the team has time to procure
+        // a fresh batch before approvals start failing.
+        var threshold = _config.GetValue<int?>("Stickers:LowStockThreshold") ?? 50;
+
         return new StickerStockSummaryDto(
-            Get(StickerState.Unallocated),
+            unallocated,
             Get(StickerState.Issued),
             Get(StickerState.Voided),
-            Get(StickerState.Expired));
+            Get(StickerState.Expired),
+            threshold,
+            unallocated <= threshold);
     }
 }
 

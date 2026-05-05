@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { DrawerModule } from 'primeng/drawer';
+import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
@@ -32,14 +33,45 @@ import { CandidateForm } from '../components/candidate-form.component';
   imports: [
     CommonModule, FormsModule, DatePipe,
     ButtonModule, TableModule, InputTextModule, IconFieldModule, InputIconModule,
-    DrawerModule, SelectModule, TooltipModule,
+    DrawerModule, DialogModule, SelectModule, TooltipModule,
     PageHeader, StatusPill, EmptyState, CandidateForm,
   ],
   template: `
     <tuv-page-header title="Candidates" icon="pi-id-card"
       subtitle="Operator registry. Each candidate can hold one or more competency assessments and cards.">
+      <p-button *ngIf="canEdit()" icon="pi pi-upload" severity="secondary" [outlined]="true"
+        label="Import" (onClick)="openImport()" />
       <p-button *ngIf="canEdit()" icon="pi pi-plus" label="New candidate" (onClick)="openNew()" />
     </tuv-page-header>
+
+    <p-dialog [(visible)]="importOpen" [modal]="true" [style]="{ width: '480px' }"
+      header="Import candidates from Excel" [closable]="!importing()">
+      <div class="form">
+        <p>Pick the client to import into:</p>
+        <p-select [options]="clientOptions()" optionLabel="label" optionValue="value"
+          [(ngModel)]="importClient" placeholder="Select client" appendTo="body" />
+        <p>The first row must be the header. Required columns: <code>FullName</code>,
+          <code>IdNumber</code>. Optional: <code>Phone</code>, <code>Email</code>,
+          <code>EmployeeNo</code>, <code>Nationality</code>, <code>DateOfBirth</code>.
+          Existing IdNumbers are skipped.</p>
+        <input type="file" accept=".xlsx" (change)="onImportFileChange($event)"
+          [disabled]="!importClient || importing()" />
+        @if (importResult(); as r) {
+          <div class="result">
+            <strong>Imported {{ r.imported }}</strong>, skipped {{ r.skipped }}.
+            @if (r.errors.length) {
+              <ul>
+                @for (e of r.errors.slice(0, 10); track e) { <li>{{ e }}</li> }
+              </ul>
+            }
+          </div>
+        }
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button severity="secondary" label="Close"
+          (onClick)="importOpen = false" [disabled]="importing()" />
+      </ng-template>
+    </p-dialog>
 
     <div class="filters">
       <p-iconfield iconPosition="left" class="grow">
@@ -153,8 +185,41 @@ export class CandidatesListPage {
   protected drawerOpen = false;
   protected editing = signal<CandidateDetail | null>(null);
 
+  protected importOpen = false;
+  protected importing = signal(false);
+  protected importClient: string | null = null;
+  protected importResult = signal<{ imported: number; skipped: number; errors: string[] } | null>(null);
+
   protected canEdit = () =>
     this.auth.hasRole(Roles.Manager) || this.auth.hasRole(Roles.Coordinator);
+
+  openImport() {
+    this.importResult.set(null);
+    this.importClient = this.filterClient;
+    this.importOpen = true;
+  }
+
+  onImportFileChange(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file || !this.importClient) return;
+    this.importing.set(true);
+    this.api.import(this.importClient, file).subscribe({
+      next: (r) => {
+        this.importing.set(false);
+        this.importResult.set(r);
+        if (r.imported > 0) {
+          this.notify.success(`Imported ${r.imported} candidate(s).`);
+        }
+        input.value = '';
+      },
+      error: (err) => {
+        this.importing.set(false);
+        showHttpError(this.notify, err);
+        input.value = '';
+      },
+    });
+  }
 
   constructor() {
     this.clientsApi.list({ pageSize: 200 }).subscribe({

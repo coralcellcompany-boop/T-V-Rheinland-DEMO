@@ -31,3 +31,19 @@ public sealed record UpdateUserRequest(
     IReadOnlyList<Guid> AssignedClientIds);
 
 public sealed record ResetPasswordRequest(string NewPassword);
+
+public sealed record UserLicenseDto(
+    string? LicenseNumber,
+    string? LicenseAuthority,
+    string? LicenseScope,
+    DateOnly? ValidFrom,
+    DateOnly? ValidUntil,
+    bool IsValidNow,
+    int? DaysUntilExpiry);
+
+public sealed record UpdateUserLicenseRequest(
+    string? LicenseNumber,
+    string? LicenseAuthority,
+    string? LicenseScope,
+    DateOnly? ValidFrom,
+    DateOnly? ValidUntil);

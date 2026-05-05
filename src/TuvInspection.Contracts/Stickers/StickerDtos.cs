@@ -27,7 +27,9 @@ public sealed record StickerStockSummaryDto(
     int Unallocated,
     int Issued,
     int Voided,
-    int Expired);
+    int Expired,
+    int LowStockThreshold,
+    bool IsLowStock);
 
 public sealed record ProcureStockRequest(int Count);
 

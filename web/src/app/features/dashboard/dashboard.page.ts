@@ -1,9 +1,12 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DashboardApi } from '../../core/api/certificates.api';
+import { StickersApi } from '../../core/api/stickers.api';
+import { StickerStockSummary } from '../../core/models/sticker.models';
 import { AuthService } from '../../core/auth/auth.service';
+import { Roles } from '../../core/models/auth.models';
 import { DashboardKpis, RecentActivityItem } from '../../core/models/certificate.models';
 import { KpiCard } from '../../shared/components/kpi-card.component';
 import { PageHeader } from '../../shared/components/page-header.component';
@@ -13,7 +16,7 @@ import { showHttpError } from '../../shared/services/api-error.handler';
 @Component({
   selector: 'tuv-dashboard',
   standalone: true,
-  imports: [CommonModule, DatePipe, ButtonModule, KpiCard, PageHeader],
+  imports: [CommonModule, DatePipe, RouterLink, ButtonModule, KpiCard, PageHeader],
   template: `
     <section class="hero">
       <div class="msg">
@@ -27,6 +30,19 @@ import { showHttpError } from '../../shared/services/api-error.handler';
           (onClick)="go('/approvals')" />
       </div>
     </section>
+
+    @if (showLowStock()) {
+      <div class="alert alert-warn">
+        <i class="pi pi-exclamation-triangle"></i>
+        <div class="alert-body">
+          <strong>Sticker stock is low.</strong>
+          Only {{ stickerSummary()?.unallocated }} unallocated sticker<ng-container *ngIf="stickerSummary()?.unallocated !== 1">s</ng-container>
+          remaining (threshold {{ stickerSummary()?.lowStockThreshold }}).
+          Procure a fresh batch before approvals start failing.
+        </div>
+        <a routerLink="/stickers" class="alert-action">Open sticker register →</a>
+      </div>
+    }
 
     <h2 class="section-title">Snapshot</h2>
     <div class="kpis">
@@ -100,6 +116,19 @@ import { showHttpError } from '../../shared/services/api-error.handler';
       .hero p  { margin: 0.4rem 0 0; opacity: 0.85; font-size: 0.95rem; }
       .hero-actions { display: flex; gap: 0.55rem; z-index: 1; }
 
+      .alert {
+        display: flex; align-items: center; gap: 0.8rem; padding: 0.85rem 1.1rem;
+        margin-bottom: 1rem; border-radius: 12px; font-size: 0.9rem;
+      }
+      .alert .pi { font-size: 1.3rem; }
+      .alert-warn { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
+      .alert-warn .pi { color: #b45309; }
+      .alert-body { flex: 1; }
+      .alert-action {
+        color: #b45309; font-weight: 600; text-decoration: none; white-space: nowrap;
+      }
+      .alert-action:hover { text-decoration: underline; }
+
       .section-title {
         font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
         letter-spacing: 0.08em; color: #475569; margin: 1.3rem 0 0.7rem 0;
@@ -140,6 +169,7 @@ import { showHttpError } from '../../shared/services/api-error.handler';
 })
 export class DashboardPage {
   private api = inject(DashboardApi);
+  private stickersApi = inject(StickersApi);
   protected auth = inject(AuthService);
   private notify = inject(NotifyService);
   private router = inject(Router);
@@ -148,6 +178,13 @@ export class DashboardPage {
   protected activityLoading = signal(true);
   protected kpis = signal<DashboardKpis | null>(null);
   protected activity = signal<RecentActivityItem[]>([]);
+  protected stickerSummary = signal<StickerStockSummary | null>(null);
+
+  protected showLowStock = () => {
+    const s = this.stickerSummary();
+    if (!s || !s.isLowStock) return false;
+    return this.auth.hasRole(Roles.Manager) || this.auth.hasRole(Roles.Coordinator);
+  };
 
   protected firstName = () => {
     const fn = this.auth.user()?.fullName ?? this.auth.user()?.userName ?? '';
@@ -171,6 +208,12 @@ export class DashboardPage {
       next: (a) => { this.activity.set(a); this.activityLoading.set(false); },
       error: (err) => { this.activityLoading.set(false); showHttpError(this.notify, err); },
     });
+    if (this.auth.hasRole(Roles.Manager) || this.auth.hasRole(Roles.Coordinator)) {
+      this.stickersApi.stockSummary().subscribe({
+        next: (s) => this.stickerSummary.set(s),
+        error: () => { /* keep dashboard usable even if low-stock probe fails */ },
+      });
+    }
   }
 
   protected humanize(name: string): string {
