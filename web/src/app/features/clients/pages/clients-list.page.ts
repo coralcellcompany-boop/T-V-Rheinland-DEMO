@@ -217,7 +217,7 @@ export class ClientsListPage {
   protected hasService = (c: ClientListItem, bit: number) => (c.allowedServices & bit) !== 0;
 
   constructor() {
-    // Refetch when search changes. Skip first run — p-table's onLazyLoad covers init.
+    this.refresh(1, this.pageSize(), '');
     let first = true;
     effect(() => {
       const s = this.searchSig();

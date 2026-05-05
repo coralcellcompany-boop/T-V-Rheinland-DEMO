@@ -264,8 +264,7 @@ export class CertificatesListPage {
       error: (err) => showHttpError(this.notify, err),
     });
 
-    // Skip the first effect run — p-table's onLazyLoad fires the initial fetch. After
-    // that, every search-debounce update flows through this effect.
+    this.refresh(1, this.pageSize(), '');
     let first = true;
     effect(() => {
       const s = this.searchSig();

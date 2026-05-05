@@ -210,6 +210,7 @@ export class AssessmentsListPage {
       next: (r) => this.candidates.set(r.items),
       error: (err) => showHttpError(this.notify, err),
     });
+    this.refresh(1, this.pageSize(), '');
     let first = true;
     effect(() => {
       const s = this.searchSig();

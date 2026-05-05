@@ -290,6 +290,7 @@ export class StickersListPage {
 
   constructor() {
     this.refreshSummary();
+    this.refresh(1, this.pageSize(), '');
     let first = true;
     effect(() => {
       const s = this.searchSig();

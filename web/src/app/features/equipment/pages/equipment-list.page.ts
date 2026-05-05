@@ -280,7 +280,7 @@ export class EquipmentListPage {
       error: (err) => showHttpError(this.notify, err),
     });
 
-    // Skip first run — p-table's onLazyLoad fires the initial fetch.
+    this.refresh(1, this.pageSize(), '');
     let first = true;
     effect(() => {
       const s = this.searchSig();
