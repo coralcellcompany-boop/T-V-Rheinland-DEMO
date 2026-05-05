@@ -43,6 +43,7 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public DbSet<Sticker> Stickers => Set<Sticker>();
+    public DbSet<StickerRequest> StickerRequests => Set<StickerRequest>();
     public DbSet<Candidate> Candidates => Set<Candidate>();
     public DbSet<Assessment> Assessments => Set<Assessment>();
     public DbSet<AssessmentTransition> AssessmentTransitions => Set<AssessmentTransition>();

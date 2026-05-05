@@ -16,10 +16,28 @@ export const StickerStateName: Record<number, string> = {
   5: 'Expired',
 };
 
+export const StickerColor = { Blue: 0, Green: 1, Red: 2, White: 3 } as const;
+export const StickerColorName: Record<number, string> = {
+  0: 'Blue', 1: 'Green', 2: 'Red', 3: 'White',
+};
+export const StickerColorHex: Record<number, string> = {
+  0: '#1d4ed8', 1: '#15803d', 2: '#b91c1c', 3: '#cbd5e1',
+};
+
+export const StickerRequestState = {
+  Pending: 0, Approved: 1, Rejected: 2, Cancelled: 3,
+} as const;
+export const StickerRequestStateName: Record<number, string> = {
+  0: 'Pending', 1: 'Approved', 2: 'Rejected', 3: 'Cancelled',
+};
+
 export interface StickerListItem {
   id: string;
   stickerNo: string;
   state: number;
+  color: number;
+  assignedToInspectorId: string | null;
+  assignedToInspectorName: string | null;
   clientId: string | null;
   clientName: string | null;
   issuedToCertificateId: string | null;

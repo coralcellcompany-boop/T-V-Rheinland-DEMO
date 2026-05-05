@@ -6,16 +6,20 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { PageHeader } from '../../../shared/components/page-header.component';
 import { StatusPill } from '../../../shared/components/status-pill.component';
 import { EmptyState } from '../../../shared/components/empty-state.component';
 import { JobOrdersApi } from '../../../core/api/job-management.api';
 import { ClientsApi } from '../../../core/api/clients.api';
+import { UsersApi } from '../../../core/api/users.api';
 import {
-  JobOrderListItem, JobOrderStatusName, ServiceType, ServiceTypeLabel,
+  JobOrderDetail, JobOrderListItem, JobOrderStatusName, ServiceType, ServiceTypeLabel,
 } from '../../../core/models/job-management.models';
 import { ClientListItem } from '../../../core/models/client.models';
+import { UserListItem } from '../../../core/models/user.models';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Roles } from '../../../core/models/auth.models';
 import { NotifyService } from '../../../shared/services/notify.service';
@@ -26,6 +30,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
   imports: [
     CommonModule, FormsModule, DatePipe,
     ButtonModule, TableModule, InputTextModule, DialogModule, SelectModule,
+    MultiSelectModule, TooltipModule,
     PageHeader, StatusPill, EmptyState,
   ],
   template: `
@@ -45,6 +50,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
             <tr>
               <th>Job Order</th><th>Client</th><th>Service</th>
               <th>Window</th><th>Inspectors</th><th>Status</th>
+              <th style="width: 60px"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-j>
@@ -58,6 +64,11 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
                 <span *ngIf="j.assignedInspectorCount === 0" class="muted">—</span>
               </td>
               <td><tuv-status-pill [value]="statusName(j.status)" /></td>
+              <td>
+                <p-button *ngIf="canEdit()" icon="pi pi-users" severity="secondary"
+                  [text]="true" rounded size="small"
+                  pTooltip="Assign inspectors" (onClick)="openAssign(j)" />
+              </td>
             </tr>
           </ng-template>
         </p-table>
@@ -85,6 +96,26 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           [disabled]="!newClientId" (onClick)="createOrder()" />
       </ng-template>
     </p-dialog>
+
+    <p-dialog [(visible)]="assignDialog" [modal]="true" [style]="{ width: '520px' }"
+      header="Assign inspectors" [closable]="!assigning()">
+      @if (assignTarget(); as t) {
+        <div class="form">
+          <p>Job order <code class="mono">{{ t.jobOrderNo }}</code> · {{ t.clientName }}</p>
+          <label>Inspectors</label>
+          <p-multiSelect [options]="inspectorOptions()" optionLabel="label" optionValue="value"
+            [(ngModel)]="assignSelection" placeholder="Select one or more inspectors"
+            [filter]="true" appendTo="body" styleClass="ms" />
+          <small *ngIf="inspectors().length === 0">
+            No users with the Inspector role were found. Add one in Admin first.
+          </small>
+        </div>
+      }
+      <ng-template pTemplate="footer">
+        <p-button severity="secondary" label="Cancel" (onClick)="closeAssign()" [disabled]="assigning()" />
+        <p-button label="Save" icon="pi pi-check" [loading]="assigning()" (onClick)="saveAssign()" />
+      </ng-template>
+    </p-dialog>
   `,
   styles: [
     `
@@ -98,6 +129,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       .form label { font-size: 0.85rem; font-weight: 500; color: #334155; margin-top: 0.3rem; }
       .form input { width: 100%; }
       :host ::ng-deep .form .p-select { width: 100%; }
+      :host ::ng-deep .form .ms { width: 100%; }
       .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
     `,
   ],
@@ -112,6 +144,16 @@ export class JobOrdersPage {
   protected rows = signal<JobOrderListItem[]>([]);
   protected clients = signal<ClientListItem[]>([]);
   protected clientOptions = computed(() => this.clients().map(c => ({ label: c.name, value: c.id })));
+  protected inspectors = signal<UserListItem[]>([]);
+  protected inspectorOptions = computed(() => this.inspectors().map(i =>
+    ({ label: `${i.fullName ?? i.userName ?? i.email} (${i.email ?? ''})`, value: i.id })));
+
+  protected assignDialog = false;
+  protected assigning = signal(false);
+  protected assignTarget = signal<JobOrderListItem | null>(null);
+  protected assignDetail = signal<JobOrderDetail | null>(null);
+  protected assignSelection: string[] = [];
+  private usersApi = inject(UsersApi);
 
   protected newDialog = false;
   protected creating = signal(false);
@@ -137,6 +179,13 @@ export class JobOrdersPage {
       next: (r) => this.clients.set(r.items),
       error: (err) => showHttpError(this.notify, err),
     });
+    if (this.canEdit()) {
+      this.usersApi.list().subscribe({
+        next: (us) => this.inspectors.set(us.filter(u => u.isActive
+          && u.roles.some(r => r === Roles.Inspector))),
+        error: () => { /* leave empty — assign dialog will show empty hint */ },
+      });
+    }
     this.refresh();
   }
 
@@ -161,6 +210,48 @@ export class JobOrdersPage {
         this.refresh();
       },
       error: (err) => { this.creating.set(false); showHttpError(this.notify, err); },
+    });
+  }
+
+  openAssign(j: JobOrderListItem) {
+    this.assignTarget.set(j);
+    this.assignSelection = [];
+    this.assignDialog = true;
+    this.api.get(j.id).subscribe({
+      next: (d) => {
+        this.assignDetail.set(d);
+        this.assignSelection = [...d.assignedInspectorIds];
+      },
+      error: (err) => showHttpError(this.notify, err),
+    });
+  }
+
+  closeAssign() {
+    this.assignDialog = false;
+    this.assignTarget.set(null);
+    this.assignDetail.set(null);
+    this.assignSelection = [];
+  }
+
+  saveAssign() {
+    const t = this.assignTarget();
+    const d = this.assignDetail();
+    if (!t || !d) return;
+    this.assigning.set(true);
+    this.api.update(t.id, {
+      dateFrom: d.dateFrom,
+      dateTo: d.dateTo,
+      location: d.location,
+      status: d.status,
+      assignedInspectorIds: this.assignSelection,
+    }).subscribe({
+      next: () => {
+        this.assigning.set(false);
+        this.notify.success(`Assigned ${this.assignSelection.length} inspector(s) to ${t.jobOrderNo}.`);
+        this.closeAssign();
+        this.refresh();
+      },
+      error: (err) => { this.assigning.set(false); showHttpError(this.notify, err); },
     });
   }
 }

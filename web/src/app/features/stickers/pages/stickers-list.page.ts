@@ -24,6 +24,9 @@ import {
   StickersApi,
 } from '../../../core/api/stickers.api';
 import {
+  StickerColor,
+  StickerColorHex,
+  StickerColorName,
   StickerListItem,
   StickerStateName,
   StickerStockSummary,
@@ -75,6 +78,10 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       <p-select [options]="stateOptions" optionLabel="label" optionValue="value"
         [(ngModel)]="filterState" (ngModelChange)="onFilterChange()"
         [showClear]="true" placeholder="Any state" appendTo="body" styleClass="filter" />
+
+      <p-select [options]="colorOptions" optionLabel="label" optionValue="value"
+        [(ngModel)]="filterColor" (ngModelChange)="onFilterChange()"
+        [showClear]="true" placeholder="Any colour" appendTo="body" styleClass="filter" />
     </div>
 
     <div class="card">
@@ -101,11 +108,12 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 14%">Sticker</th>
+              <th style="width: 70px">Colour</th>
               <th style="width: 13%">State</th>
+              <th style="width: 14%">Assigned to</th>
               <th>Linked equipment / cert</th>
-              <th style="width: 16%">Client</th>
-              <th style="width: 12%">Valid until</th>
-              <th style="width: 14%">Created</th>
+              <th style="width: 12%">Client</th>
+              <th style="width: 11%">Valid until</th>
               <th style="width: 100px"></th>
             </tr>
           </ng-template>
@@ -113,8 +121,17 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
             <tr>
               <td>
                 <div class="sticker-no">{{ s.stickerNo }}</div>
+                <div class="muted">{{ s.createdAtUtc | date: 'dd MMM yyyy' }}</div>
+              </td>
+              <td>
+                <span class="color-chip" [style.background]="colorHex(s.color)"
+                  [pTooltip]="colorName(s.color)"></span>
               </td>
               <td><tuv-status-pill [value]="stateName(s.state)" /></td>
+              <td>
+                <span *ngIf="s.assignedToInspectorName">{{ s.assignedToInspectorName }}</span>
+                <span *ngIf="!s.assignedToInspectorName" class="muted">—</span>
+              </td>
               <td>
                 <div *ngIf="s.equipmentIdNo" class="equip-id">{{ s.equipmentIdNo }}</div>
                 <div *ngIf="s.certificateNo" class="muted">{{ s.certificateNo }}</div>
@@ -122,7 +139,6 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
               </td>
               <td>{{ s.clientName ?? '—' }}</td>
               <td>{{ s.validUntil ? (s.validUntil | date: 'dd MMM yyyy') : '—' }}</td>
-              <td>{{ s.createdAtUtc | date: 'dd MMM yyyy' }}</td>
               <td class="actions">
                 <a [href]="qrUrl(s.stickerNo)" target="_blank" rel="noopener">
                   <p-button icon="pi pi-qrcode" severity="secondary" [text]="true" rounded
@@ -138,11 +154,23 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       }
     </div>
 
-    <p-dialog [(visible)]="procureDialog" [modal]="true" [style]="{ width: '420px' }"
+    <p-dialog [(visible)]="procureDialog" [modal]="true" [style]="{ width: '460px' }"
       header="Procure sticker stock" [closable]="!procuring()">
       <div class="form">
-        <p>Generate a fresh batch of <code>TUVR######</code> sticker numbers ready to auto-issue
-          when Blue Sticker certificates are approved.</p>
+        <p>Generate a fresh batch of <code>TUVR######</code> sticker numbers in the selected
+          colour. They auto-issue when matching certificates are approved.</p>
+        <label>Colour<span class="req">*</span></label>
+        <div class="color-row">
+          @for (opt of colorOptions; track opt.value) {
+            <button type="button" class="color-btn"
+              [class.selected]="procureColor === opt.value"
+              (click)="procureColor = opt.value"
+              [style.background]="colorHex(opt.value)"
+              [attr.aria-label]="opt.label">
+              <span>{{ opt.label }}</span>
+            </button>
+          }
+        </div>
         <label>Count<span class="req">*</span></label>
         <p-inputNumber [(ngModel)]="procureCount" [min]="1" [max]="1000" [showButtons]="true" />
         <small>1–1000 stickers per batch.</small>
@@ -185,6 +213,21 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       .equip-id { font-family: ui-monospace, Menlo, monospace; font-weight: 500; }
       .muted { color: #94a3b8; font-size: 0.78rem; margin-top: 0.15rem; }
       .actions { display: flex; gap: 0.2rem; }
+      .color-chip {
+        display: inline-block; width: 18px; height: 18px;
+        border-radius: 50%; border: 1px solid rgba(15, 23, 42, 0.18);
+      }
+      .color-row { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+      .color-btn {
+        flex: 1; min-width: 70px;
+        display: flex; align-items: center; justify-content: center;
+        padding: 0.6rem 0.4rem; border-radius: 10px;
+        border: 2px solid transparent; cursor: pointer;
+        color: #fff; font-size: 0.72rem; font-weight: 600;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      }
+      .color-btn.selected { border-color: #0f172a; box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.18); }
+      .color-btn[aria-label='White'] { color: #0f172a; text-shadow: none; }
       .form { display: flex; flex-direction: column; gap: 0.55rem; padding: 0.5rem 0; }
       .form label { font-size: 0.85rem; font-weight: 500; color: #334155; margin-top: 0.2rem; }
       .req { color: #dc2626; margin-left: 0.15rem; }
@@ -214,6 +257,14 @@ export class StickersListPage {
     { initialValue: '' });
 
   protected filterState: number | null = null;
+  protected filterColor: number | null = null;
+  protected procureColor: number = StickerColor.Blue;
+
+  protected colorOptions = Object.entries(StickerColorName).map(([v, l]) => ({
+    value: Number(v), label: l,
+  }));
+  protected colorName = (c: number) => StickerColorName[c] ?? 'Unknown';
+  protected colorHex = (c: number) => StickerColorHex[c] ?? '#94a3b8';
 
   protected procureDialog = false;
   protected procuring = signal(false);
@@ -258,6 +309,7 @@ export class StickersListPage {
       page, pageSize,
       search: search?.trim() || undefined,
       state: this.filterState ?? undefined,
+      color: this.filterColor ?? undefined,
     }).subscribe({
       next: (res) => {
         this.rows.set(res.items);
@@ -284,11 +336,11 @@ export class StickersListPage {
   procure() {
     if (!this.procureCount || this.procureCount < 1) return;
     this.procuring.set(true);
-    this.api.procure(this.procureCount).subscribe({
+    this.api.procure(this.procureCount, this.procureColor).subscribe({
       next: (r) => {
         this.procuring.set(false);
         this.procureDialog = false;
-        this.notify.success(`Added ${r.added} sticker(s) to stock.`);
+        this.notify.success(`Added ${r.added} ${this.colorName(this.procureColor)} sticker(s) to stock.`);
         this.refresh(1, this.pageSize(), this.searchSig());
         this.refreshSummary();
       },
@@ -332,8 +384,9 @@ export class StickersListPage {
 
   printBatch() {
     const state = this.filterState ?? 0; // default to Unallocated
+    const color = this.filterColor ?? undefined;
     this.printingBatch.set(true);
-    this.api.printBatch(state, 24).subscribe({
+    this.api.printBatch(state, color, 24).subscribe({
       next: (blob) => {
         this.printingBatch.set(false);
         const url = window.URL.createObjectURL(blob);

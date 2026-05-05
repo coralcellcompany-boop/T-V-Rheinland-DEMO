@@ -22,6 +22,9 @@ public sealed class ListStickersHandler : IQueryHandler<ListStickersQuery, Paged
     {
         IQueryable<Sticker> query = _db.Stickers.AsNoTracking();
         if (q.State is { } st) query = query.Where(s => s.State == (StickerState)(int)st);
+        if (q.Color is { } c) query = query.Where(s => s.Color == (StickerColor)(int)c);
+        if (!string.IsNullOrWhiteSpace(q.AssignedToInspectorId))
+            query = query.Where(s => s.AssignedToInspectorId == q.AssignedToInspectorId);
         if (!string.IsNullOrWhiteSpace(q.Search))
         {
             var s = q.Search.Trim().ToUpperInvariant();
@@ -32,14 +35,19 @@ public sealed class ListStickersHandler : IQueryHandler<ListStickersQuery, Paged
         var page = Math.Max(1, q.Page);
         var pageSize = Math.Clamp(q.PageSize, 1, 200);
 
-        // Project with a left-join to clients/equipment/cert (ignore tenant filters — admin view).
         var rows = await query
             .OrderByDescending(s => s.CreatedAtUtc)
             .Skip((page - 1) * pageSize).Take(pageSize)
             .Select(s => new
             {
-                s.Id, s.StickerNo, s.State, s.ClientId, s.IssuedToCertificateId,
-                s.IssuedToEquipmentId, s.ValidUntil, s.CreatedAtUtc,
+                s.Id, s.StickerNo, s.State, s.Color, s.ClientId,
+                s.AssignedToInspectorId,
+                s.IssuedToCertificateId, s.IssuedToEquipmentId,
+                s.ValidUntil, s.CreatedAtUtc,
+                AssignedToInspectorName = _db.Users
+                    .Where(u => u.Id == s.AssignedToInspectorId)
+                    .Select(u => u.FullName ?? u.UserName ?? u.Email)
+                    .FirstOrDefault(),
                 ClientName = _db.Clients.IgnoreQueryFilters()
                     .Where(c => c.Id == s.ClientId).Select(c => c.Name).FirstOrDefault(),
                 CertificateNo = _db.Certificates.IgnoreQueryFilters()
@@ -50,7 +58,8 @@ public sealed class ListStickersHandler : IQueryHandler<ListStickersQuery, Paged
             .ToListAsync(ct);
 
         var items = rows.Select(r => new StickerListItemDto(
-            r.Id, r.StickerNo, (StickerStateDto)r.State,
+            r.Id, r.StickerNo, (StickerStateDto)r.State, (StickerColorDto)r.Color,
+            r.AssignedToInspectorId, r.AssignedToInspectorName,
             r.ClientId, r.ClientName,
             r.IssuedToCertificateId, r.CertificateNo,
             r.IssuedToEquipmentId, r.EquipmentIdNo,
@@ -64,8 +73,8 @@ public sealed class GetStickerStockSummaryHandler
     : IQueryHandler<GetStickerStockSummaryQuery, StickerStockSummaryDto>
 {
     private readonly AppDbContext _db;
-    private readonly Microsoft.Extensions.Configuration.IConfiguration _config;
-    public GetStickerStockSummaryHandler(AppDbContext db, Microsoft.Extensions.Configuration.IConfiguration config)
+    private readonly IConfiguration _config;
+    public GetStickerStockSummaryHandler(AppDbContext db, IConfiguration config)
     { _db = db; _config = config; }
 
     public async Task<StickerStockSummaryDto> Handle(GetStickerStockSummaryQuery q, CancellationToken ct)
@@ -171,10 +180,11 @@ public sealed class ProcureStickerStockHandler : ICommandHandler<ProcureStickerS
         if (command.Count is < 1 or > 1000)
             throw new ArgumentException("Count must be between 1 and 1000.");
 
+        var color = (StickerColor)(int)command.Color;
         var nos = await _gen.NextBatch(command.Count, ct);
         foreach (var n in nos)
         {
-            var sticker = new Sticker(Guid.NewGuid(), n)
+            var sticker = new Sticker(Guid.NewGuid(), n, color)
             {
                 CreatedAtUtc = _clock.UtcNow,
                 CreatedById = _tenant.UserId,
@@ -207,10 +217,50 @@ public sealed class VoidStickerHandler : ICommandHandler<VoidStickerCommand, Sti
         await _db.SaveChangesAsync(ct);
 
         return new StickerListItemDto(
-            s.Id, s.StickerNo, (StickerStateDto)s.State,
+            s.Id, s.StickerNo, (StickerStateDto)s.State, (StickerColorDto)s.Color,
+            s.AssignedToInspectorId, null,
             s.ClientId, null,
             s.IssuedToCertificateId, null,
             s.IssuedToEquipmentId, null,
             s.ValidUntil, s.CreatedAtUtc);
+    }
+}
+
+public sealed class AssignStickersToInspectorHandler
+    : ICommandHandler<AssignStickersToInspectorCommand, int>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+    public AssignStickersToInspectorHandler(AppDbContext db, ITenantContext tenant, IClock clock)
+    { _db = db; _tenant = tenant; _clock = clock; }
+
+    public async Task<int> Handle(AssignStickersToInspectorCommand c, CancellationToken ct)
+    {
+        if (!_tenant.IsInRole(Roles.Manager) && !_tenant.IsInRole(Roles.Coordinator))
+            throw new UnauthorizedAccessException("Only Manager or Coordinator may assign stickers.");
+        if (c.Count <= 0 || c.Count > 500)
+            throw new ArgumentException("Count must be between 1 and 500.");
+
+        var color = (StickerColor)(int)c.Color;
+        var pool = await _db.Stickers
+            .Where(s => s.State == StickerState.Unallocated
+                && s.Color == color
+                && s.AssignedToInspectorId == null)
+            .OrderBy(s => s.CreatedAtUtc)
+            .Take(c.Count)
+            .ToListAsync(ct);
+
+        var taken = pool.Count;
+        if (taken == 0) return 0;
+
+        foreach (var s in pool)
+        {
+            s.AssignToInspector(c.InspectorUserId, c.FromRequestId, _clock.UtcNow);
+            s.UpdatedAtUtc = _clock.UtcNow;
+            s.UpdatedById = _tenant.UserId;
+        }
+        await _db.SaveChangesAsync(ct);
+        return taken;
     }
 }

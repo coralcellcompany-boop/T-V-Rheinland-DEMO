@@ -11,7 +11,7 @@ using TuvInspection.Infrastructure.Stickers;
 namespace TuvInspection.Api.Controllers;
 
 [ApiController]
-[Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+[Authorize]
 [Route("api/stickers")]
 [Produces("application/json")]
 public class StickersController : ControllerBase
@@ -32,13 +32,17 @@ public class StickersController : ControllerBase
     [HttpGet]
     public Task<PagedResult<StickerListItemDto>> List(
         [FromQuery] StickerStateDto? state,
+        [FromQuery] StickerColorDto? color,
+        [FromQuery] string? assignedToInspectorId,
         [FromQuery] string? search,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 25,
         CancellationToken ct = default) =>
-        _dispatcher.Query(new ListStickersQuery(state, search, page, pageSize), ct);
+        _dispatcher.Query(new ListStickersQuery(
+            state, color, assignedToInspectorId, search, page, pageSize), ct);
 
     [HttpGet("stock-summary")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
     public Task<StickerStockSummaryDto> StockSummary(CancellationToken ct) =>
         _dispatcher.Query(new GetStickerStockSummaryQuery(), ct);
 
@@ -46,7 +50,7 @@ public class StickersController : ControllerBase
     [Authorize(Roles = Roles.Manager)]
     public async Task<IActionResult> Procure([FromBody] ProcureStockRequest body, CancellationToken ct)
     {
-        var n = await _dispatcher.Send(new ProcureStickerStockCommand(body.Count), ct);
+        var n = await _dispatcher.Send(new ProcureStickerStockCommand(body.Count, body.Color), ct);
         return Ok(new { added = n });
     }
 
@@ -55,17 +59,28 @@ public class StickersController : ControllerBase
     public Task<StickerListItemDto> Void(Guid id, [FromBody] VoidStickerRequest body, CancellationToken ct) =>
         _dispatcher.Send(new VoidStickerCommand(id, body.Reason), ct);
 
+    [HttpPost("assign")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+    public async Task<IActionResult> Assign([FromBody] AssignStickersRequest body, CancellationToken ct)
+    {
+        var n = await _dispatcher.Send(new AssignStickersToInspectorCommand(
+            body.InspectorUserId, body.Color, body.Count, null), ct);
+        return Ok(new { assigned = n });
+    }
+
     /// <summary>Print a batch of unallocated stickers — one A4 page with up to 24 stickers,
     /// each with its public-PDF QR. Manager/Coordinator only.</summary>
     [HttpGet("print-batch")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
     public async Task<IActionResult> PrintBatch(
         [FromQuery] StickerStateDto? state,
+        [FromQuery] StickerColorDto? color,
         [FromQuery] int max = 24,
         CancellationToken ct = default)
     {
         var clamped = Math.Clamp(max, 1, 96);
         var page = await _dispatcher.Query(
-            new ListStickersQuery(state ?? StickerStateDto.Unallocated, null, 1, clamped), ct);
+            new ListStickersQuery(state ?? StickerStateDto.Unallocated, color, null, null, 1, clamped), ct);
         var apiBase = _config["Public:ApiBaseUrl"]?.TrimEnd('/') ?? "http://localhost:5282";
         var rows = page.Items.Select(s =>
         {
@@ -75,4 +90,41 @@ public class StickersController : ControllerBase
         var bytes = _pdf.RenderPrintBatch(rows);
         return File(bytes, "application/pdf", $"sticker-batch-{DateTime.UtcNow:yyyyMMddHHmm}.pdf");
     }
+}
+
+[ApiController]
+[Authorize]
+[Route("api/sticker-requests")]
+[Produces("application/json")]
+public class StickerRequestsController : ControllerBase
+{
+    private readonly IDispatcher _dispatcher;
+    public StickerRequestsController(IDispatcher dispatcher) => _dispatcher = dispatcher;
+
+    [HttpGet]
+    public Task<PagedResult<StickerRequestDto>> List(
+        [FromQuery] StickerRequestStateDto? state,
+        [FromQuery] string? inspectorUserId,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 25,
+        CancellationToken ct = default) =>
+        _dispatcher.Query(new ListStickerRequestsQuery(state, inspectorUserId, page, pageSize), ct);
+
+    [HttpPost]
+    public Task<StickerRequestDto> Create([FromBody] CreateStickerRequest body, CancellationToken ct) =>
+        _dispatcher.Send(new CreateStickerRequestCommand(body), ct);
+
+    [HttpPost("{id:guid}/approve")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+    public Task<StickerRequestDto> Approve(Guid id, [FromBody] DecisionCommentsBody? body, CancellationToken ct) =>
+        _dispatcher.Send(new ApproveStickerRequestCommand(id, body?.Comments), ct);
+
+    [HttpPost("{id:guid}/reject")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+    public Task<StickerRequestDto> Reject(Guid id, [FromBody] RejectStickerRequestBody body, CancellationToken ct) =>
+        _dispatcher.Send(new RejectStickerRequestCommand(id, body.Reason), ct);
+
+    [HttpPost("{id:guid}/cancel")]
+    public Task<StickerRequestDto> Cancel(Guid id, CancellationToken ct) =>
+        _dispatcher.Send(new CancelStickerRequestCommand(id), ct);
 }

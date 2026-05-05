@@ -18,3 +18,16 @@ public enum StickerState
     /// <summary>Past Next Inspection Due Date.</summary>
     Expired = 5
 }
+
+/// <summary>
+/// Sticker colour (per the Aramco / lifting-equipment colour-coding convention used in
+/// the field). Blue is the default Blue Sticker; Green/Red/White are used for variants
+/// where the contract or category requires a different colour.
+/// </summary>
+public enum StickerColor
+{
+    Blue = 0,
+    Green = 1,
+    Red = 2,
+    White = 3
+}

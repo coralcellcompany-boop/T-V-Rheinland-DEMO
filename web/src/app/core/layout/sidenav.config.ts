@@ -18,6 +18,8 @@ export const PRIMARY_NAV: NavItem[] = [
     roles: [Roles.Manager, Roles.Coordinator] },
   { label: 'nav.stickers',      icon: 'pi-qrcode',       route: '/stickers',
     roles: [Roles.Manager, Roles.Coordinator] },
+  { label: 'nav.stickerRequests', icon: 'pi-inbox',     route: '/sticker-requests',
+    roles: [Roles.Manager, Roles.Coordinator, Roles.Inspector] },
   { label: 'nav.candidates',    icon: 'pi-id-card',      route: '/candidates',
     roles: [Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer] },
   { label: 'nav.assessments',   icon: 'pi-verified',     route: '/assessments' },

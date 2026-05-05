@@ -12,8 +12,13 @@ public class Sticker : AggregateRoot<Guid>, IAuditable
 {
     public string StickerNo { get; private set; } = default!;        // e.g. TUVR000123
     public StickerState State { get; private set; } = StickerState.Unallocated;
+    public StickerColor Color { get; private set; } = StickerColor.Blue;
 
     public Guid? AllocatedToJobOrderId { get; private set; }
+    public string? AssignedToInspectorId { get; private set; }
+    public DateTime? AssignedAtUtc { get; private set; }
+    public Guid? AssignedFromRequestId { get; private set; }
+
     public Guid? IssuedToCertificateId { get; private set; }
     public Guid? IssuedToEquipmentId { get; private set; }
     public Guid? ClientId { get; private set; }
@@ -31,11 +36,31 @@ public class Sticker : AggregateRoot<Guid>, IAuditable
 
     private Sticker() { }
 
-    public Sticker(Guid id, string stickerNo) : base(id)
+    public Sticker(Guid id, string stickerNo, StickerColor color = StickerColor.Blue) : base(id)
     {
         if (string.IsNullOrWhiteSpace(stickerNo))
             throw new ArgumentException("Sticker number is required.", nameof(stickerNo));
         StickerNo = stickerNo.Trim().ToUpperInvariant();
+        Color = color;
+    }
+
+    public void AssignToInspector(string inspectorUserId, Guid? fromRequestId, DateTime atUtc)
+    {
+        if (State != StickerState.Unallocated)
+            throw new InvalidOperationException(
+                $"Only Unallocated stickers can be assigned to an inspector. Current state: {State}.");
+        if (string.IsNullOrWhiteSpace(inspectorUserId))
+            throw new ArgumentException("Inspector required.", nameof(inspectorUserId));
+        AssignedToInspectorId = inspectorUserId;
+        AssignedAtUtc = atUtc;
+        AssignedFromRequestId = fromRequestId;
+    }
+
+    public void Unassign()
+    {
+        AssignedToInspectorId = null;
+        AssignedAtUtc = null;
+        AssignedFromRequestId = null;
     }
 
     public void AllocateToJob(Guid jobOrderId)

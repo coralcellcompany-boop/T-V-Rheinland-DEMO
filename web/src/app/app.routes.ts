@@ -67,6 +67,12 @@ export const routes: Routes = [
           import('./features/stickers/pages/stickers-list.page').then((m) => m.StickersListPage),
       },
       {
+        path: 'sticker-requests',
+        canActivate: [roleGuard(Roles.Manager, Roles.Coordinator, Roles.Inspector)],
+        loadComponent: () =>
+          import('./features/stickers/pages/sticker-requests.page').then((m) => m.StickerRequestsPage),
+      },
+      {
         path: 'candidates',
         canActivate: [roleGuard(Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer)],
         loadComponent: () =>
