@@ -31,6 +31,8 @@ export const PRIMARY_NAV: NavItem[] = [
 export const SECONDARY_NAV: NavItem[] = [
   { label: 'nav.reports',       icon: 'pi-chart-line',   route: '/reports',
     roles: [Roles.Manager, Roles.Coordinator] },
+  { label: 'nav.audit',         icon: 'pi-history',      route: '/audit',
+    roles: [Roles.Manager] },
   { label: 'nav.admin',         icon: 'pi-cog',          route: '/admin', roles: [Roles.Manager] },
 ];
 

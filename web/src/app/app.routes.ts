@@ -115,6 +115,22 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/pages/users-admin.page').then((m) => m.UsersAdminPage),
       },
+      {
+        path: 'audit',
+        canActivate: [roleGuard(Roles.Manager)],
+        loadComponent: () =>
+          import('./features/audit/audit-log.page').then((m) => m.AuditLogPage),
+      },
+      {
+        path: 'equipment/:id/history',
+        loadComponent: () =>
+          import('./features/equipment/pages/equipment-history.page').then((m) => m.EquipmentHistoryPage),
+      },
+      {
+        path: 'certificates/:id/diff',
+        loadComponent: () =>
+          import('./features/certificates/pages/certificate-diff.page').then((m) => m.CertificateDiffPage),
+      },
     ],
   },
   { path: '**', redirectTo: 'dashboard' },

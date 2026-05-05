@@ -50,6 +50,12 @@ import {
       <tuv-page-header [title]="c.certificateNo" icon="pi-file-check"
         [subtitle]="'Equipment ' + c.equipmentIdNo + ' · ' + c.equipmentTypeName + ' · ' + c.clientName">
         <a class="back" routerLink="/certificates"><i class="pi pi-arrow-left"></i> Back to list</a>
+        <a [routerLink]="['/equipment', c.equipmentId, 'history']">
+          <p-button icon="pi pi-history" severity="secondary" [outlined]="true" label="Equipment history" />
+        </a>
+        <p-button *ngIf="previousCertId() as pid" icon="pi pi-arrows-h" severity="secondary"
+          [outlined]="true" label="Compare with previous"
+          (onClick)="goCompare(c.id, pid)" />
         <p-button icon="pi pi-file-pdf" severity="secondary" label="Download PDF"
           [loading]="downloadingPdf()" (onClick)="downloadPdf()" />
       </tuv-page-header>
@@ -276,6 +282,7 @@ export class CertificateDetailPage implements OnInit {
 
   protected loading = signal(true);
   protected cert = signal<CertificateDetail | null>(null);
+  protected previousCertId = signal<string | null>(null);
 
   protected transitions = computed(() => {
     const c = this.cert();
@@ -322,13 +329,35 @@ export class CertificateDetailPage implements OnInit {
   private load(id: string) {
     this.loading.set(true);
     this.api.get(id).subscribe({
-      next: (c) => { this.cert.set(c); this.loading.set(false); },
+      next: (c) => {
+        this.cert.set(c);
+        this.loading.set(false);
+        this.findPrevious(c);
+      },
       error: (err) => {
         this.loading.set(false);
         showHttpError(this.notify, err);
         this.router.navigate(['/certificates']);
       },
     });
+  }
+
+  private findPrevious(c: CertificateDetail) {
+    this.previousCertId.set(null);
+    this.api.list({ equipmentId: c.equipmentId, page: 1, pageSize: 50 }).subscribe({
+      next: (r) => {
+        const sorted = [...r.items].sort((a, b) =>
+          (a.inspectionDate < b.inspectionDate ? 1 : a.inspectionDate > b.inspectionDate ? -1 : 0));
+        const idx = sorted.findIndex((x) => x.id === c.id);
+        const prev = idx >= 0 ? sorted[idx + 1] : null;
+        this.previousCertId.set(prev?.id ?? null);
+      },
+      error: () => { /* nav button just stays hidden */ },
+    });
+  }
+
+  goCompare(later: string, earlier: string) {
+    this.router.navigate(['/certificates', later, 'diff'], { queryParams: { vs: earlier } });
   }
 
   prepareTrigger(t: AvailableTransition) {

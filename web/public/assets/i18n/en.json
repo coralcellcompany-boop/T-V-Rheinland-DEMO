@@ -19,6 +19,7 @@
     "timesheets": "Timesheets",
     "surveys": "Surveys",
     "reports": "Reports",
+    "audit": "Audit log",
     "admin": "Admin"
   },
   "topbar": {

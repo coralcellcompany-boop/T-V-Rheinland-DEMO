@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
@@ -9,6 +10,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { DrawerModule } from 'primeng/drawer';
 import { SelectModule } from 'primeng/select';
 import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -38,6 +40,7 @@ import { EquipmentForm } from '../components/equipment-form.component';
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     ButtonModule,
     TableModule,
     InputTextModule,
@@ -46,6 +49,7 @@ import { EquipmentForm } from '../components/equipment-form.component';
     DrawerModule,
     SelectModule,
     DialogModule,
+    TooltipModule,
     PageHeader,
     StatusPill,
     EmptyState,
@@ -130,7 +134,11 @@ import { EquipmentForm } from '../components/equipment-form.component';
               </td>
               <td>{{ e.swl ?? '—' }}</td>
               <td><tuv-status-pill [value]="statusLabel(e.status)" /></td>
-              <td>
+              <td class="row-actions">
+                <a [routerLink]="['/equipment', e.id, 'history']">
+                  <p-button icon="pi pi-history" severity="secondary"
+                    [text]="true" rounded pTooltip="History" />
+                </a>
                 <p-button *ngIf="canEdit()" icon="pi pi-pencil" severity="secondary"
                   [text]="true" rounded (onClick)="openEdit(e)" />
               </td>
