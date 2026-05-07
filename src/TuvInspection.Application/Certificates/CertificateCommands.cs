@@ -7,6 +7,7 @@ namespace TuvInspection.Application.Certificates;
 public sealed record ListCertificatesQuery(
     Guid? ClientId,
     Guid? EquipmentId,
+    Guid? JobOrderId,
     CertificateStateDto? State,
     CertificateInspectionTypeDto? InspectionType,
     InspectionResultDto? Result,

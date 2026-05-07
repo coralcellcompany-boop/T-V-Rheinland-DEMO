@@ -107,6 +107,8 @@ export interface CertificateDetail {
   photosJson: string | null;
   signaturesJson: string | null;
   aramcoReportJson: string | null;
+  equipmentAramcoCategory: string | null;
+  isBlueStickerCertificate: boolean;
   createdAtUtc: string;
   updatedAtUtc: string | null;
   transitions: CertificateTransition[];

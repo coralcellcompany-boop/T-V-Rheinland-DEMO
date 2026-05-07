@@ -18,10 +18,14 @@ public sealed record ConvertJobRequestCommand(Guid Id) : ICommand<JobOrderDetail
 // Job Orders
 public sealed record ListJobOrdersQuery(
     Guid? ClientId, JobOrderStatusDto? Status, string? Search,
+    string? AssignedInspectorId, bool MineOnly,
     int Page, int PageSize) : IQuery<PagedResult<JobOrderListItemDto>>;
 public sealed record GetJobOrderByIdQuery(Guid Id) : IQuery<JobOrderDetailDto?>;
 public sealed record CreateJobOrderCommand(CreateJobOrderRequest Body) : ICommand<JobOrderDetailDto>;
 public sealed record UpdateJobOrderCommand(Guid Id, UpdateJobOrderRequest Body) : ICommand<JobOrderDetailDto>;
+public sealed record BeginJobOrderCommand(Guid Id) : ICommand<JobOrderDetailDto>;
+public sealed record CompleteJobOrderCommand(Guid Id) : ICommand<JobOrderDetailDto>;
+public sealed record CancelJobOrderCommand(Guid Id) : ICommand<JobOrderDetailDto>;
 
 // DWR / Timesheets
 public sealed record ListDwrQuery(

@@ -34,11 +34,16 @@ export class JobRequestsApi {
 export class JobOrdersApi {
   private http = inject(HttpClient);
   private base = `${environment.apiBaseUrl}/api/job-orders`;
-  list(f: { clientId?: string; status?: number; search?: string; page?: number; pageSize?: number } = {})
+  list(f: { clientId?: string; status?: number; search?: string;
+    assignedInspectorId?: string; mineOnly?: boolean;
+    page?: number; pageSize?: number } = {})
     : Observable<PagedResult<JobOrderListItem>> { return this.http.get<PagedResult<JobOrderListItem>>(this.base, { params: p(f) }); }
   get(id: string): Observable<JobOrderDetail> { return this.http.get<JobOrderDetail>(`${this.base}/${id}`); }
   create(body: CreateJobOrderRequest): Observable<JobOrderDetail> { return this.http.post<JobOrderDetail>(this.base, body); }
   update(id: string, body: UpdateJobOrderRequest): Observable<JobOrderDetail> { return this.http.put<JobOrderDetail>(`${this.base}/${id}`, body); }
+  begin(id: string): Observable<JobOrderDetail> { return this.http.post<JobOrderDetail>(`${this.base}/${id}/begin`, {}); }
+  complete(id: string): Observable<JobOrderDetail> { return this.http.post<JobOrderDetail>(`${this.base}/${id}/complete`, {}); }
+  cancel(id: string): Observable<JobOrderDetail> { return this.http.post<JobOrderDetail>(`${this.base}/${id}/cancel`, {}); }
 }
 
 @Injectable({ providedIn: 'root' })

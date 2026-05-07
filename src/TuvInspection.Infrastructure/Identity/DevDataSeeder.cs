@@ -161,8 +161,11 @@ public sealed class DevDataSeeder
 
     private async Task SeedEquipment(List<Client> clients, CancellationToken ct)
     {
-        var anyEquipment = await _db.Equipment.IgnoreQueryFilters().AnyAsync(ct);
-        if (anyEquipment) return;
+        // Only check for our DEV-prefixed seeded equipment so user-created entries don't
+        // block re-seeding when the seeder is improved.
+        var alreadySeeded = await _db.Equipment.IgnoreQueryFilters()
+            .AnyAsync(e => e.IdNo.StartsWith("DEV-"), ct);
+        if (alreadySeeded) return;
 
         // Pick a few common equipment types — names match EquipmentTypeSeed.
         var types = await _db.EquipmentTypes.AsNoTracking()
@@ -182,7 +185,7 @@ public sealed class DevDataSeeder
                     Guid.NewGuid(),
                     client.Id,
                     t.Id,
-                    $"{client.Code}-EQ-{k + 1:D3}",
+                    $"DEV-{client.Code}-EQ-{k + 1:D3}",
                     t.AramcoCategory)
                 {
                     CreatedAtUtc = DateTime.UtcNow,
@@ -269,8 +272,10 @@ public sealed class DevDataSeeder
     {
         if (inspectors.Count == 0 || clients.Count == 0) return;
 
-        var anyJobOrder = await _db.JobOrders.IgnoreQueryFilters().AnyAsync(ct);
-        if (anyJobOrder) return;
+        // Only seed our DEV-* job orders — leave any user-created JOs untouched.
+        var alreadySeeded = await _db.JobOrders.IgnoreQueryFilters()
+            .AnyAsync(j => j.JobOrderNo.StartsWith("DEV-JOD-"), ct);
+        if (alreadySeeded) return;
 
         // Pick the first Aramco-categorized equipment per client so the auto-issue path
         // exercises (only Aramco-cat equipment triggers Blue Sticker on cert approval).
@@ -291,7 +296,7 @@ public sealed class DevDataSeeder
             var equipForClient = aramcoEquipment.FirstOrDefault(e => e.ClientId == client.Id);
             if (equipForClient is null) continue;
 
-            var jobOrderNo = $"JOD{year}-{(i + 1):D4}";
+            var jobOrderNo = $"DEV-JOD-{year}-{(i + 1):D4}";
             var jo = new JobOrder(Guid.NewGuid(), jobOrderNo, client.Id,
                 ServiceType.BlueSticker, today, today.AddDays(7))
             {
@@ -299,11 +304,12 @@ public sealed class DevDataSeeder
             };
             jo.AssignInspector(inspector.Id);
             jo.UpdateLocation($"{client.Address} — site survey");
-            jo.Begin();
+            // Half open / half in-progress so the UI shows both Begin and Complete buttons.
+            if (i % 2 == 1) jo.Begin();
             _db.JobOrders.Add(jo);
 
             // Spawn a draft certificate the inspector can fill in.
-            var certNo = $"IS-{year:D4}-{i + 1:D6}-{client.Code}";
+            var certNo = $"DEV-IS-{year:D4}-{i + 1:D6}-{client.Code}";
             var cert = new InspectionCertificate(
                 Guid.NewGuid(), certNo, client.Id, equipForClient.Id, jo.Id,
                 today, today, CertificateInspectionType.PeriodicInspection)

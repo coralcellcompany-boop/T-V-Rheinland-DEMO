@@ -75,6 +75,8 @@ public sealed record CertificateDetailDto(
     string? PhotosJson,
     string? SignaturesJson,
     string? AramcoReportJson,
+    string? EquipmentAramcoCategory,
+    bool IsBlueStickerCertificate,
     DateTime CreatedAtUtc,
     DateTime? UpdatedAtUtc,
     IReadOnlyList<CertificateTransitionDto> Transitions);

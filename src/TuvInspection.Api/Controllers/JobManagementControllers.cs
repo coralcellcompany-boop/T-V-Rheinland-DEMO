@@ -69,9 +69,13 @@ public class JobOrdersController : ControllerBase
 
     [HttpGet] public Task<PagedResult<JobOrderListItemDto>> List(
         [FromQuery] Guid? clientId, [FromQuery] JobOrderStatusDto? status,
-        [FromQuery] string? search, [FromQuery] int page = 1, [FromQuery] int pageSize = 25,
+        [FromQuery] string? search,
+        [FromQuery] string? assignedInspectorId,
+        [FromQuery] bool mineOnly = false,
+        [FromQuery] int page = 1, [FromQuery] int pageSize = 25,
         CancellationToken ct = default) =>
-        _d.Query(new ListJobOrdersQuery(clientId, status, search, page, pageSize), ct);
+        _d.Query(new ListJobOrdersQuery(
+            clientId, status, search, assignedInspectorId, mineOnly, page, pageSize), ct);
 
     [HttpGet("{id:guid}")] public async Task<ActionResult<JobOrderDetailDto>> GetById(Guid id, CancellationToken ct)
     {
@@ -91,6 +95,22 @@ public class JobOrdersController : ControllerBase
     [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
     public Task<JobOrderDetailDto> Update(Guid id, [FromBody] UpdateJobOrderRequest body, CancellationToken ct) =>
         _d.Send(new UpdateJobOrderCommand(id, body), ct);
+
+    /// <summary>Move an Open job order into InProgress. Inspector (assigned) or staff.</summary>
+    [HttpPost("{id:guid}/begin")]
+    public Task<JobOrderDetailDto> Begin(Guid id, CancellationToken ct) =>
+        _d.Send(new BeginJobOrderCommand(id), ct);
+
+    /// <summary>Mark a job order Completed. Inspector (assigned) or staff.</summary>
+    [HttpPost("{id:guid}/complete")]
+    public Task<JobOrderDetailDto> Complete(Guid id, CancellationToken ct) =>
+        _d.Send(new CompleteJobOrderCommand(id), ct);
+
+    /// <summary>Cancel a job order. Manager/Coordinator only.</summary>
+    [HttpPost("{id:guid}/cancel")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+    public Task<JobOrderDetailDto> Cancel(Guid id, CancellationToken ct) =>
+        _d.Send(new CancelJobOrderCommand(id), ct);
 }
 
 [ApiController]

@@ -139,22 +139,37 @@ import {
             (save)="saveChecklist($event)" />
         </section>
 
-        <!-- Aramco Annex 1 inspection report fields -->
-        <section class="aramco card">
-          <header class="block-header">
-            <h3>Aramco inspection report (Annex 1)</h3>
-            <span class="muted" *ngIf="!isMutable()">
-              <i class="pi pi-lock"></i>
-              Read-only — certificate is in {{ stateName(c.state) }} state.
-            </span>
-          </header>
-          <tuv-aramco-form
-            [value]="c.aramcoReportJson"
-            [readonly]="!isMutable()"
-            [canDownloadPdf]="true"
-            [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
-            (save)="saveAramcoReport($event)" />
-        </section>
+        <!-- Aramco Annex 1 — Blue Sticker only (Aramco-categorised equipment).
+             Third Party Inspection certs use the per-equipment-type checklist above
+             and don't need this section. -->
+        @if (c.isBlueStickerCertificate) {
+          <section class="aramco card">
+            <header class="block-header">
+              <h3>
+                <i class="pi pi-tag" style="color: #0a64a4"></i>
+                Aramco Blue Sticker report (Annex 1 · MS0053813)
+                <span class="badge" *ngIf="c.equipmentAramcoCategory">{{ c.equipmentAramcoCategory }}</span>
+              </h3>
+              <span class="muted" *ngIf="!isMutable()">
+                <i class="pi pi-lock"></i>
+                Read-only — certificate is in {{ stateName(c.state) }} state.
+              </span>
+            </header>
+            <tuv-aramco-form
+              [value]="c.aramcoReportJson"
+              [readonly]="!isMutable()"
+              [canDownloadPdf]="true"
+              [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
+              (save)="saveAramcoReport($event)" />
+          </section>
+        } @else {
+          <section class="aramco card tpi-note">
+            <h3><i class="pi pi-info-circle"></i> Third Party Inspection</h3>
+            <p>This equipment isn't Aramco-categorised, so the Annex 1 / Blue Sticker
+              report doesn't apply. Use the equipment-type checklist above to record
+              the inspection.</p>
+          </section>
+        }
 
         <!-- Photos -->
         <section class="photos card">
@@ -228,6 +243,13 @@ import {
       .summary { grid-area: summary; }
       .actions { grid-area: actions; }
       .aramco { grid-area: aramco; }
+      .aramco h3 .badge {
+        display: inline-block; margin-left: 0.5rem;
+        background: #0a64a4; color: #fff; font-size: 0.6rem;
+        padding: 0.1rem 0.5rem; border-radius: 999px; vertical-align: middle;
+      }
+      .tpi-note { background: #f8fafc; }
+      .tpi-note p { color: #475569; font-size: 0.88rem; }
       .checklist { grid-area: checklist; }
       .photos { grid-area: photos; }
       .signatures { grid-area: signatures; }

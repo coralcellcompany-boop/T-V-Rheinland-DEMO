@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
@@ -220,6 +220,9 @@ export class CertificatesListPage {
   protected filterState: number | null = null;
   protected filterType: number | null = null;
   protected filterResult: number | null = null;
+  /** Optional pre-filter from `?jobOrderId=…` (e.g. opened from /job-orders). */
+  protected filterJobOrderId: string | null = null;
+  private route = inject(ActivatedRoute);
 
   protected newDialog = false;
   protected creating = signal(false);
@@ -266,7 +269,10 @@ export class CertificatesListPage {
       error: (err) => showHttpError(this.notify, err),
     });
 
-    this.refresh(1, this.pageSize(), '');
+    this.route.queryParamMap.subscribe((qp) => {
+      this.filterJobOrderId = qp.get('jobOrderId');
+      this.refresh(1, this.pageSize(), this.searchSig());
+    });
     let first = true;
     effect(() => {
       const s = this.searchSig();
@@ -288,6 +294,7 @@ export class CertificatesListPage {
       page, pageSize,
       search: search?.trim() || undefined,
       clientId: this.filterClient ?? undefined,
+      jobOrderId: this.filterJobOrderId ?? undefined,
       state: this.filterState ?? undefined,
       inspectionType: this.filterType ?? undefined,
       result: this.filterResult ?? undefined,

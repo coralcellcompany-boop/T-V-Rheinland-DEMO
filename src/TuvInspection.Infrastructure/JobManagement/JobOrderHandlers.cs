@@ -45,18 +45,40 @@ public sealed class ListJobOrdersHandler : IQueryHandler<ListJobOrdersQuery, Pag
         if (!string.IsNullOrWhiteSpace(q.Search))
             query = query.Where(j => EF.Functions.Like(j.JobOrderNo, $"%{q.Search.Trim()}%"));
 
-        var total = await query.CountAsync(ct);
+        // Inspector-scoped filter: either an explicit AssignedInspectorId param (used by
+        // Manager/Coordinator dashboards) or MineOnly which pins it to the caller (used
+        // by inspectors viewing their own queue). The inspector list lives in a JSON
+        // column with a value converter, so EF cannot translate Contains to SQL — we
+        // materialize the page and apply the filter in memory. Pragmatic at MVP volumes;
+        // a backing CSV/junction table would scale better.
+        var inspectorId = q.MineOnly ? _tenant.UserId : q.AssignedInspectorId;
         var page = Math.Max(1, q.Page);
         var pageSize = Math.Clamp(q.PageSize, 1, 200);
 
+        if (!string.IsNullOrWhiteSpace(inspectorId))
+        {
+            var all = await query.OrderByDescending(j => j.CreatedAtUtc).ToListAsync(ct);
+            var filtered = all.Where(j => j.AssignedInspectorIds.Contains(inspectorId)).ToList();
+            var pageItems = filtered.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+            var clientIds = pageItems.Select(j => j.ClientId).Distinct().ToList();
+            var clientNames = await _db.Clients.IgnoreQueryFilters()
+                .Where(c => clientIds.Contains(c.Id))
+                .ToDictionaryAsync(c => c.Id, c => c.Name, ct);
+
+            var items = pageItems.Select(j => JobOrderMapper.ToListItem(j,
+                clientNames.GetValueOrDefault(j.ClientId, ""))).ToList();
+            return new PagedResult<JobOrderListItemDto>(items, filtered.Count, page, pageSize);
+        }
+
+        var total = await query.CountAsync(ct);
         var rows = await query
             .OrderByDescending(j => j.CreatedAtUtc)
             .Skip((page - 1) * pageSize).Take(pageSize)
             .Join(_db.Clients.IgnoreQueryFilters(), j => j.ClientId, c => c.Id, (j, c) => new { j, c })
             .ToListAsync(ct);
-
-        var items = rows.Select(x => JobOrderMapper.ToListItem(x.j, x.c.Name)).ToList();
-        return new PagedResult<JobOrderListItemDto>(items, total, page, pageSize);
+        var unfilteredItems = rows.Select(x => JobOrderMapper.ToListItem(x.j, x.c.Name)).ToList();
+        return new PagedResult<JobOrderListItemDto>(unfilteredItems, total, page, pageSize);
     }
 }
 
@@ -146,5 +168,83 @@ public sealed class UpdateJobOrderHandler : ICommandHandler<UpdateJobOrderComman
         jo.UpdatedById = _tenant.UserId;
         await _db.SaveChangesAsync(ct);
         return (await new GetJobOrderByIdHandler(_db, _tenant).Handle(new(command.Id), ct))!;
+    }
+}
+
+/// <summary>
+/// Status-flip commands. Inspectors can only flip a JO they are assigned to
+/// (Begin / Complete) — the actual physical site work; Manager/Coordinator can do any
+/// flip including Cancel.
+/// </summary>
+public abstract class JobOrderStatusFlipHandlerBase
+{
+    protected readonly AppDbContext _db;
+    protected readonly ITenantContext _tenant;
+    protected readonly IClock _clock;
+    protected JobOrderStatusFlipHandlerBase(AppDbContext db, ITenantContext tenant, IClock clock)
+    { _db = db; _tenant = tenant; _clock = clock; }
+
+    protected async Task<JobOrder> LoadAndAuthorize(Guid id, bool inspectorAllowed, CancellationToken ct)
+    {
+        var query = _tenant.IsInRole(Roles.Manager) ? _db.JobOrders.IgnoreQueryFilters() : _db.JobOrders;
+        var jo = await query.FirstOrDefaultAsync(x => x.Id == id, ct)
+            ?? throw new KeyNotFoundException($"Job order {id} not found.");
+
+        var isStaff = _tenant.IsInRole(Roles.Manager) || _tenant.IsInRole(Roles.Coordinator);
+        if (isStaff) return jo;
+
+        if (!inspectorAllowed || _tenant.UserId is null
+            || !jo.AssignedInspectorIds.Contains(_tenant.UserId))
+            throw new UnauthorizedAccessException(
+                "Only Manager/Coordinator or an assigned Inspector can change this job order's status.");
+        return jo;
+    }
+
+    protected async Task<JobOrderDetailDto> Persist(JobOrder jo, CancellationToken ct)
+    {
+        jo.UpdatedAtUtc = _clock.UtcNow;
+        jo.UpdatedById = _tenant.UserId;
+        await _db.SaveChangesAsync(ct);
+        return (await new GetJobOrderByIdHandler(_db, _tenant).Handle(new(jo.Id), ct))!;
+    }
+}
+
+public sealed class BeginJobOrderHandler : JobOrderStatusFlipHandlerBase, ICommandHandler<BeginJobOrderCommand, JobOrderDetailDto>
+{
+    public BeginJobOrderHandler(AppDbContext db, ITenantContext tenant, IClock clock) : base(db, tenant, clock) { }
+    public async Task<JobOrderDetailDto> Handle(BeginJobOrderCommand c, CancellationToken ct)
+    {
+        var jo = await LoadAndAuthorize(c.Id, inspectorAllowed: true, ct);
+        if (jo.Status != JobOrderStatus.Open)
+            throw new InvalidOperationException($"Cannot begin a job order in state {jo.Status}.");
+        jo.Begin();
+        return await Persist(jo, ct);
+    }
+}
+
+public sealed class CompleteJobOrderHandler : JobOrderStatusFlipHandlerBase, ICommandHandler<CompleteJobOrderCommand, JobOrderDetailDto>
+{
+    public CompleteJobOrderHandler(AppDbContext db, ITenantContext tenant, IClock clock) : base(db, tenant, clock) { }
+    public async Task<JobOrderDetailDto> Handle(CompleteJobOrderCommand c, CancellationToken ct)
+    {
+        var jo = await LoadAndAuthorize(c.Id, inspectorAllowed: true, ct);
+        if (jo.Status is JobOrderStatus.Completed or JobOrderStatus.Cancelled)
+            throw new InvalidOperationException($"Job order is already in terminal state {jo.Status}.");
+        jo.Complete();
+        return await Persist(jo, ct);
+    }
+}
+
+public sealed class CancelJobOrderHandler : JobOrderStatusFlipHandlerBase, ICommandHandler<CancelJobOrderCommand, JobOrderDetailDto>
+{
+    public CancelJobOrderHandler(AppDbContext db, ITenantContext tenant, IClock clock) : base(db, tenant, clock) { }
+    public async Task<JobOrderDetailDto> Handle(CancelJobOrderCommand c, CancellationToken ct)
+    {
+        // Inspectors should not cancel — only staff.
+        var jo = await LoadAndAuthorize(c.Id, inspectorAllowed: false, ct);
+        if (jo.Status is JobOrderStatus.Completed or JobOrderStatus.Cancelled)
+            throw new InvalidOperationException($"Job order is already in terminal state {jo.Status}.");
+        jo.Cancel();
+        return await Persist(jo, ct);
     }
 }

@@ -22,6 +22,7 @@ export class CertificatesApi {
   list(filters: {
     clientId?: string;
     equipmentId?: string;
+    jobOrderId?: string;
     state?: number;
     inspectionType?: number;
     result?: number;

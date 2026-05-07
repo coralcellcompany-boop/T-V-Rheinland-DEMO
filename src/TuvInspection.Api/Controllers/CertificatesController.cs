@@ -32,6 +32,7 @@ public class CertificatesController : ControllerBase
     public Task<PagedResult<CertificateListItemDto>> List(
         [FromQuery] Guid? clientId,
         [FromQuery] Guid? equipmentId,
+        [FromQuery] Guid? jobOrderId,
         [FromQuery] CertificateStateDto? state,
         [FromQuery] CertificateInspectionTypeDto? inspectionType,
         [FromQuery] InspectionResultDto? result,
@@ -40,7 +41,7 @@ public class CertificatesController : ControllerBase
         [FromQuery] int pageSize = 25,
         CancellationToken ct = default) =>
         _dispatcher.Query(new ListCertificatesQuery(
-            clientId, equipmentId, state, inspectionType, result, search, page, pageSize), ct);
+            clientId, equipmentId, jobOrderId, state, inspectionType, result, search, page, pageSize), ct);
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<CertificateDetailDto>> GetById(Guid id, CancellationToken ct)

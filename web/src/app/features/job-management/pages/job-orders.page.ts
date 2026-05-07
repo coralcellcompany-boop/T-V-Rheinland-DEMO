@@ -1,6 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
@@ -50,7 +51,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
             <tr>
               <th>Job Order</th><th>Client</th><th>Service</th>
               <th>Window</th><th>Inspectors</th><th>Status</th>
-              <th style="width: 60px"></th>
+              <th style="width: 220px"></th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-j>
@@ -64,10 +65,31 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
                 <span *ngIf="j.assignedInspectorCount === 0" class="muted">—</span>
               </td>
               <td><tuv-status-pill [value]="statusName(j.status)" /></td>
-              <td>
+              <td class="row-actions">
+                <p-button icon="pi pi-file-check" severity="secondary"
+                  [text]="true" rounded size="small"
+                  pTooltip="Open inspections for this job order"
+                  (onClick)="openCertificates(j)" />
+
+                <p-button *ngIf="j.status === 0" icon="pi pi-play" severity="success"
+                  [text]="true" rounded size="small"
+                  pTooltip="Begin work — moves to In Progress"
+                  [loading]="busy() === j.id" (onClick)="beginOrder(j)" />
+
+                <p-button *ngIf="j.status === 1" icon="pi pi-check" severity="success"
+                  [text]="true" rounded size="small"
+                  pTooltip="Mark complete"
+                  [loading]="busy() === j.id" (onClick)="completeOrder(j)" />
+
                 <p-button *ngIf="canEdit()" icon="pi pi-users" severity="secondary"
                   [text]="true" rounded size="small"
                   pTooltip="Assign inspectors" (onClick)="openAssign(j)" />
+
+                <p-button *ngIf="canEdit() && j.status !== 2 && j.status !== 3"
+                  icon="pi pi-times" severity="danger"
+                  [text]="true" rounded size="small"
+                  pTooltip="Cancel job order"
+                  [loading]="busy() === j.id" (onClick)="cancelOrder(j)" />
               </td>
             </tr>
           </ng-template>
@@ -131,6 +153,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       :host ::ng-deep .form .p-select { width: 100%; }
       :host ::ng-deep .form .ms { width: 100%; }
       .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+      .row-actions { display: flex; gap: 0.15rem; flex-wrap: nowrap; }
     `,
   ],
 })
@@ -171,8 +194,12 @@ export class JobOrdersPage {
   ];
 
   protected canEdit = () => this.auth.hasAnyRole([Roles.Manager, Roles.Coordinator]);
+  protected isInspectorOnly = () => this.auth.hasRole(Roles.Inspector) && !this.canEdit();
   protected statusName = (s: number) => JobOrderStatusName[s];
   protected serviceLabel = (s: number) => ServiceTypeLabel[s] ?? '—';
+
+  protected busy = signal<string | null>(null);
+  private router = inject(Router);
 
   constructor() {
     this.clientsApi.list({ pageSize: 200 }).subscribe({
@@ -191,10 +218,43 @@ export class JobOrdersPage {
 
   private refresh() {
     this.loading.set(true);
-    this.api.list({ pageSize: 100 }).subscribe({
+    // Inspectors see only their own job orders; staff see everything.
+    const params = this.isInspectorOnly() ? { mineOnly: true, pageSize: 100 } : { pageSize: 100 };
+    this.api.list(params).subscribe({
       next: (r) => { this.rows.set(r.items); this.loading.set(false); },
       error: (err) => { this.loading.set(false); showHttpError(this.notify, err); },
     });
+  }
+
+  beginOrder(j: JobOrderListItem) {
+    this.busy.set(j.id);
+    this.api.begin(j.id).subscribe({
+      next: () => { this.busy.set(null); this.notify.success(`${j.jobOrderNo} started.`); this.refresh(); },
+      error: (err) => { this.busy.set(null); showHttpError(this.notify, err); },
+    });
+  }
+
+  completeOrder(j: JobOrderListItem) {
+    if (!confirm(`Mark ${j.jobOrderNo} as complete?`)) return;
+    this.busy.set(j.id);
+    this.api.complete(j.id).subscribe({
+      next: () => { this.busy.set(null); this.notify.success(`${j.jobOrderNo} completed.`); this.refresh(); },
+      error: (err) => { this.busy.set(null); showHttpError(this.notify, err); },
+    });
+  }
+
+  cancelOrder(j: JobOrderListItem) {
+    if (!confirm(`Cancel ${j.jobOrderNo}? Inspectors won't be able to record more work.`)) return;
+    this.busy.set(j.id);
+    this.api.cancel(j.id).subscribe({
+      next: () => { this.busy.set(null); this.notify.success(`${j.jobOrderNo} cancelled.`); this.refresh(); },
+      error: (err) => { this.busy.set(null); showHttpError(this.notify, err); },
+    });
+  }
+
+  /** Navigate to /certificates pre-filtered to this job order's inspections. */
+  openCertificates(j: JobOrderListItem) {
+    this.router.navigate(['/certificates'], { queryParams: { jobOrderId: j.id } });
   }
 
   createOrder() {

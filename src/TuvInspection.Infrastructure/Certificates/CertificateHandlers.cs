@@ -31,6 +31,7 @@ public sealed class ListCertificatesHandler
 
         if (q.ClientId is { } cid) certs = certs.Where(c => c.ClientId == cid);
         if (q.EquipmentId is { } eid) certs = certs.Where(c => c.EquipmentId == eid);
+        if (q.JobOrderId is { } jid) certs = certs.Where(c => c.JobOrderId == jid);
         if (q.State is { } st) certs = certs.Where(c => c.State == (CertificateState)(int)st);
         if (q.InspectionType is { } it) certs = certs.Where(c => c.InspectionType == (CertificateInspectionType)(int)it);
         if (q.Result is { } r) certs = certs.Where(c => c.Result == (InspectionResult)(int)r);
@@ -86,8 +87,13 @@ public sealed class GetCertificateByIdHandler
         var equip = await _db.Equipment.IgnoreQueryFilters()
             .Where(e => e.Id == c.EquipmentId)
             .Join(_db.EquipmentTypes, e => e.EquipmentTypeId, t => t.Id,
-                (e, t) => new { e.IdNo, TypeId = t.Id, TypeName = t.Name })
+                (e, t) => new { e.IdNo, e.AramcoCategory, TypeId = t.Id, TypeName = t.Name })
             .FirstAsync(ct);
+
+        // Blue Sticker certificate detection: any cert whose equipment carries an Aramco
+        // category triggers the auto-issue and thus needs the Annex 1 report. Pure Third
+        // Party Inspection (no Aramco category) uses the equipment-type checklist instead.
+        var isBlueSticker = equip.AramcoCategory is not null && equip.AramcoCategory != 0;
 
         return new CertificateDetailDto(
             c.Id, c.CertificateNo, c.ClientId, clientName,
@@ -100,6 +106,8 @@ public sealed class GetCertificateByIdHandler
             c.Standards, c.StickerNo,
             c.ChecklistJson, c.FindingsJson, c.PhotosJson, c.SignaturesJson,
             c.AramcoReportJson,
+            equip.AramcoCategory?.ToString(),
+            isBlueSticker,
             c.CreatedAtUtc, c.UpdatedAtUtc,
             c.Transitions.OrderBy(t => t.AtUtc).Select(t => t.ToDto()).ToList());
     }
