@@ -6,6 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.3.0" />
     <PackageReference Include="EPPlus" Version="8.5.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.7" />
@@ -28,5 +29,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <!-- Embed the official Aramco Annex 1 docx so the renderer can fill it in
+       memory and forward to gotenberg for byte-perfect docx→pdf. -->
+  <ItemGroup>
+    <EmbeddedResource Include="Certificates\Templates\Annex1.docx" />
+  </ItemGroup>
 
 </Project>

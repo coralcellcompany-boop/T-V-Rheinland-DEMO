@@ -38,5 +38,17 @@ services:
       - "8025:8025"   # Web UI: http://localhost:8025
     restart: unless-stopped
 
+  # Gotenberg = headless LibreOffice exposed as a REST API.
+  # Used by AramcoReportPdfRenderer to render the official Annex 1 docx template
+  # to PDF byte-for-byte (no QuestPDF re-implementation that drifts from the
+  # source layout). API: POST /forms/libreoffice/convert with the .docx in a
+  # multipart form field named `files`; response is the PDF.
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    container_name: tuv-gotenberg
+    ports:
+      - "3030:3000"   # http://localhost:3030 (API)
+    restart: unless-stopped
+
 volumes:
   mssql-data:

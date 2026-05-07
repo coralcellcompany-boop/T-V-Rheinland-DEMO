@@ -96,10 +96,11 @@ public class CertificatesController : ControllerBase
         var dto = await _dispatcher.Query(new GetCertificateByIdQuery(id), ct);
         if (dto is null) return NotFound();
         var ctx = await _dispatcher.Query(new GetCertificateInspectorContextQuery(id), ct);
-        var bytes = _aramcoRenderer.Render(dto,
+        var bytes = await _aramcoRenderer.RenderAsync(dto,
             inspectorName: ctx.InspectorName ?? "—",
             inspectorSapNo: ctx.InspectorSapNo,
-            equipmentSwl: ctx.EquipmentSwl ?? "—");
+            equipmentSwl: ctx.EquipmentSwl ?? "—",
+            ct: ct);
         return File(bytes, "application/pdf", $"{dto.CertificateNo}-Annex1.pdf");
     }
 }

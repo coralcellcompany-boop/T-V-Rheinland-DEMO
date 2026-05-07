@@ -134,7 +134,9 @@ public static class InfrastructureModule
         // Certificate number generator + PDF renderer
         services.AddScoped<CertificateNoGenerator>();
         services.AddSingleton<CertificatePdfRenderer>();
-        services.AddSingleton<AramcoReportPdfRenderer>();
+        services.AddSingleton<Annex1TemplateFiller>();
+        services.AddHttpClient<GotenbergClient>();
+        services.AddScoped<AramcoReportPdfRenderer>();
 
         // Stickers
         services.AddScoped<StickerNumberGenerator>();
