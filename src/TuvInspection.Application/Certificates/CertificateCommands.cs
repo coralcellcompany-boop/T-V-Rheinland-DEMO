@@ -12,6 +12,12 @@ public sealed record ListCertificatesQuery(
     CertificateInspectionTypeDto? InspectionType,
     InspectionResultDto? Result,
     string? Search,
+    /// <summary>
+    /// True → only certs whose equipment carries an Aramco category (Blue Sticker line).
+    /// False → only certs whose equipment is NOT Aramco-categorised (Third Party line).
+    /// Null → no filter (the unified all-services view).
+    /// </summary>
+    bool? AramcoOnly,
     int Page,
     int PageSize) : IQuery<PagedResult<CertificateListItemDto>>;
 

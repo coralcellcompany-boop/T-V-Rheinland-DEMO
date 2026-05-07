@@ -30,7 +30,9 @@
       "operations": "Operations",
       "administration": "Administration"
     },
-    "myStickers": "My stickers"
+    "myStickers": "My stickers",
+    "tpiCertificates": "TPI inspections",
+    "blueStickerCertificates": "Blue Sticker inspections"
   },
   "topbar": {
     "search": "Search certificates, equipment, clients…",

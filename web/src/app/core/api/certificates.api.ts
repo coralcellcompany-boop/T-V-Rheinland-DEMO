@@ -27,6 +27,7 @@ export class CertificatesApi {
     inspectionType?: number;
     result?: number;
     search?: string;
+    aramcoOnly?: boolean;
     page?: number;
     pageSize?: number;
   } = {}): Observable<PagedResult<CertificateListItem>> {

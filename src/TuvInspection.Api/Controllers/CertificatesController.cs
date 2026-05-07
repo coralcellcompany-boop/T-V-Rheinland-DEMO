@@ -37,11 +37,13 @@ public class CertificatesController : ControllerBase
         [FromQuery] CertificateInspectionTypeDto? inspectionType,
         [FromQuery] InspectionResultDto? result,
         [FromQuery] string? search,
+        [FromQuery] bool? aramcoOnly,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 25,
         CancellationToken ct = default) =>
         _dispatcher.Query(new ListCertificatesQuery(
-            clientId, equipmentId, jobOrderId, state, inspectionType, result, search, page, pageSize), ct);
+            clientId, equipmentId, jobOrderId, state, inspectionType, result, search,
+            aramcoOnly, page, pageSize), ct);
 
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<CertificateDetailDto>> GetById(Guid id, CancellationToken ct)

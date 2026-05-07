@@ -26,6 +26,8 @@ import { NavItem, NavSection, pickPrimarySections, pickSecondaryNav } from './si
           <hr *ngIf="collapsed()" class="group-divider" />
           <a *ngFor="let item of section.items"
              [routerLink]="item.route"
+             [queryParams]="item.queryParams ?? null"
+             [routerLinkActiveOptions]="{ exact: false, queryParams: 'subset' }"
              routerLinkActive="active"
              [pTooltip]="collapsed() ? (item.label | translate) : ''"
              tooltipPosition="right">
@@ -38,6 +40,7 @@ import { NavItem, NavSection, pickPrimarySections, pickSecondaryNav } from './si
         <hr *ngIf="secondary().length && collapsed()" class="group-divider" />
         <a *ngFor="let item of secondary()"
            [routerLink]="item.route"
+           [queryParams]="item.queryParams ?? null"
            routerLinkActive="active"
            [pTooltip]="collapsed() ? (item.label | translate) : ''"
            tooltipPosition="right">

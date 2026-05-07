@@ -15,12 +15,11 @@ import { StatusPill } from '../../../shared/components/status-pill.component';
 import { EmptyState } from '../../../shared/components/empty-state.component';
 import { JobOrdersApi } from '../../../core/api/job-management.api';
 import { ClientsApi } from '../../../core/api/clients.api';
-import { UsersApi } from '../../../core/api/users.api';
+import { InspectorLookup, UsersApi } from '../../../core/api/users.api';
 import {
   JobOrderDetail, JobOrderListItem, JobOrderStatusName, ServiceType, ServiceTypeLabel,
 } from '../../../core/models/job-management.models';
 import { ClientListItem } from '../../../core/models/client.models';
-import { UserListItem } from '../../../core/models/user.models';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Roles } from '../../../core/models/auth.models';
 import { NotifyService } from '../../../shared/services/notify.service';
@@ -167,9 +166,9 @@ export class JobOrdersPage {
   protected rows = signal<JobOrderListItem[]>([]);
   protected clients = signal<ClientListItem[]>([]);
   protected clientOptions = computed(() => this.clients().map(c => ({ label: c.name, value: c.id })));
-  protected inspectors = signal<UserListItem[]>([]);
+  protected inspectors = signal<InspectorLookup[]>([]);
   protected inspectorOptions = computed(() => this.inspectors().map(i =>
-    ({ label: `${i.fullName ?? i.userName ?? i.email} (${i.email ?? ''})`, value: i.id })));
+    ({ label: `${i.displayName} (${i.email ?? ''})`, value: i.id })));
 
   protected assignDialog = false;
   protected assigning = signal(false);
@@ -207,9 +206,11 @@ export class JobOrdersPage {
       error: (err) => showHttpError(this.notify, err),
     });
     if (this.canEdit()) {
-      this.usersApi.list().subscribe({
-        next: (us) => this.inspectors.set(us.filter(u => u.isActive
-          && u.roles.some(r => r === Roles.Inspector))),
+      // Use the lightweight /api/users/inspectors lookup (Manager + Coordinator).
+      // The full /api/admin/users endpoint is Manager-only and would 403 here for
+      // Coordinators, leaving the dropdown empty.
+      this.usersApi.inspectors().subscribe({
+        next: (xs) => this.inspectors.set(xs),
         error: () => { /* leave empty — assign dialog will show empty hint */ },
       });
     }

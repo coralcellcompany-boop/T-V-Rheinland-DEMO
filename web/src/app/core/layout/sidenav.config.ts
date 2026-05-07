@@ -6,6 +6,8 @@ export interface NavItem {
   route: string;
   roles?: readonly string[];
   badge?: 'pending' | 'expired';
+  /** Optional query parameters appended on click (e.g. service-line filter). */
+  queryParams?: Record<string, string>;
 }
 
 export interface NavSection {
@@ -28,15 +30,18 @@ export const PRIMARY_SECTIONS: NavSection[] = [
   {
     label: 'nav.section.thirdParty',
     items: [
-      { label: 'nav.certificates', icon: 'pi-file-check', route: '/certificates' },
-      { label: 'nav.equipment',    icon: 'pi-wrench',     route: '/equipment' },
-      { label: 'nav.approvals',    icon: 'pi-thumbs-up',  route: '/approvals',
+      { label: 'nav.tpiCertificates', icon: 'pi-file-check', route: '/certificates',
+        queryParams: { service: 'third-party' } },
+      { label: 'nav.equipment',       icon: 'pi-wrench',     route: '/equipment' },
+      { label: 'nav.approvals',       icon: 'pi-thumbs-up',  route: '/approvals',
         roles: [Roles.Manager, Roles.Coordinator, Roles.TechReviewer], badge: 'pending' },
     ],
   },
   {
     label: 'nav.section.blueSticker',
     items: [
+      { label: 'nav.blueStickerCertificates', icon: 'pi-file-check', route: '/certificates',
+        queryParams: { service: 'blue-sticker' } },
       { label: 'nav.stickers',         icon: 'pi-qrcode', route: '/stickers',
         roles: [Roles.Manager, Roles.Coordinator] },
       { label: 'nav.myStickers',       icon: 'pi-tag',    route: '/my-stickers',

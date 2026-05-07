@@ -30,7 +30,9 @@
       "operations": "العمليات",
       "administration": "الإدارة"
     },
-    "myStickers": "ملصقاتي"
+    "myStickers": "ملصقاتي",
+    "tpiCertificates": "فحوص الطرف الثالث",
+    "blueStickerCertificates": "فحوص الملصق الأزرق"
   },
   "topbar": {
     "search": "ابحث في الشهادات والمعدات والعملاء…",

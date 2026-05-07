@@ -41,6 +41,18 @@ public sealed class ListCertificatesHandler
             certs = certs.Where(c => EF.Functions.Like(c.CertificateNo, $"%{s}%"));
         }
 
+        // Service-line split: Blue Sticker = Aramco-categorised equipment;
+        // Third Party = everything else.
+        if (q.AramcoOnly is bool aramcoOnly)
+        {
+            var aramcoEquipIds = _db.Equipment.IgnoreQueryFilters()
+                .Where(e => e.AramcoCategory != null)
+                .Select(e => e.Id);
+            certs = aramcoOnly
+                ? certs.Where(c => aramcoEquipIds.Contains(c.EquipmentId))
+                : certs.Where(c => !aramcoEquipIds.Contains(c.EquipmentId));
+        }
+
         var total = await certs.CountAsync(ct);
         var page = Math.Max(1, q.Page);
         var pageSize = Math.Clamp(q.PageSize, 1, 200);

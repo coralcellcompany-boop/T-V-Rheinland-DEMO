@@ -54,8 +54,8 @@ import { DatePipe } from '@angular/common';
     EmptyState,
   ],
   template: `
-    <tuv-page-header title="Certificates" icon="pi-file-check"
-      subtitle="Inspection certificates with their full lifecycle. Use filters to scope to a client, state, or inspection type.">
+    <tuv-page-header [title]="pageTitle()" [icon]="pageIcon()"
+      [subtitle]="pageSubtitle()">
       <p-button *ngIf="canCreate()" icon="pi pi-plus" label="New certificate"
         (onClick)="newDialog = true" />
     </tuv-page-header>
@@ -222,6 +222,8 @@ export class CertificatesListPage {
   protected filterResult: number | null = null;
   /** Optional pre-filter from `?jobOrderId=…` (e.g. opened from /job-orders). */
   protected filterJobOrderId: string | null = null;
+  /** Service-line filter from `?service=blue-sticker | third-party` URL param. */
+  protected filterAramcoOnly: boolean | null = null;
   private route = inject(ActivatedRoute);
 
   protected newDialog = false;
@@ -256,6 +258,21 @@ export class CertificatesListPage {
   protected resultLabel = (r: number) => InspectionResultLabel[r];
   protected inspectionTypeLabel = (t: number) => CertificateInspectionTypeLabel[t];
 
+  protected pageTitle = () =>
+    this.filterAramcoOnly === true ? 'Blue Sticker certificates'
+    : this.filterAramcoOnly === false ? 'Third Party Inspection certificates'
+    : 'Certificates';
+  protected pageIcon = () =>
+    this.filterAramcoOnly === true ? 'pi-tag'
+    : this.filterAramcoOnly === false ? 'pi-file-check'
+    : 'pi-file-check';
+  protected pageSubtitle = () =>
+    this.filterAramcoOnly === true
+      ? 'Aramco-categorised equipment. Approval auto-issues a Blue Sticker; the Annex 1 (MS0053813) report is the deliverable.'
+    : this.filterAramcoOnly === false
+      ? 'Non-Aramco equipment. Equipment-type-specific checklist is the deliverable; no Blue Sticker is issued.'
+    : 'Inspection certificates with their full lifecycle. Use filters to scope to a client, state, or inspection type.';
+
   protected canSubmitNew = () =>
     !!this.newEquipmentId && !!this.newInspectionDate && !!this.newReportIssueDate;
 
@@ -271,6 +288,10 @@ export class CertificatesListPage {
 
     this.route.queryParamMap.subscribe((qp) => {
       this.filterJobOrderId = qp.get('jobOrderId');
+      const service = qp.get('service');
+      this.filterAramcoOnly = service === 'blue-sticker' ? true
+        : service === 'third-party' ? false
+        : null;
       this.refresh(1, this.pageSize(), this.searchSig());
     });
     let first = true;
@@ -295,6 +316,7 @@ export class CertificatesListPage {
       search: search?.trim() || undefined,
       clientId: this.filterClient ?? undefined,
       jobOrderId: this.filterJobOrderId ?? undefined,
+      aramcoOnly: this.filterAramcoOnly ?? undefined,
       state: this.filterState ?? undefined,
       inspectionType: this.filterType ?? undefined,
       result: this.filterResult ?? undefined,
