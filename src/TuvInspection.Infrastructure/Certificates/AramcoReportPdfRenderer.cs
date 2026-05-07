@@ -8,13 +8,15 @@ namespace TuvInspection.Infrastructure.Certificates;
 
 /// <summary>
 /// Renders the Aramco-approved Annex 1 (MS0053813) Lifting Equipment Inspection Report
-/// matching the official format used by TÜV Rheinland Arabia for Saudi Aramco.
-///
-/// The report payload (RPO No., CRM No., Org Code, Aramco Category No., previous
-/// sticker info, receiver/inspector signatures, etc.) is stored as JSON in
-/// <c>InspectionCertificate.AramcoReportJson</c> and unfolded here. Fields that
-/// are not yet filled render as a blank line so the printed PDF can be hand-completed
-/// in the field.
+/// in a layout that matches the official Word template byte-for-byte:
+///   - 11-column grid sized in the same dxa proportions as the docx
+///     (3187/1133/1260/30/1784/110/1305/1431/2540/1440/1525)
+///   - Blue title bar (#548DD4) and grey label rows (#D9D9D9) per the original
+///   - Same row order: title → 4 detail rows → compliance paragraph → deficiencies →
+///     signatures
+/// Aramco fields come from <c>InspectionCertificate.AramcoReportJson</c>; equipment
+/// + inspector context is supplied by the caller (handler) since they don't live on the
+/// cert DTO.
 /// </summary>
 public sealed class AramcoReportPdfRenderer
 {
@@ -23,10 +25,17 @@ public sealed class AramcoReportPdfRenderer
         PropertyNameCaseInsensitive = true,
     };
 
-    private const string HeaderBlue = "#548dd4";
-    private const string SoftGrey   = "#d9d9d9";
-    private const string White      = "#ffffff";
-    private const string Ink        = "#0f172a";
+    // Palette taken directly from the docx theme.
+    private const string TitleBlue  = "#548DD4";
+    private const string LabelGrey  = "#D9D9D9";
+    private const string PassGreen  = "#00B050";
+    private const string FailRed    = "#C00000";
+    private const string White      = "#FFFFFF";
+    private const string Ink        = "#000000";
+
+    // 11-column grid weights from the original docx tblGrid.
+    private static readonly int[] Cols =
+        { 3187, 1133, 1260, 30, 1784, 110, 1305, 1431, 2540, 1440, 1525 };
 
     static AramcoReportPdfRenderer()
     {
@@ -45,7 +54,7 @@ public sealed class AramcoReportPdfRenderer
                 page.Size(PageSizes.A4.Landscape());
                 page.Margin(20);
                 page.PageColor(White);
-                page.DefaultTextStyle(t => t.FontSize(8).FontColor(Ink));
+                page.DefaultTextStyle(t => t.FontSize(8.5f).FontColor(Ink).FontFamily("Helvetica"));
                 page.Content().Element(el => Sheet(el, cert, data, inspectorName, inspectorSapNo, equipmentSwl));
             });
         }).GeneratePdf();
@@ -71,156 +80,179 @@ public sealed class AramcoReportPdfRenderer
     private static void Sheet(IContainer c, CertificateDetailDto cert, AramcoReportData data,
         string inspectorName, string? inspectorSapNo, string equipmentSwl)
     {
-        c.Column(col =>
+        c.Table(t =>
         {
-            // Title bar
-            col.Item().Background(HeaderBlue).Padding(8).AlignCenter()
+            t.ColumnsDefinition(cd =>
+            {
+                foreach (var w in Cols) cd.RelativeColumn(w);
+            });
+
+            // ── Row 0: title bar — span all 11 columns ─────────────────────────
+            t.Cell().ColumnSpan(11)
+                .Background(TitleBlue).Padding(8).AlignCenter()
                 .Text("LIFTING EQUIPMENT INSPECTION REPORT")
                 .FontSize(13).Bold().FontColor(White);
 
-            // Row 1 — TUV Job Order, Aramco Cat No., Org Code, RPO No., CRM No., Report No.
-            HeaderRow6(col,
-                ("TUV Job Order No.", data.TuvJobOrderNo),
-                ("Aramco Category No.", data.AramcoCategoryNo),
-                ("Org. Code", data.OrgCode),
-                ("RPO No.", data.RpoNo),
-                ("CRM No.", data.CrmNo),
-                ("Report No.", data.ReportNo ?? cert.CertificateNo));
+            // ── Row 1: 6 labels — spans [1,3,2,2,1,2] ─────────────────────────
+            LabelCell(t, 1, "TUV Job Order. No.");
+            LabelCell(t, 3, "Aramco Category No.");
+            LabelCell(t, 2, "Org. Code");
+            LabelCell(t, 2, "RPO NO.");
+            LabelCell(t, 1, "CRM No.");
+            LabelCell(t, 2, "Report No.");
 
-            // Row 2 — Department/Contractor, Inspection Date/Time, Previous Sticker info
-            HeaderRow5(col,
-                ("Department / Contractor", data.DepartmentContractor),
-                ("Inspection Date", cert.InspectionDate.ToString("dd MMM yyyy")),
-                ("Inspection Time", data.InspectionTime?.ToString("HH:mm")),
-                ("Previous Sticker No.", data.PreviousStickerNo),
-                ("Previous Sticker Issued By", data.PreviousStickerIssuedBy));
+            // ── Row 2: data ───────────────────────────────────────────────────
+            DataCell(t, 1, data.TuvJobOrderNo);
+            DataCell(t, 3, data.AramcoCategoryNo ?? cert.EquipmentAramcoCategory);
+            DataCell(t, 2, data.OrgCode);
+            DataCell(t, 2, data.RpoNo);
+            DataCell(t, 1, data.CrmNo);
+            DataCell(t, 2, data.ReportNo ?? cert.CertificateNo);
 
-            // Row 3 — Area, Equipment ID, Capacity, Location, Result, New Sticker
-            HeaderRow6(col,
-                ("Area of Inspection", data.AreaOfInspection),
-                ("Equipment ID No.", cert.EquipmentIdNo),
-                ("Capacity", data.Capacity ?? equipmentSwl),
-                ("Equipment Location", data.EquipmentLocationOnSite),
-                ("Inspection Result", cert.Result.ToString()),
-                ("New Sticker No.", cert.StickerNo));
+            // ── Row 3: 5 labels — spans [4,2,2,1,2] ───────────────────────────
+            LabelCell(t, 4, "Department / Contractor");
+            LabelCell(t, 2, "Inspection Date");
+            LabelCell(t, 2, "Inspection Time");
+            LabelCell(t, 1, "Previous Sticker No.");
+            LabelCell(t, 2, "Previous Sticker Issued By");
 
-            // Row 4 — Manufacturer, Model, Equipment Type, Serial No., Sticker Expiration
-            HeaderRow5(col,
-                ("Manufacturer", data.Manufacturer),
-                ("Model", data.Model),
-                ("Equipment Type", cert.EquipmentTypeName),
-                ("Equipment Serial No.", data.EquipmentSerialNo),
-                ("Sticker Expiration Date",
-                    (data.StickerExpirationDate ?? cert.NextDueDate)?.ToString("dd MMM yyyy")));
+            // ── Row 4: data ───────────────────────────────────────────────────
+            DataCell(t, 4, data.DepartmentContractor);
+            DataCell(t, 2, cert.InspectionDate.ToString("dd MMM yyyy"));
+            DataCell(t, 2, data.InspectionTime?.ToString("HH:mm"));
+            DataCell(t, 1, data.PreviousStickerNo);
+            DataCell(t, 2, data.PreviousStickerIssuedBy);
 
-            // Compliance statement
-            col.Item().PaddingTop(8).Border(0.5f).Padding(8).Text(
-                "The above-mentioned equipment was inspected by TUV Rheinland Arabia LLC in " +
-                "accordance with applicable Saudi Aramco G.I.'s, ASME and API Standards. " +
-                "Deficiencies that require corrective action are listed below; specific repair " +
-                "to correct each deficiency should be noted in the corrective action taken column."
-            ).FontSize(8).Italic();
+            // ── Row 5: 6 labels — spans [1,3,2,2,1,2] ─────────────────────────
+            LabelCell(t, 1, "Area of Inspection");
+            LabelCell(t, 3, "Equipment ID No.");
+            LabelCell(t, 2, "Capacity");
+            LabelCell(t, 2, "Equipment Location");
+            LabelCell(t, 1, "Inspection Result");
+            LabelCell(t, 2, "New Sticker No.");
 
-            // Deficiencies / Corrective Actions table
-            col.Item().PaddingTop(8).Table(t =>
-            {
-                t.ColumnsDefinition(c => { c.RelativeColumn(); c.RelativeColumn(); });
-                t.Header(h =>
-                {
-                    h.Cell().Background(SoftGrey).Padding(4).Text("DEFICIENCIES / OBSERVATIONS").Bold();
-                    h.Cell().Background(SoftGrey).Padding(4).Text("CORRECTIVE ACTION TAKEN").Bold();
-                });
-                t.Cell().Border(0.5f).Padding(6).MinHeight(80)
-                    .Text(string.IsNullOrWhiteSpace(data.Deficiencies) ? "—" : data.Deficiencies).FontSize(8);
-                t.Cell().Border(0.5f).Padding(6).MinHeight(80)
-                    .Text(string.IsNullOrWhiteSpace(data.CorrectiveActionsTaken) ? "—" : data.CorrectiveActionsTaken).FontSize(8);
-            });
+            // ── Row 6: data — Inspection Result cell coloured by outcome ──────
+            DataCell(t, 1, data.AreaOfInspection);
+            DataCell(t, 3, cert.EquipmentIdNo);
+            DataCell(t, 2, data.Capacity ?? equipmentSwl);
+            DataCell(t, 2, data.EquipmentLocationOnSite);
+            ResultCell(t, cert.Result);
+            DataCell(t, 2, cert.StickerNo, monospace: true);
 
-            // Signature block — Receiver | Inspector | Tech Reviewer
-            col.Item().PaddingTop(10).Table(t =>
-            {
-                t.ColumnsDefinition(c => { c.RelativeColumn(); c.RelativeColumn(); c.RelativeColumn(); });
-                t.Header(h =>
-                {
-                    h.Cell().Background(HeaderBlue).Padding(4).AlignCenter()
-                        .Text("RECEIVER").Bold().FontColor(White);
-                    h.Cell().Background(HeaderBlue).Padding(4).AlignCenter()
-                        .Text("INSPECTOR").Bold().FontColor(White);
-                    h.Cell().Background(HeaderBlue).Padding(4).AlignCenter()
-                        .Text("TECHNICAL REVIEWER").Bold().FontColor(White);
-                });
+            // ── Row 7: 5 labels — spans [1,3,4,1,2] ───────────────────────────
+            LabelCell(t, 1, "Manufacturer");
+            LabelCell(t, 3, "Model");
+            LabelCell(t, 4, "Equipment Type");
+            LabelCell(t, 1, "Equipment Serial No.");
+            LabelCell(t, 2, "Sticker Expiration Date");
 
-                SignatureCell(t, "Name",       data.ReceiverName);
-                SignatureCell(t, "Name",       inspectorName);
-                SignatureCell(t, "Name",       null);
+            // ── Row 8: data ───────────────────────────────────────────────────
+            DataCell(t, 1, data.Manufacturer);
+            DataCell(t, 3, data.Model);
+            DataCell(t, 4, cert.EquipmentTypeName);
+            DataCell(t, 1, data.EquipmentSerialNo);
+            DataCell(t, 2, (data.StickerExpirationDate ?? cert.NextDueDate)?.ToString("dd MMM yyyy"));
 
-                SignatureCell(t, "Badge No.",  data.ReceiverBadgeNo);
-                SignatureCell(t, "SAP No.",    inspectorSapNo);
-                SignatureCell(t, "Reviewed",   data.ReviewedDate?.ToString("dd MMM yyyy"));
+            // ── Row 9: compliance paragraph — full width grey ─────────────────
+            t.Cell().ColumnSpan(11)
+                .Background(LabelGrey).Border(0.4f).BorderColor(Ink).Padding(8)
+                .Text(
+                    "The above-mentioned equipment was inspected by TUV Rheinland Arabia LLC " +
+                    "in accordance with applicable Saudi Aramco G.I.'s, ASME AND API Standards. " +
+                    "Deficiencies that required corrective action are listed below. Specific repair " +
+                    "to correct each deficiency should be noted in the corrective action taken column.")
+                .FontSize(8).Italic();
 
-                SignatureCell(t, "Telephone",  data.ReceiverTelephone);
-                SignatureCell(t, "Telephone",  data.InspectorTelephone);
-                SignatureCell(t, "Received",   data.ReceivedDate?.ToString("dd MMM yyyy"));
+            // ── Row 10: deficiencies / corrective actions header ──────────────
+            BlueHeaderCell(t, 8, "DEFICIENCES / OBSERVATIONS");
+            BlueHeaderCell(t, 3, "CORRECTIVE ACTION TAKEN");
 
-                SignatureCell(t, "Signature",  null, isSignature: true);
-                SignatureCell(t, "Signature",  null, isSignature: true);
-                SignatureCell(t, "Signature",  null, isSignature: true);
-            });
+            // ── Row 11: deficiencies / corrective actions data ────────────────
+            t.Cell().ColumnSpan(8).Border(0.4f).BorderColor(Ink).Padding(8).MinHeight(70)
+                .Text(string.IsNullOrWhiteSpace(data.Deficiencies) ? " " : data.Deficiencies)
+                .FontSize(8.5f);
+            t.Cell().ColumnSpan(3).Border(0.4f).BorderColor(Ink).Padding(8).MinHeight(70)
+                .Text(string.IsNullOrWhiteSpace(data.CorrectiveActionsTaken) ? " " : data.CorrectiveActionsTaken)
+                .FontSize(8.5f);
 
-            col.Item().PaddingTop(10).Text(
-                "Annex 1 — MS0053813 — TÜV Rheinland Arabia LLC — Aramco-approved contractor agency.")
-                .FontSize(6).FontColor("#64748b").AlignCenter();
+            // ── Row 12: signature header — RECIEVER | INSPECTOR | TECH REV ────
+            BlueHeaderCell(t, 3, "RECIEVER");
+            BlueHeaderCell(t, 5, "INSPECTOR");
+            BlueHeaderCell(t, 3, "TECHNICAL REVIEWER");
+
+            // ── Row 13: signature labels ──────────────────────────────────────
+            // Receiver block (3 cols)
+            LabelCell(t, 1, "Name");
+            LabelCell(t, 1, "Badge No.");
+            LabelCell(t, 1, "Telephone #");
+            // Inspector block (5 cols → split [2,2,1])
+            LabelCell(t, 2, "Name");
+            LabelCell(t, 2, "SAP NO.");
+            LabelCell(t, 1, "Telephone #");
+            // Tech reviewer block (3 cols)
+            LabelCell(t, 1, "Name");
+            LabelCell(t, 1, "Received date");
+            LabelCell(t, 1, "Reviewed date");
+
+            // ── Row 14: signature data ────────────────────────────────────────
+            DataCell(t, 1, data.ReceiverName);
+            DataCell(t, 1, data.ReceiverBadgeNo);
+            DataCell(t, 1, data.ReceiverTelephone);
+            DataCell(t, 2, inspectorName);
+            DataCell(t, 2, inspectorSapNo);
+            DataCell(t, 1, data.InspectorTelephone);
+            DataCell(t, 1, null);
+            DataCell(t, 1, data.ReceivedDate?.ToString("dd MMM yyyy"));
+            DataCell(t, 1, data.ReviewedDate?.ToString("dd MMM yyyy"));
+
+            // ── Row 15: signature lines ───────────────────────────────────────
+            SignatureCell(t, 3);
+            SignatureCell(t, 5);
+            SignatureCell(t, 3);
         });
     }
 
-    private static void HeaderRow6(ColumnDescriptor col, params (string Label, string? Value)[] cells)
+    private static void LabelCell(TableDescriptor t, int span, string label)
     {
-        col.Item().PaddingTop(2).Table(t =>
-        {
-            t.ColumnsDefinition(c =>
-            {
-                for (var i = 0; i < cells.Length; i++) c.RelativeColumn();
-            });
-            t.Header(h =>
-            {
-                foreach (var (label, _) in cells)
-                    h.Cell().Background(SoftGrey).Padding(4).AlignCenter().Text(label).FontSize(7).Bold();
-            });
-            foreach (var (_, value) in cells)
-                t.Cell().Border(0.5f).Padding(6).MinHeight(20)
-                    .Text(string.IsNullOrWhiteSpace(value) ? " " : value).FontSize(8);
-        });
+        t.Cell().ColumnSpan((uint)span)
+            .Background(LabelGrey).Border(0.4f).BorderColor(Ink).Padding(4).AlignCenter()
+            .Text(label).FontSize(8).Bold();
     }
 
-    private static void HeaderRow5(ColumnDescriptor col, params (string Label, string? Value)[] cells)
+    private static void DataCell(TableDescriptor t, int span, string? value, bool monospace = false)
     {
-        col.Item().PaddingTop(2).Table(t =>
-        {
-            t.ColumnsDefinition(c =>
-            {
-                for (var i = 0; i < cells.Length; i++) c.RelativeColumn();
-            });
-            t.Header(h =>
-            {
-                foreach (var (label, _) in cells)
-                    h.Cell().Background(SoftGrey).Padding(4).AlignCenter().Text(label).FontSize(7).Bold();
-            });
-            foreach (var (_, value) in cells)
-                t.Cell().Border(0.5f).Padding(6).MinHeight(20)
-                    .Text(string.IsNullOrWhiteSpace(value) ? " " : value).FontSize(8);
-        });
+        var item = t.Cell().ColumnSpan((uint)span)
+            .Background(White).Border(0.4f).BorderColor(Ink).Padding(6).MinHeight(22);
+        item.Text(string.IsNullOrWhiteSpace(value) ? " " : value)
+            .FontSize(9).Bold();
     }
 
-    private static void SignatureCell(TableDescriptor t, string label, string? value,
-        bool isSignature = false)
+    private static void BlueHeaderCell(TableDescriptor t, int span, string label)
     {
-        t.Cell().Border(0.5f).Padding(6).Column(col =>
+        t.Cell().ColumnSpan((uint)span)
+            .Background(TitleBlue).Border(0.4f).BorderColor(Ink).Padding(4).AlignCenter()
+            .Text(label).FontSize(9).Bold().FontColor(White);
+    }
+
+    private static void ResultCell(TableDescriptor t, InspectionResultDto result)
+    {
+        var (label, color) = result switch
         {
-            col.Item().Text(label).FontSize(6).FontColor("#64748b");
-            if (isSignature)
-                col.Item().Height(36);
-            else
-                col.Item().Text(string.IsNullOrWhiteSpace(value) ? " " : value).FontSize(9).Bold();
-        });
+            InspectionResultDto.Pass                 => ("PASS", PassGreen),
+            InspectionResultDto.Fail                 => ("FAIL", FailRed),
+            InspectionResultDto.FailWithObservations => ("FAIL w/ OBS", FailRed),
+            _                                        => ("—", White),
+        };
+        t.Cell().ColumnSpan(1)
+            .Background(color).Border(0.4f).BorderColor(Ink).Padding(4).AlignCenter()
+            .Text(label).FontSize(10).Bold()
+            .FontColor(color == White ? Ink : White);
+    }
+
+    private static void SignatureCell(TableDescriptor t, int span)
+    {
+        t.Cell().ColumnSpan((uint)span)
+            .Background(White).Border(0.4f).BorderColor(Ink).Padding(6).MinHeight(40)
+            .Text("Signature").FontSize(7).FontColor("#64748b");
     }
 }
