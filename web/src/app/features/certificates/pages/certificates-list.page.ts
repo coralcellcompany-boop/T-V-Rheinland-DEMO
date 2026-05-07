@@ -85,7 +85,7 @@ import { DatePipe } from '@angular/common';
     </div>
 
     <div class="card">
-      @if (loading()) {
+      @if (firstLoad()) {
         <div class="loader">Loading certificates…</div>
       } @else if (rows().length === 0) {
         <tuv-empty-state icon="pi-file-check" title="No certificates yet"
@@ -100,6 +100,7 @@ import { DatePipe } from '@angular/common';
           [rows]="pageSize()"
           [totalRecords]="total()"
           [lazy]="true"
+          [loading]="loading()"
           (onLazyLoad)="onLazyLoad($event)"
           [rowsPerPageOptions]="[10, 25, 50, 100]"
           dataKey="id"
@@ -201,6 +202,7 @@ export class CertificatesListPage {
   private router = inject(Router);
 
   protected loading = signal(true);
+  protected firstLoad = signal(true);
   protected rows = signal<CertificateListItem[]>([]);
   protected total = signal(0);
   protected page = signal(1);
@@ -296,9 +298,11 @@ export class CertificatesListPage {
         this.page.set(res.page);
         this.pageSize.set(res.pageSize);
         this.loading.set(false);
+        this.firstLoad.set(false);
       },
       error: (err) => {
         this.loading.set(false);
+        this.firstLoad.set(false);
         showHttpError(this.notify, err, 'Failed to load certificates');
       },
     });

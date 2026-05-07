@@ -56,7 +56,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
     </div>
 
     <div class="card">
-      @if (loading()) { <div class="loader">Loading assessments…</div> }
+      @if (firstLoad()) { <div class="loader">Loading assessments…</div> }
       @else if (rows().length === 0) {
         <tuv-empty-state icon="pi-verified" title="No assessments yet"
           message="Create the first competency assessment from a candidate.">
@@ -65,6 +65,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       } @else {
         <p-table [value]="rows()" [rowHover]="true" styleClass="p-datatable-sm"
           [paginator]="true" [rows]="pageSize()" [totalRecords]="total()" [lazy]="true"
+          [loading]="loading()"
           (onLazyLoad)="onLazyLoad($event)" [rowsPerPageOptions]="[10, 25, 50, 100]">
           <ng-template pTemplate="header">
             <tr>
@@ -159,6 +160,7 @@ export class AssessmentsListPage {
   private router = inject(Router);
 
   protected loading = signal(true);
+  protected firstLoad = signal(true);
   protected rows = signal<AssessmentListItem[]>([]);
   protected total = signal(0);
   protected page = signal(1);
@@ -237,8 +239,13 @@ export class AssessmentsListPage {
         this.rows.set(res.items); this.total.set(res.total);
         this.page.set(res.page); this.pageSize.set(res.pageSize);
         this.loading.set(false);
+        this.firstLoad.set(false);
       },
-      error: (err) => { this.loading.set(false); showHttpError(this.notify, err); },
+      error: (err) => {
+        this.loading.set(false);
+        this.firstLoad.set(false);
+        showHttpError(this.notify, err);
+      },
     });
   }
 

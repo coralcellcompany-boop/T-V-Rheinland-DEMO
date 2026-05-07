@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.Common;
@@ -120,11 +121,32 @@ public sealed class GetStickerPublicViewHandler
             : await _db.Clients.IgnoreQueryFilters()
                 .Where(c => c.Id == s.ClientId).Select(c => c.Name).FirstOrDefaultAsync(ct);
 
-        string? certNo = s.IssuedToCertificateId is null ? null
-            : await _db.Certificates.IgnoreQueryFilters()
-                .Where(c => c.Id == s.IssuedToCertificateId).Select(c => c.CertificateNo).FirstOrDefaultAsync(ct);
+        string? certNo = null;
+        DateOnly? inspectionDate = null;
+        string? inspectorName = null;
+        string? inspectorSap = null;
+        if (s.IssuedToCertificateId is { } certId)
+        {
+            var cert = await _db.Certificates.IgnoreQueryFilters().AsNoTracking()
+                .Where(c => c.Id == certId)
+                .Select(c => new { c.CertificateNo, c.InspectionDate, c.CreatedById })
+                .FirstOrDefaultAsync(ct);
+            certNo = cert?.CertificateNo;
+            inspectionDate = cert?.InspectionDate;
+            if (cert?.CreatedById is { } uid)
+            {
+                var user = await _db.Users.AsNoTracking()
+                    .Where(u => u.Id == uid)
+                    .Select(u => new { Name = u.FullName ?? u.UserName ?? u.Email, Sap = u.SapNo })
+                    .FirstOrDefaultAsync(ct);
+                inspectorName = user?.Name;
+                inspectorSap = user?.Sap;
+            }
+        }
 
         string? equipIdNo = null;
+        string? equipSerialNo = null;
+        string? equipSwl = null;
         string? equipTypeName = null;
         AramcoCategory? aramcoCat = null;
         if (s.IssuedToEquipmentId is { } eqId)
@@ -132,17 +154,18 @@ public sealed class GetStickerPublicViewHandler
             var eq = await _db.Equipment.IgnoreQueryFilters().AsNoTracking()
                 .Where(e => e.Id == eqId)
                 .Join(_db.EquipmentTypes, e => e.EquipmentTypeId, t => t.Id,
-                    (e, t) => new { e.IdNo, e.AramcoCategory, TypeName = t.Name })
+                    (e, t) => new { e.IdNo, e.SerialNo, e.Swl, e.AramcoCategory, TypeName = t.Name })
                 .FirstOrDefaultAsync(ct);
             equipIdNo = eq?.IdNo;
+            equipSerialNo = eq?.SerialNo;
+            equipSwl = eq?.Swl;
             equipTypeName = eq?.TypeName;
             aramcoCat = eq?.AramcoCategory;
         }
 
-        // Mask equipment ID — show last 6 chars only.
-        var maskedIdNo = string.IsNullOrEmpty(equipIdNo)
-            ? null
-            : equipIdNo.Length <= 6 ? equipIdNo : "…" + equipIdNo[^6..];
+        // Mask equipment ID + serial — show last 6 chars only (no PII over public scan).
+        static string? Mask(string? v) => string.IsNullOrEmpty(v)
+            ? null : (v.Length <= 6 ? v : "…" + v[^6..]);
 
         var isValid = s.State == StickerState.Issued
             && s.ValidUntil.HasValue
@@ -153,11 +176,16 @@ public sealed class GetStickerPublicViewHandler
             (StickerStateDto)s.State,
             aramcoCat?.ToString(),
             equipTypeName,
-            maskedIdNo,
+            Mask(equipIdNo),
+            Mask(equipSerialNo),
+            equipSwl,
             clientName,
+            inspectionDate,
             s.ValidUntil,
             isValid,
             certNo,
+            inspectorName,
+            inspectorSap,
             s.IssuedAtUtc);
     }
 }
@@ -168,17 +196,18 @@ public sealed class ProcureStickerStockHandler : ICommandHandler<ProcureStickerS
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
     private readonly StickerNumberGenerator _gen;
+    private readonly IValidator<ProcureStockRequest> _validator;
 
     public ProcureStickerStockHandler(AppDbContext db, ITenantContext tenant, IClock clock,
-        StickerNumberGenerator gen)
-    { _db = db; _tenant = tenant; _clock = clock; _gen = gen; }
+        StickerNumberGenerator gen, IValidator<ProcureStockRequest> validator)
+    { _db = db; _tenant = tenant; _clock = clock; _gen = gen; _validator = validator; }
 
     public async Task<int> Handle(ProcureStickerStockCommand command, CancellationToken ct)
     {
         if (!_tenant.IsInRole(Roles.Manager))
             throw new UnauthorizedAccessException("Only Manager may procure sticker stock.");
-        if (command.Count is < 1 or > 1000)
-            throw new ArgumentException("Count must be between 1 and 1000.");
+
+        await _validator.ValidateAndThrowAsync(new ProcureStockRequest(command.Count, command.Color), ct);
 
         var color = (StickerColor)(int)command.Color;
         var nos = await _gen.NextBatch(command.Count, ct);
@@ -201,13 +230,17 @@ public sealed class VoidStickerHandler : ICommandHandler<VoidStickerCommand, Sti
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
-    public VoidStickerHandler(AppDbContext db, ITenantContext tenant, IClock clock)
-    { _db = db; _tenant = tenant; _clock = clock; }
+    private readonly IValidator<VoidStickerRequest> _validator;
+    public VoidStickerHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IValidator<VoidStickerRequest> validator)
+    { _db = db; _tenant = tenant; _clock = clock; _validator = validator; }
 
     public async Task<StickerListItemDto> Handle(VoidStickerCommand command, CancellationToken ct)
     {
         if (!_tenant.IsInRole(Roles.Manager))
             throw new UnauthorizedAccessException("Only Manager may void stickers.");
+
+        await _validator.ValidateAndThrowAsync(new VoidStickerRequest(command.Reason), ct);
 
         var s = await _db.Stickers.FirstOrDefaultAsync(x => x.Id == command.Id, ct)
             ?? throw new KeyNotFoundException($"Sticker {command.Id} not found.");
@@ -232,15 +265,18 @@ public sealed class AssignStickersToInspectorHandler
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
-    public AssignStickersToInspectorHandler(AppDbContext db, ITenantContext tenant, IClock clock)
-    { _db = db; _tenant = tenant; _clock = clock; }
+    private readonly IValidator<AssignStickersRequest> _validator;
+    public AssignStickersToInspectorHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IValidator<AssignStickersRequest> validator)
+    { _db = db; _tenant = tenant; _clock = clock; _validator = validator; }
 
     public async Task<int> Handle(AssignStickersToInspectorCommand c, CancellationToken ct)
     {
         if (!_tenant.IsInRole(Roles.Manager) && !_tenant.IsInRole(Roles.Coordinator))
             throw new UnauthorizedAccessException("Only Manager or Coordinator may assign stickers.");
-        if (c.Count <= 0 || c.Count > 500)
-            throw new ArgumentException("Count must be between 1 and 500.");
+
+        await _validator.ValidateAndThrowAsync(
+            new AssignStickersRequest(c.InspectorUserId, c.Color, c.Count), ct);
 
         var color = (StickerColor)(int)c.Color;
         var pool = await _db.Stickers

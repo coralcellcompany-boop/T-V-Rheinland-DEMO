@@ -79,8 +79,13 @@ public sealed record StickerPublicViewDto(
     string? AramcoCategory,
     string? EquipmentTypeName,
     string? EquipmentIdNo,         // last 6 chars only — not full identifier
+    string? EquipmentSerialNo,     // last 6 chars only
+    string? EquipmentSwl,          // capacity / safe working load (non-PII)
     string? ClientName,            // company name is non-PII
+    DateOnly? InspectionDate,      // last inspection (from linked certificate)
     DateOnly? ValidUntil,
     bool IsValidNow,
     string? CertificateNo,
+    string? InspectorName,         // inspector full name from the linked certificate
+    string? InspectorSapNo,        // inspector SAP / employee number
     DateTime? IssuedAtUtc);

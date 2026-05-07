@@ -21,7 +21,15 @@
     "surveys": "المسوحات",
     "reports": "التقارير",
     "audit": "سجل المراجعة",
-    "admin": "المسؤول"
+    "admin": "المسؤول",
+    "section": {
+      "workspace": "مساحة العمل",
+      "thirdParty": "الفحص الطرف الثالث",
+      "blueSticker": "خدمة الملصق الأزرق",
+      "assessment": "تقييم المشغّلين",
+      "operations": "العمليات",
+      "administration": "الإدارة"
+    }
   },
   "topbar": {
     "search": "ابحث في الشهادات والمعدات والعملاء…",

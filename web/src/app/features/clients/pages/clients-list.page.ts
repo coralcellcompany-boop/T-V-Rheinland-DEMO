@@ -93,7 +93,7 @@ import { ClientForm } from '../components/client-form.component';
     </p-dialog>
 
     <div class="card">
-      @if (loading()) {
+      @if (firstLoad()) {
         <div class="loader">Loading clients…</div>
       } @else if (rows().length === 0) {
         <tuv-empty-state
@@ -110,6 +110,7 @@ import { ClientForm } from '../components/client-form.component';
           [rows]="pageSize()"
           [totalRecords]="total()"
           [lazy]="true"
+          [loading]="loading()"
           (onLazyLoad)="onLazyLoad($event)"
           [rowsPerPageOptions]="[10, 25, 50, 100]"
           dataKey="id"
@@ -193,6 +194,7 @@ export class ClientsListPage {
   private confirm = inject(ConfirmationService);
 
   protected loading = signal(true);
+  protected firstLoad = signal(true);
   protected rows = signal<ClientListItem[]>([]);
   protected total = signal(0);
   protected page = signal(1);
@@ -240,9 +242,11 @@ export class ClientsListPage {
         this.page.set(res.page);
         this.pageSize.set(res.pageSize);
         this.loading.set(false);
+        this.firstLoad.set(false);
       },
       error: (err) => {
         this.loading.set(false);
+        this.firstLoad.set(false);
         showHttpError(this.notify, err, 'Failed to load clients');
       },
     });

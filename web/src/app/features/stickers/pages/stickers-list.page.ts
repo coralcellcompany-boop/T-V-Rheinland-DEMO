@@ -35,6 +35,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 import { Roles } from '../../../core/models/auth.models';
 import { NotifyService } from '../../../shared/services/notify.service';
 import { showHttpError } from '../../../shared/services/api-error.handler';
+import { InspectorLookup, UsersApi } from '../../../core/api/users.api';
 
 @Component({
   selector: 'tuv-stickers-list',
@@ -51,6 +52,9 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       <p-button icon="pi pi-print" label="Print batch" severity="secondary"
         [outlined]="true" [loading]="printingBatch()" (onClick)="printBatch()"
         pTooltip="Print up to 24 unallocated stickers per A4 page (each with QR)." />
+      <p-button *ngIf="canAssign()" icon="pi pi-user-plus" label="Assign to inspector"
+        severity="secondary" (onClick)="openAssign()"
+        pTooltip="Reserve unallocated stickers for a specific inspector." />
       <p-button *ngIf="canProcure()" icon="pi pi-plus" label="Procure stock"
         (onClick)="procureDialog = true" />
     </tuv-page-header>
@@ -85,7 +89,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
     </div>
 
     <div class="card">
-      @if (loading()) {
+      @if (firstLoad()) {
         <div class="loader">Loading sticker register…</div>
       } @else if (rows().length === 0) {
         <tuv-empty-state icon="pi-qrcode" title="No stickers"
@@ -100,6 +104,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           [rows]="pageSize()"
           [totalRecords]="total()"
           [lazy]="true"
+          [loading]="loading()"
           (onLazyLoad)="onLazyLoad($event)"
           [rowsPerPageOptions]="[10, 25, 50, 100]"
           dataKey="id"
@@ -196,6 +201,45 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           [disabled]="!voidReason.trim()" (onClick)="confirmVoid()" />
       </ng-template>
     </p-dialog>
+
+    <p-dialog [(visible)]="assignDialog" [modal]="true" [style]="{ width: '480px' }"
+      header="Assign stickers to inspector" [closable]="!assigning()">
+      <div class="form">
+        <p>Reserve unallocated stickers for a specific inspector. The system pulls from the
+          oldest stock matching the colour.</p>
+
+        <label>Inspector<span class="req">*</span></label>
+        <p-select [options]="inspectorOptions()" optionLabel="label" optionValue="value"
+          [(ngModel)]="assignInspectorId" placeholder="Select an inspector"
+          [filter]="true" filterBy="label" appendTo="body" />
+        <small *ngIf="!inspectorsLoading() && inspectors().length === 0">
+          No active inspectors found. Add one in Admin first.
+        </small>
+
+        <label>Colour<span class="req">*</span></label>
+        <div class="color-row">
+          @for (opt of colorOptions; track opt.value) {
+            <button type="button" class="color-btn"
+              [class.selected]="assignColor === opt.value"
+              (click)="assignColor = opt.value"
+              [style.background]="colorHex(opt.value)"
+              [attr.aria-label]="opt.label">
+              <span>{{ opt.label }}</span>
+            </button>
+          }
+        </div>
+
+        <label>Count<span class="req">*</span></label>
+        <p-inputNumber [(ngModel)]="assignCount" [min]="1" [max]="500" [showButtons]="true" />
+        <small>Available {{ colorName(assignColor) }} stock: {{ summary()?.unallocated ?? '?' }} (all colours combined).</small>
+      </div>
+      <ng-template pTemplate="footer">
+        <p-button severity="secondary" label="Cancel" (onClick)="assignDialog = false" [disabled]="assigning()" />
+        <p-button label="Assign" icon="pi pi-user-plus" [loading]="assigning()"
+          [disabled]="!assignInspectorId || !assignCount || assignCount < 1"
+          (onClick)="confirmAssign()" />
+      </ng-template>
+    </p-dialog>
   `,
   styles: [
     `
@@ -240,10 +284,12 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
 export class StickersListPage {
   private api = inject(StickersApi);
   private publicApi = inject(PublicStickerApi);
+  private usersApi = inject(UsersApi);
   protected auth = inject(AuthService);
   private notify = inject(NotifyService);
 
   protected loading = signal(true);
+  protected firstLoad = signal(true);
   protected loadingSummary = signal(true);
   protected rows = signal<StickerListItem[]>([]);
   protected total = signal(0);
@@ -277,7 +323,18 @@ export class StickersListPage {
 
   protected printingBatch = signal(false);
 
+  protected assignDialog = false;
+  protected assigning = signal(false);
+  protected inspectors = signal<InspectorLookup[]>([]);
+  protected inspectorsLoading = signal(false);
+  protected inspectorOptions = computed(() =>
+    this.inspectors().map((i) => ({ value: i.id, label: i.displayName })));
+  protected assignInspectorId: string | null = null;
+  protected assignColor: number = StickerColor.Blue;
+  protected assignCount = 25;
+
   protected canProcure = () => this.auth.hasRole(Roles.Manager);
+  protected canAssign = () => this.auth.hasRole(Roles.Manager) || this.auth.hasRole(Roles.Coordinator);
   protected canVoid = (s: StickerListItem) =>
     this.auth.hasRole(Roles.Manager) && s.state !== 4 && s.state !== 5 && s.state !== 3;
 
@@ -320,9 +377,11 @@ export class StickersListPage {
         this.page.set(res.page);
         this.pageSize.set(res.pageSize);
         this.loading.set(false);
+        this.firstLoad.set(false);
       },
       error: (err) => {
         this.loading.set(false);
+        this.firstLoad.set(false);
         showHttpError(this.notify, err, 'Failed to load stickers');
       },
     });
@@ -399,6 +458,48 @@ export class StickersListPage {
       error: (err) => {
         this.printingBatch.set(false);
         showHttpError(this.notify, err, 'Could not generate sticker batch.');
+      },
+    });
+  }
+
+  openAssign() {
+    this.assignInspectorId = null;
+    this.assignColor = StickerColor.Blue;
+    this.assignCount = 25;
+    this.assignDialog = true;
+    if (this.inspectors().length === 0) {
+      this.inspectorsLoading.set(true);
+      this.usersApi.inspectors().subscribe({
+        next: (xs) => { this.inspectors.set(xs); this.inspectorsLoading.set(false); },
+        error: (err) => { this.inspectorsLoading.set(false); showHttpError(this.notify, err); },
+      });
+    }
+  }
+
+  confirmAssign() {
+    if (!this.assignInspectorId || !this.assignCount || this.assignCount < 1) return;
+    this.assigning.set(true);
+    this.api.assign(this.assignInspectorId, this.assignColor, this.assignCount).subscribe({
+      next: (r) => {
+        this.assigning.set(false);
+        this.assignDialog = false;
+        const inspector = this.inspectors().find((i) => i.id === this.assignInspectorId)?.displayName
+          ?? 'inspector';
+        if (r.assigned === this.assignCount) {
+          this.notify.success(`Assigned ${r.assigned} sticker(s) to ${inspector}.`);
+        } else if (r.assigned > 0) {
+          this.notify.success(
+            `Assigned ${r.assigned} of ${this.assignCount} sticker(s) to ${inspector}. ` +
+            `Stock for the selected colour is low — procure more to fulfil the rest.`);
+        } else {
+          this.notify.error(`No matching ${this.colorName(this.assignColor)} stickers in stock — procure more first.`);
+        }
+        this.refresh(this.page(), this.pageSize(), this.searchSig());
+        this.refreshSummary();
+      },
+      error: (err) => {
+        this.assigning.set(false);
+        showHttpError(this.notify, err);
       },
     });
   }

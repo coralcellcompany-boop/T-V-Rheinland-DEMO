@@ -86,7 +86,7 @@ import { CandidateForm } from '../components/candidate-form.component';
     </div>
 
     <div class="card">
-      @if (loading()) {
+      @if (firstLoad()) {
         <div class="loader">Loading candidates…</div>
       } @else if (rows().length === 0) {
         <tuv-empty-state icon="pi-id-card" title="No candidates yet"
@@ -96,6 +96,7 @@ import { CandidateForm } from '../components/candidate-form.component';
       } @else {
         <p-table [value]="rows()" [rowHover]="true" styleClass="p-datatable-sm"
           [paginator]="true" [rows]="pageSize()" [totalRecords]="total()" [lazy]="true"
+          [loading]="loading()"
           (onLazyLoad)="onLazyLoad($event)" [rowsPerPageOptions]="[10, 25, 50, 100]">
           <ng-template pTemplate="header">
             <tr>
@@ -167,6 +168,7 @@ export class CandidatesListPage {
   private notify = inject(NotifyService);
 
   protected loading = signal(true);
+  protected firstLoad = signal(true);
   protected rows = signal<CandidateListItem[]>([]);
   protected total = signal(0);
   protected page = signal(1);
@@ -252,8 +254,13 @@ export class CandidatesListPage {
         this.rows.set(res.items); this.total.set(res.total);
         this.page.set(res.page); this.pageSize.set(res.pageSize);
         this.loading.set(false);
+        this.firstLoad.set(false);
       },
-      error: (err) => { this.loading.set(false); showHttpError(this.notify, err, 'Failed to load candidates'); },
+      error: (err) => {
+        this.loading.set(false);
+        this.firstLoad.set(false);
+        showHttpError(this.notify, err, 'Failed to load candidates');
+      },
     });
   }
 

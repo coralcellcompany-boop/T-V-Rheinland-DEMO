@@ -124,6 +124,7 @@ public static class InfrastructureModule
         // Outbox processor + handlers
         services.AddHostedService<OutboxProcessor>();
         services.AddScoped<IOutboxMessageHandler<ClientSentCertificateEmail>, ClientSentEmailHandler>();
+        services.AddScoped<IOutboxMessageHandler<StickerRequestDecidedEmail>, StickerRequestDecidedEmailHandler>();
 
         // Excel import services
         services.AddScoped<EquipmentImportService>();

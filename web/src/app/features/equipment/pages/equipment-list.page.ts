@@ -86,7 +86,7 @@ import { EquipmentForm } from '../components/equipment-form.component';
     </div>
 
     <div class="card">
-      @if (loading()) {
+      @if (firstLoad()) {
         <div class="loader">Loading equipment…</div>
       } @else if (rows().length === 0) {
         <tuv-empty-state icon="pi-wrench" title="No equipment matches your filters"
@@ -100,6 +100,7 @@ import { EquipmentForm } from '../components/equipment-form.component';
           [rows]="pageSize()"
           [totalRecords]="total()"
           [lazy]="true"
+          [loading]="loading()"
           (onLazyLoad)="onLazyLoad($event)"
           [rowsPerPageOptions]="[10, 25, 50, 100]"
           dataKey="id"
@@ -225,6 +226,7 @@ export class EquipmentListPage {
   private notify = inject(NotifyService);
 
   protected loading = signal(true);
+  protected firstLoad = signal(true);
   protected rows = signal<EquipmentListItem[]>([]);
   protected total = signal(0);
   protected page = signal(1);
@@ -314,9 +316,11 @@ export class EquipmentListPage {
           this.page.set(res.page);
           this.pageSize.set(res.pageSize);
           this.loading.set(false);
+          this.firstLoad.set(false);
         },
         error: (err) => {
           this.loading.set(false);
+          this.firstLoad.set(false);
           showHttpError(this.notify, err, 'Failed to load equipment');
         },
       });

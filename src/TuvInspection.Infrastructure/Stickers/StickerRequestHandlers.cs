@@ -1,6 +1,8 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
+using TuvInspection.Application.Common.Outbox;
 using TuvInspection.Application.Common.Time;
 using TuvInspection.Application.Stickers;
 using TuvInspection.Contracts.Common;
@@ -68,8 +70,10 @@ public sealed class CreateStickerRequestHandler
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
-    public CreateStickerRequestHandler(AppDbContext db, ITenantContext tenant, IClock clock)
-    { _db = db; _tenant = tenant; _clock = clock; }
+    private readonly IValidator<CreateStickerRequest> _validator;
+    public CreateStickerRequestHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IValidator<CreateStickerRequest> validator)
+    { _db = db; _tenant = tenant; _clock = clock; _validator = validator; }
 
     public async Task<StickerRequestDto> Handle(CreateStickerRequestCommand c, CancellationToken ct)
     {
@@ -80,6 +84,8 @@ public sealed class CreateStickerRequestHandler
         // case but Coordinators may also pre-allocate stock to themselves.
         if (_tenant.IsInRole(Roles.ClientUser) && !_tenant.IsInRole(Roles.Inspector))
             throw new UnauthorizedAccessException("Client users cannot request stickers.");
+
+        await _validator.ValidateAndThrowAsync(c.Body, ct);
 
         var year = _clock.UtcNow.Year;
         var lastNo = await _db.StickerRequests
@@ -110,8 +116,9 @@ public sealed class ApproveStickerRequestHandler
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
-    public ApproveStickerRequestHandler(AppDbContext db, ITenantContext tenant, IClock clock)
-    { _db = db; _tenant = tenant; _clock = clock; }
+    private readonly IOutbox _outbox;
+    public ApproveStickerRequestHandler(AppDbContext db, ITenantContext tenant, IClock clock, IOutbox outbox)
+    { _db = db; _tenant = tenant; _clock = clock; _outbox = outbox; }
 
     public async Task<StickerRequestDto> Handle(ApproveStickerRequestCommand c, CancellationToken ct)
     {
@@ -143,6 +150,10 @@ public sealed class ApproveStickerRequestHandler
         r.UpdatedAtUtc = _clock.UtcNow;
         r.UpdatedById = _tenant.UserId;
 
+        await _outbox.Enqueue(new StickerRequestDecidedEmail(
+            r.Id, r.RequestNo, r.InspectorUserId, true,
+            r.Quantity, pool.Count, c.Comments, _clock.UtcNow), ct);
+
         await _db.SaveChangesAsync(ct);
         return await StickerRequestHandlerHelpers.ProjectAsync(_db, r.Id, ct);
     }
@@ -154,8 +165,9 @@ public sealed class RejectStickerRequestHandler
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
-    public RejectStickerRequestHandler(AppDbContext db, ITenantContext tenant, IClock clock)
-    { _db = db; _tenant = tenant; _clock = clock; }
+    private readonly IOutbox _outbox;
+    public RejectStickerRequestHandler(AppDbContext db, ITenantContext tenant, IClock clock, IOutbox outbox)
+    { _db = db; _tenant = tenant; _clock = clock; _outbox = outbox; }
 
     public async Task<StickerRequestDto> Handle(RejectStickerRequestCommand c, CancellationToken ct)
     {
@@ -170,10 +182,27 @@ public sealed class RejectStickerRequestHandler
         r.UpdatedAtUtc = _clock.UtcNow;
         r.UpdatedById = _tenant.UserId;
 
+        await _outbox.Enqueue(new StickerRequestDecidedEmail(
+            r.Id, r.RequestNo, r.InspectorUserId, false,
+            r.Quantity, 0, c.Reason, _clock.UtcNow), ct);
+
         await _db.SaveChangesAsync(ct);
         return await StickerRequestHandlerHelpers.ProjectAsync(_db, r.Id, ct);
     }
 }
+
+/// <summary>
+/// Outbox payload: notify the inspector when their sticker request was approved or rejected.
+/// </summary>
+public sealed record StickerRequestDecidedEmail(
+    Guid RequestId,
+    string RequestNo,
+    string InspectorUserId,
+    bool Approved,
+    int RequestedQuantity,
+    int AllocatedCount,
+    string? Comments,
+    DateTime AtUtc);
 
 public sealed class CancelStickerRequestHandler
     : ICommandHandler<CancelStickerRequestCommand, StickerRequestDto>

@@ -5,6 +5,8 @@ namespace TuvInspection.Application.Users;
 
 public sealed record ListUsersQuery(string? Search) : IQuery<IReadOnlyList<UserListItemDto>>;
 
+public sealed record ListInspectorsQuery() : IQuery<IReadOnlyList<InspectorLookupDto>>;
+
 public sealed record GetUserByIdQuery(string Id) : IQuery<UserListItemDto?>;
 
 public sealed record CreateUserCommand(CreateUserRequest Body) : ICommand<UserListItemDto>;

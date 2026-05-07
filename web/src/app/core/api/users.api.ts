@@ -12,11 +12,17 @@ import {
 export class UsersApi {
   private http = inject(HttpClient);
   private base = `${environment.apiBaseUrl}/api/admin/users`;
+  private lookupBase = `${environment.apiBaseUrl}/api/users`;
 
   list(search?: string): Observable<UserListItem[]> {
     let p = new HttpParams();
     if (search) p = p.set('search', search);
     return this.http.get<UserListItem[]>(this.base, { params: p });
+  }
+
+  /** Lookup of active inspectors — Manager + Coordinator can call this. */
+  inspectors(): Observable<InspectorLookup[]> {
+    return this.http.get<InspectorLookup[]>(`${this.lookupBase}/inspectors`);
   }
 
   get(id: string): Observable<UserListItem> {
@@ -56,6 +62,12 @@ export interface UserLicense {
   validUntil: string | null;
   isValidNow: boolean;
   daysUntilExpiry: number | null;
+}
+
+export interface InspectorLookup {
+  id: string;
+  displayName: string;
+  email: string | null;
 }
 
 export interface UpdateUserLicenseRequest {

@@ -25,6 +25,7 @@ builder.Services.Configure<ApiBehaviorOptions>(o =>
 builder.Services.AddProblemDetails();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<IdentitySeeder>();
+builder.Services.AddScoped<DevDataSeeder>();
 
 // CORS for the Angular dev server
 const string SpaCors = "Spa";
@@ -70,6 +71,9 @@ using (var scope = app.Services.CreateScope())
 {
     var seeder = scope.ServiceProvider.GetRequiredService<IdentitySeeder>();
     await seeder.SeedAsync(CancellationToken.None);
+
+    var devSeeder = scope.ServiceProvider.GetRequiredService<DevDataSeeder>();
+    await devSeeder.SeedAsync(CancellationToken.None);
 }
 
 app.Run();

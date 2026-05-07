@@ -47,3 +47,7 @@ public sealed record UpdateUserLicenseRequest(
     string? LicenseScope,
     DateOnly? ValidFrom,
     DateOnly? ValidUntil);
+
+/// <summary>Lightweight inspector lookup — used by features that need to pick an inspector
+/// (sticker assignment, job-order assignment) without exposing full admin user data.</summary>
+public sealed record InspectorLookupDto(string Id, string DisplayName, string? Email);

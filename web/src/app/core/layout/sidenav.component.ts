@@ -4,7 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../auth/auth.service';
-import { NavItem, pickPrimaryNav, pickSecondaryNav } from './sidenav.config';
+import { NavItem, NavSection, pickPrimarySections, pickSecondaryNav } from './sidenav.config';
 
 @Component({
   selector: 'tuv-sidenav',
@@ -21,17 +21,21 @@ import { NavItem, pickPrimaryNav, pickSecondaryNav } from './sidenav.config';
       </div>
 
       <nav class="nav">
-        <span class="group" *ngIf="!collapsed()">{{ 'nav.workspace' | translate }}</span>
-        <a *ngFor="let item of primary()"
-           [routerLink]="item.route"
-           routerLinkActive="active"
-           [pTooltip]="collapsed() ? (item.label | translate) : ''"
-           tooltipPosition="right">
-          <i class="pi" [ngClass]="item.icon"></i>
-          <span class="label">{{ item.label | translate }}</span>
-        </a>
+        <ng-container *ngFor="let section of primarySections()">
+          <span class="group" *ngIf="!collapsed()">{{ section.label | translate }}</span>
+          <hr *ngIf="collapsed()" class="group-divider" />
+          <a *ngFor="let item of section.items"
+             [routerLink]="item.route"
+             routerLinkActive="active"
+             [pTooltip]="collapsed() ? (item.label | translate) : ''"
+             tooltipPosition="right">
+            <i class="pi" [ngClass]="item.icon"></i>
+            <span class="label">{{ item.label | translate }}</span>
+          </a>
+        </ng-container>
 
-        <span class="group" *ngIf="secondary().length && !collapsed()">{{ 'nav.administration' | translate }}</span>
+        <span class="group" *ngIf="secondary().length && !collapsed()">{{ 'nav.section.administration' | translate }}</span>
+        <hr *ngIf="secondary().length && collapsed()" class="group-divider" />
         <a *ngFor="let item of secondary()"
            [routerLink]="item.route"
            routerLinkActive="active"
@@ -82,6 +86,9 @@ import { NavItem, pickPrimaryNav, pickSecondaryNav } from './sidenav.config';
         display: block; padding: 0.85rem 0.6rem 0.4rem; font-size: 0.7rem;
         text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;
       }
+      .group-divider {
+        margin: 0.5rem 0.4rem; border: 0; border-top: 1px solid rgba(255,255,255,0.07);
+      }
       .nav a {
         display: flex; align-items: center; gap: 0.7rem;
         padding: 0.55rem 0.65rem; border-radius: 8px;
@@ -115,7 +122,12 @@ export class Sidenav {
   readonly collapsed = input<boolean>(false);
   @Output() toggle = new EventEmitter<void>();
 
-  protected primary = computed(() => filterByRole(pickPrimaryNav(this.auth.roles()), this.auth.roles()));
+  protected primarySections = computed<NavSection[]>(() => {
+    const roles = this.auth.roles();
+    return pickPrimarySections(roles)
+      .map((s) => ({ ...s, items: filterByRole(s.items, roles) }))
+      .filter((s) => s.items.length > 0);
+  });
   protected secondary = computed(() => filterByRole(pickSecondaryNav(this.auth.roles()), this.auth.roles()));
 }
 

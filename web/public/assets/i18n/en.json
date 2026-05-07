@@ -21,7 +21,15 @@
     "surveys": "Surveys",
     "reports": "Reports",
     "audit": "Audit log",
-    "admin": "Admin"
+    "admin": "Admin",
+    "section": {
+      "workspace": "Workspace",
+      "thirdParty": "Third Party Inspection",
+      "blueSticker": "Blue Sticker Service",
+      "assessment": "Operator Assessment",
+      "operations": "Operations",
+      "administration": "Administration"
+    }
   },
   "topbar": {
     "search": "Search certificates, equipment, clients…",

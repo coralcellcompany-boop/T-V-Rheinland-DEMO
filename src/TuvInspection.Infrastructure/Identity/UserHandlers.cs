@@ -52,6 +52,25 @@ public sealed class ListUsersHandler : IQueryHandler<ListUsersQuery, IReadOnlyLi
     }
 }
 
+public sealed class ListInspectorsHandler : IQueryHandler<ListInspectorsQuery, IReadOnlyList<InspectorLookupDto>>
+{
+    private readonly UserManager<ApplicationUser> _users;
+    public ListInspectorsHandler(UserManager<ApplicationUser> users) => _users = users;
+
+    public async Task<IReadOnlyList<InspectorLookupDto>> Handle(ListInspectorsQuery q, CancellationToken ct)
+    {
+        var inspectors = await _users.GetUsersInRoleAsync(Roles.Inspector);
+        return inspectors
+            .Where(u => u.IsActive)
+            .OrderBy(u => u.FullName ?? u.UserName ?? u.Email)
+            .Select(u => new InspectorLookupDto(
+                u.Id,
+                u.FullName ?? u.UserName ?? u.Email ?? u.Id,
+                u.Email))
+            .ToList();
+    }
+}
+
 public sealed class GetUserByIdHandler : IQueryHandler<GetUserByIdQuery, UserListItemDto?>
 {
     private readonly UserManager<ApplicationUser> _users;
