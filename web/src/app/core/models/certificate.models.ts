@@ -106,6 +106,7 @@ export interface CertificateDetail {
   findingsJson: string | null;
   photosJson: string | null;
   signaturesJson: string | null;
+  aramcoReportJson: string | null;
   createdAtUtc: string;
   updatedAtUtc: string | null;
   transitions: CertificateTransition[];
@@ -133,6 +134,7 @@ export interface UpdateCertificateRequest {
   findingsJson?: string | null;
   photosJson?: string | null;
   signaturesJson?: string | null;
+  aramcoReportJson?: string | null;
 }
 
 export interface ApprovalQueueCounts {

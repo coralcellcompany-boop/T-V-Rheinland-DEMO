@@ -28,7 +28,9 @@ import { TransitionTimeline } from '../components/transition-timeline.component'
 import { ChecklistEditor } from '../components/checklist-editor.component';
 import { PhotoGallery } from '../components/photo-gallery.component';
 import { SignaturesPanel } from '../components/signatures-panel.component';
+import { AramcoFormComponent } from '../components/aramco-form.component';
 import { PublicStickerApi } from '../../../core/api/stickers.api';
+import { environment } from '../../../../environments/environment';
 import {
   AvailableTransition,
   availableTransitions,
@@ -41,7 +43,8 @@ import {
     CommonModule, FormsModule, DatePipe, RouterLink,
     ButtonModule, CardModule, DialogModule, TextareaModule,
     InputTextModule, SelectModule, TooltipModule,
-    PageHeader, StatusPill, TransitionTimeline, ChecklistEditor, PhotoGallery, SignaturesPanel,
+    PageHeader, StatusPill, TransitionTimeline, ChecklistEditor, PhotoGallery,
+    SignaturesPanel, AramcoFormComponent,
   ],
   template: `
     @if (loading()) {
@@ -136,6 +139,23 @@ import {
             (save)="saveChecklist($event)" />
         </section>
 
+        <!-- Aramco Annex 1 inspection report fields -->
+        <section class="aramco card">
+          <header class="block-header">
+            <h3>Aramco inspection report (Annex 1)</h3>
+            <span class="muted" *ngIf="!isMutable()">
+              <i class="pi pi-lock"></i>
+              Read-only — certificate is in {{ stateName(c.state) }} state.
+            </span>
+          </header>
+          <tuv-aramco-form
+            [value]="c.aramcoReportJson"
+            [readonly]="!isMutable()"
+            [canDownloadPdf]="true"
+            [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
+            (save)="saveAramcoReport($event)" />
+        </section>
+
         <!-- Photos -->
         <section class="photos card">
           <header class="block-header">
@@ -203,10 +223,11 @@ import {
       .back:hover { text-decoration: underline; }
       .grid {
         display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;
-        grid-template-areas: 'summary actions' 'checklist checklist' 'photos photos' 'signatures signatures' 'timeline timeline';
+        grid-template-areas: 'summary actions' 'checklist checklist' 'aramco aramco' 'photos photos' 'signatures signatures' 'timeline timeline';
       }
       .summary { grid-area: summary; }
       .actions { grid-area: actions; }
+      .aramco { grid-area: aramco; }
       .checklist { grid-area: checklist; }
       .photos { grid-area: photos; }
       .signatures { grid-area: signatures; }
@@ -263,7 +284,7 @@ import {
       textarea { width: 100%; }
 
       @media (max-width: 1080px) {
-        .grid { grid-template-columns: 1fr; grid-template-areas: 'summary' 'actions' 'checklist' 'photos' 'signatures' 'timeline'; }
+        .grid { grid-template-columns: 1fr; grid-template-areas: 'summary' 'actions' 'checklist' 'aramco' 'photos' 'signatures' 'timeline'; }
       }
     `,
   ],
@@ -424,12 +445,21 @@ export class CertificateDetailPage implements OnInit {
     this.partialUpdate({ signaturesJson: json }, 'Signatures updated.');
   }
 
+  saveAramcoReport(json: string) {
+    this.partialUpdate({ aramcoReportJson: json }, 'Annex 1 fields saved.');
+  }
+
+  aramcoPdfUrl(certId: string): string {
+    return `${environment.apiBaseUrl}/api/certificates/${certId}/aramco-report`;
+  }
+
   private partialUpdate(patch: Partial<{
     inspectionDate: string; reportIssueDate: string; nextDueDate: string | null;
     inspectionType: number; loadTest: number; result: number;
     standards: string | null; stickerNo: string | null;
     checklistJson: string | null; findingsJson: string | null;
     photosJson: string | null; signaturesJson: string | null;
+    aramcoReportJson: string | null;
   }>, successMsg: string) {
     const c = this.cert();
     if (!c) return;
@@ -446,6 +476,7 @@ export class CertificateDetailPage implements OnInit {
       findingsJson: c.findingsJson,
       photosJson: c.photosJson,
       signaturesJson: c.signaturesJson,
+      aramcoReportJson: c.aramcoReportJson,
       ...patch,
     }).subscribe({
       next: (updated) => { this.cert.set(updated); this.notify.success(successMsg); },
