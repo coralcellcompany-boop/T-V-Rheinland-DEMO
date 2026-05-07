@@ -39,6 +39,8 @@ export const PRIMARY_SECTIONS: NavSection[] = [
     items: [
       { label: 'nav.stickers',         icon: 'pi-qrcode', route: '/stickers',
         roles: [Roles.Manager, Roles.Coordinator] },
+      { label: 'nav.myStickers',       icon: 'pi-tag',    route: '/my-stickers',
+        roles: [Roles.Inspector] },
       { label: 'nav.stickerRequests',  icon: 'pi-inbox',  route: '/sticker-requests',
         roles: [Roles.Manager, Roles.Coordinator, Roles.Inspector] },
     ],

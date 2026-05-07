@@ -34,6 +34,14 @@ public class InspectionCertificate : AggregateRoot<Guid>, IAuditable, ITenantSco
     public string? PhotosJson { get; private set; }
     /// <summary>JSON array of base64 PNG signatures, one per role (Inspector/TechReviewer/Client).</summary>
     public string? SignaturesJson { get; private set; }
+    /// <summary>
+    /// Aramco Annex 1 inspection report payload — JSON-serialised. Holds the Aramco-specific
+    /// fields (RPO No., CRM No., Org Code, Aramco Category No., Department/Contractor,
+    /// Previous Sticker No./Issuer, Receiver name + badge, etc.) the SAIC report requires
+    /// but the rest of the cert flow does not. Kept as JSON to avoid a wide schema migration;
+    /// the Annex 1 PDF renderer deserialises it.
+    /// </summary>
+    public string? AramcoReportJson { get; private set; }
 
     public DateTime CreatedAtUtc { get; set; }
     public string? CreatedById { get; set; }
@@ -85,6 +93,7 @@ public class InspectionCertificate : AggregateRoot<Guid>, IAuditable, ITenantSco
     public void UpdateChecklist(string? checklistJson) { EnsureMutable(); ChecklistJson = checklistJson; }
     public void UpdateFindings(string? findingsJson) { EnsureMutable(); FindingsJson = findingsJson; }
     public void UpdatePhotos(string? photosJson) { EnsureMutable(); PhotosJson = photosJson; }
+    public void UpdateAramcoReport(string? aramcoReportJson) { EnsureMutable(); AramcoReportJson = aramcoReportJson; }
 
     /// <summary>
     /// Signatures can be captured at multiple lifecycle points (inspector signs at submission,

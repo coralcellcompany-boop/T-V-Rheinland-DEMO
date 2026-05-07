@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TuvInspection.Domain.Certificates;
 using TuvInspection.Domain.Clients;
 using TuvInspection.Domain.Identity;
+using TuvInspection.Domain.JobOrders;
 using TuvInspection.Domain.Stickers;
 using TuvInspection.Infrastructure.Persistence;
 using EquipmentEntity = TuvInspection.Domain.Equipment.Equipment;
@@ -53,6 +55,8 @@ public sealed class DevDataSeeder
         await SeedEquipment(clients, ct);
         await SeedStickerStock(ct);
         await SeedStickerRequests(inspectors, ct);
+        await SeedJobOrdersAndDraftCertificates(clients, inspectors, ct);
+        await AssignClientsToStaff(clients, ct);
 
         _log.LogWarning("==========================================================");
         _log.LogWarning("Dev data seeded. Login with any of these accounts:");
@@ -226,6 +230,88 @@ public sealed class DevDataSeeder
                 };
                 _db.Stickers.Add(sticker);
             }
+        }
+
+        await _db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Tenant filtering scopes certificates/equipment to the current user's assigned clients.
+    /// In production those assignments come from admin UI; in dev we wire every staff user
+    /// to every client so the seed data is fully visible while testing.
+    /// </summary>
+    private async Task AssignClientsToStaff(List<Client> clients, CancellationToken ct)
+    {
+        if (clients.Count == 0) return;
+        var allClientIds = string.Join(",", clients.Select(c => c.Id));
+        var emails = new[]
+        {
+            "coordinator@tuv-arabia.local",
+            "techreviewer@tuv-arabia.local",
+            "inspector1@tuv-arabia.local",
+            "inspector2@tuv-arabia.local",
+            "inspector3@tuv-arabia.local",
+        };
+        foreach (var email in emails)
+        {
+            var u = await _users.FindByEmailAsync(email);
+            if (u is null) continue;
+            if (u.AssignedClientIdsCsv != allClientIds)
+            {
+                u.AssignedClientIdsCsv = allClientIds;
+                await _users.UpdateAsync(u);
+            }
+        }
+    }
+
+    private async Task SeedJobOrdersAndDraftCertificates(
+        List<Client> clients, List<ApplicationUser> inspectors, CancellationToken ct)
+    {
+        if (inspectors.Count == 0 || clients.Count == 0) return;
+
+        var anyJobOrder = await _db.JobOrders.IgnoreQueryFilters().AnyAsync(ct);
+        if (anyJobOrder) return;
+
+        // Pick the first Aramco-categorized equipment per client so the auto-issue path
+        // exercises (only Aramco-cat equipment triggers Blue Sticker on cert approval).
+        var aramcoEquipment = await _db.Equipment.IgnoreQueryFilters().AsNoTracking()
+            .Where(e => e.AramcoCategory != null)
+            .OrderBy(e => e.IdNo)
+            .ToListAsync(ct);
+        if (aramcoEquipment.Count == 0) return;
+
+        var year = DateTime.UtcNow.Year;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        // One Job Order per inspector, assigned to a different client where possible.
+        for (var i = 0; i < Math.Min(inspectors.Count, clients.Count); i++)
+        {
+            var inspector = inspectors[i];
+            var client = clients[i];
+            var equipForClient = aramcoEquipment.FirstOrDefault(e => e.ClientId == client.Id);
+            if (equipForClient is null) continue;
+
+            var jobOrderNo = $"JOD{year}-{(i + 1):D4}";
+            var jo = new JobOrder(Guid.NewGuid(), jobOrderNo, client.Id,
+                ServiceType.BlueSticker, today, today.AddDays(7))
+            {
+                CreatedAtUtc = DateTime.UtcNow,
+            };
+            jo.AssignInspector(inspector.Id);
+            jo.UpdateLocation($"{client.Address} — site survey");
+            jo.Begin();
+            _db.JobOrders.Add(jo);
+
+            // Spawn a draft certificate the inspector can fill in.
+            var certNo = $"IS-{year:D4}-{i + 1:D6}-{client.Code}";
+            var cert = new InspectionCertificate(
+                Guid.NewGuid(), certNo, client.Id, equipForClient.Id, jo.Id,
+                today, today, CertificateInspectionType.PeriodicInspection)
+            {
+                CreatedAtUtc = DateTime.UtcNow,
+                CreatedById = inspector.Id,
+            };
+            _db.Certificates.Add(cert);
         }
 
         await _db.SaveChangesAsync(ct);

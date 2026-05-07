@@ -28,6 +28,7 @@ public class InspectionCertificateConfiguration : IEntityTypeConfiguration<Inspe
         e.Property(x => x.FindingsJson).HasColumnType("nvarchar(max)");
         e.Property(x => x.PhotosJson).HasColumnType("nvarchar(max)");
         e.Property(x => x.SignaturesJson).HasColumnType("nvarchar(max)");
+        e.Property(x => x.AramcoReportJson).HasColumnType("nvarchar(max)");
         e.Property(x => x.CreatedById).HasMaxLength(450);
         e.Property(x => x.UpdatedById).HasMaxLength(450);
 

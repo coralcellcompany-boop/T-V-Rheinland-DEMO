@@ -29,7 +29,8 @@
       "assessment": "Operator Assessment",
       "operations": "Operations",
       "administration": "Administration"
-    }
+    },
+    "myStickers": "My stickers"
   },
   "topbar": {
     "search": "Search certificates, equipment, clients…",

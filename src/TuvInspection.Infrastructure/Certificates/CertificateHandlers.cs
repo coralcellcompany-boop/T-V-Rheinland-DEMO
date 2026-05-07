@@ -99,8 +99,38 @@ public sealed class GetCertificateByIdHandler
             (CertificateStateDto)c.State,
             c.Standards, c.StickerNo,
             c.ChecklistJson, c.FindingsJson, c.PhotosJson, c.SignaturesJson,
+            c.AramcoReportJson,
             c.CreatedAtUtc, c.UpdatedAtUtc,
             c.Transitions.OrderBy(t => t.AtUtc).Select(t => t.ToDto()).ToList());
+    }
+}
+
+public sealed class GetCertificateInspectorContextHandler
+    : IQueryHandler<GetCertificateInspectorContextQuery, CertificateInspectorContext>
+{
+    private readonly AppDbContext _db;
+    public GetCertificateInspectorContextHandler(AppDbContext db) => _db = db;
+
+    public async Task<CertificateInspectorContext> Handle(
+        GetCertificateInspectorContextQuery q, CancellationToken ct)
+    {
+        var cert = await _db.Certificates.IgnoreQueryFilters().AsNoTracking()
+            .Where(c => c.Id == q.CertificateId)
+            .Select(c => new { c.CreatedById, c.EquipmentId })
+            .FirstOrDefaultAsync(ct);
+        if (cert is null) return new CertificateInspectorContext(null, null, null);
+
+        var inspector = cert.CreatedById is null ? null : await _db.Users.AsNoTracking()
+            .Where(u => u.Id == cert.CreatedById)
+            .Select(u => new { Name = u.FullName ?? u.UserName ?? u.Email, Sap = u.SapNo })
+            .FirstOrDefaultAsync(ct);
+
+        var swl = await _db.Equipment.IgnoreQueryFilters().AsNoTracking()
+            .Where(e => e.Id == cert.EquipmentId)
+            .Select(e => e.Swl)
+            .FirstOrDefaultAsync(ct);
+
+        return new CertificateInspectorContext(inspector?.Name, inspector?.Sap, swl);
     }
 }
 
@@ -261,6 +291,7 @@ public sealed class UpdateCertificateHandler : ICommandHandler<UpdateCertificate
         cert.UpdateFindings(command.Body.FindingsJson);
         cert.UpdatePhotos(command.Body.PhotosJson);
         cert.UpdateSignatures(command.Body.SignaturesJson);
+        cert.UpdateAramcoReport(command.Body.AramcoReportJson);
 
         cert.UpdatedAtUtc = _clock.UtcNow;
         cert.UpdatedById = _tenant.UserId;

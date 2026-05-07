@@ -17,11 +17,15 @@ public class CertificatesController : ControllerBase
 {
     private readonly IDispatcher _dispatcher;
     private readonly CertificatePdfRenderer _pdfRenderer;
+    private readonly AramcoReportPdfRenderer _aramcoRenderer;
 
-    public CertificatesController(IDispatcher dispatcher, CertificatePdfRenderer pdfRenderer)
+    public CertificatesController(IDispatcher dispatcher,
+        CertificatePdfRenderer pdfRenderer,
+        AramcoReportPdfRenderer aramcoRenderer)
     {
         _dispatcher = dispatcher;
         _pdfRenderer = pdfRenderer;
+        _aramcoRenderer = aramcoRenderer;
     }
 
     [HttpGet]
@@ -77,5 +81,22 @@ public class CertificatesController : ControllerBase
         if (dto is null) return NotFound();
         var bytes = _pdfRenderer.Render(dto);
         return File(bytes, "application/pdf", $"{dto.CertificateNo}.pdf");
+    }
+
+    /// <summary>
+    /// Aramco-approved Annex 1 (MS0053813) lifting equipment inspection report PDF —
+    /// the official format Saudi Aramco accepts for Blue Sticker certificates.
+    /// </summary>
+    [HttpGet("{id:guid}/aramco-report")]
+    public async Task<IActionResult> GetAramcoReport(Guid id, CancellationToken ct)
+    {
+        var dto = await _dispatcher.Query(new GetCertificateByIdQuery(id), ct);
+        if (dto is null) return NotFound();
+        var ctx = await _dispatcher.Query(new GetCertificateInspectorContextQuery(id), ct);
+        var bytes = _aramcoRenderer.Render(dto,
+            inspectorName: ctx.InspectorName ?? "—",
+            inspectorSapNo: ctx.InspectorSapNo,
+            equipmentSwl: ctx.EquipmentSwl ?? "—");
+        return File(bytes, "application/pdf", $"{dto.CertificateNo}-Annex1.pdf");
     }
 }

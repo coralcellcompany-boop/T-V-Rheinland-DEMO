@@ -74,9 +74,41 @@ public sealed record CertificateDetailDto(
     string? FindingsJson,
     string? PhotosJson,
     string? SignaturesJson,
+    string? AramcoReportJson,
     DateTime CreatedAtUtc,
     DateTime? UpdatedAtUtc,
     IReadOnlyList<CertificateTransitionDto> Transitions);
+
+/// <summary>
+/// Aramco-specific Annex 1 inspection report fields. Persisted as JSON in
+/// <c>InspectionCertificate.AramcoReportJson</c> and unfolded by the report renderer.
+/// </summary>
+public sealed record AramcoReportData(
+    string? TuvJobOrderNo,
+    string? AramcoCategoryNo,
+    string? OrgCode,
+    string? RpoNo,
+    string? CrmNo,
+    string? ReportNo,
+    string? DepartmentContractor,
+    TimeOnly? InspectionTime,
+    string? PreviousStickerNo,
+    string? PreviousStickerIssuedBy,
+    string? AreaOfInspection,
+    string? Capacity,
+    string? EquipmentLocationOnSite,
+    string? Manufacturer,
+    string? Model,
+    string? EquipmentSerialNo,
+    DateOnly? StickerExpirationDate,
+    string? ReceiverName,
+    string? ReceiverBadgeNo,
+    string? ReceiverTelephone,
+    string? InspectorTelephone,
+    DateOnly? ReceivedDate,
+    DateOnly? ReviewedDate,
+    string? Deficiencies,
+    string? CorrectiveActionsTaken);
 
 public sealed record CreateCertificateRequest(
     Guid EquipmentId,
@@ -98,7 +130,8 @@ public sealed record UpdateCertificateRequest(
     string? ChecklistJson,
     string? FindingsJson,
     string? PhotosJson,
-    string? SignaturesJson);
+    string? SignaturesJson,
+    string? AramcoReportJson);
 
 public sealed record TransitionRequest(string? Comments);
 
