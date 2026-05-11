@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.Certificates;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
@@ -8,8 +9,10 @@ using TuvInspection.Application.Common.Time;
 using TuvInspection.Contracts.Certificates;
 using TuvInspection.Contracts.Common;
 using TuvInspection.Domain.Certificates;
+using TuvInspection.Domain.Equipment;
 using TuvInspection.Domain.Stickers;
 using TuvInspection.Domain.Identity;
+using TuvInspection.Infrastructure.Outbox;
 using TuvInspection.Infrastructure.Persistence;
 
 namespace TuvInspection.Infrastructure.Certificates;
@@ -301,11 +304,25 @@ public sealed class UpdateCertificateHandler : ICommandHandler<UpdateCertificate
             throw new InvalidOperationException(
                 $"Certificate cannot be edited in state {cert.State}. Only Draft and Rejected are mutable.");
 
+        // Auto-fill NextDueDate from the equipment's Aramco category when the inspector left
+        // the field blank. SAIC intervals are deterministic per category, so a blank value is
+        // almost always "I forgot" rather than "I want a non-standard interval".
+        var nextDueDate = command.Body.NextDueDate;
+        if (nextDueDate is null)
+        {
+            var aramcoCat = await _db.Equipment.IgnoreQueryFilters()
+                .Where(e => e.Id == cert.EquipmentId)
+                .Select(e => e.AramcoCategory)
+                .FirstOrDefaultAsync(ct);
+            if (aramcoCat is not null && aramcoCat != AramcoCategory.None)
+                nextDueDate = AramcoIntervalCalculator.NextDueFrom(command.Body.InspectionDate, aramcoCat.Value);
+        }
+
         cert.UpdateInspectionData(
             command.Body.Standards,
             (LoadTestKind)(int)command.Body.LoadTest,
             (InspectionResult)(int)command.Body.Result,
-            command.Body.NextDueDate,
+            nextDueDate,
             command.Body.StickerNo);
         cert.UpdateChecklist(command.Body.ChecklistJson);
         cert.UpdateFindings(command.Body.FindingsJson);
@@ -327,9 +344,15 @@ public sealed class FireCertificateTriggerHandler : ICommandHandler<FireCertific
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
     private readonly IOutbox _outbox;
+    private readonly IConfiguration _config;
+    private readonly AramcoReportValidator _aramcoValidator;
 
-    public FireCertificateTriggerHandler(AppDbContext db, ITenantContext tenant, IClock clock, IOutbox outbox)
-    { _db = db; _tenant = tenant; _clock = clock; _outbox = outbox; }
+    public FireCertificateTriggerHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IOutbox outbox, IConfiguration config, AramcoReportValidator aramcoValidator)
+    {
+        _db = db; _tenant = tenant; _clock = clock; _outbox = outbox;
+        _config = config; _aramcoValidator = aramcoValidator;
+    }
 
     public async Task<CertificateDetailDto> Handle(FireCertificateTriggerCommand command, CancellationToken ct)
     {
@@ -340,7 +363,38 @@ public sealed class FireCertificateTriggerHandler : ICommandHandler<FireCertific
         var cert = await query.FirstOrDefaultAsync(c => c.Id == command.Id, ct)
             ?? throw new KeyNotFoundException($"Certificate {command.Id} not found.");
 
+        var equipCat = await _db.Equipment.IgnoreQueryFilters()
+            .Where(e => e.Id == cert.EquipmentId)
+            .Select(e => e.AramcoCategory)
+            .FirstOrDefaultAsync(ct);
+        var isBlueSticker = equipCat is not null && equipCat != AramcoCategory.None;
+
         var trigger = (CertificateTrigger)(int)command.Trigger;
+
+        // P0 guards on the destructive triggers (Submit / FinalApprove).
+        if (trigger == CertificateTrigger.Submit && isBlueSticker)
+        {
+            // Aramco fields must be fully populated before a Blue Sticker cert leaves Draft.
+            var result = _aramcoValidator.ValidateJson(cert.AramcoReportJson);
+            if (!result.IsValid) throw new ValidationException(result.Errors);
+        }
+
+        if (trigger == CertificateTrigger.FinalApprove)
+        {
+            // A Fail inspection means the equipment is unsafe — it must not silently produce
+            // a fresh Blue Sticker. NotSet means the inspector hasn't recorded a verdict yet.
+            if (cert.Result == InspectionResult.NotSet)
+                throw new InvalidOperationException(
+                    "Cannot approve — inspection result has not been recorded.");
+            if (cert.Result == InspectionResult.Fail && isBlueSticker)
+                throw new InvalidOperationException(
+                    "Cannot approve a Failed inspection for Blue Sticker equipment. " +
+                    "Re-inspect after corrective actions or void the certificate.");
+            if (isBlueSticker && cert.NextDueDate is null)
+                throw new InvalidOperationException(
+                    "Cannot approve — next inspection due date is missing.");
+        }
+
         var sm = new CertificateStateMachine(cert, _tenant, _clock);
         if (!sm.CanFire(trigger))
             throw new InvalidOperationException(
@@ -349,28 +403,46 @@ public sealed class FireCertificateTriggerHandler : ICommandHandler<FireCertific
         sm.Fire(trigger, command.Comments);
 
         // Auto-issue Blue Sticker: when a cert with an Aramco-categorized equipment hits
-        // Approved, pull the next Unallocated sticker and link it. If stock is empty we
-        // surface a clear error so the manager knows to procure more.
-        if (cert.State == CertificateState.Approved && cert.StickerId is null)
+        // Approved, pull the next Unallocated sticker and link it. The Fail guard above
+        // ensures we never get here with InspectionResult.Fail.
+        if (cert.State == CertificateState.Approved && cert.StickerId is null && isBlueSticker)
         {
-            var equipCat = await _db.Equipment.IgnoreQueryFilters()
-                .Where(e => e.Id == cert.EquipmentId)
-                .Select(e => e.AramcoCategory)
+            var sticker = await _db.Stickers
+                .Where(s => s.State == StickerState.Unallocated)
+                .OrderBy(s => s.StickerNo)
                 .FirstOrDefaultAsync(ct);
+            if (sticker is null)
+                throw new InvalidOperationException(
+                    "No Blue Sticker stock available. Manager: procure new stickers first.");
+            sticker.Issue(cert.Id, cert.EquipmentId, cert.ClientId,
+                cert.NextDueDate, _clock.UtcNow);
+            cert.LinkSticker(sticker.Id, sticker.StickerNo);
 
-            if (equipCat is not null && equipCat != 0)
+            // After taking one out of the pool, check whether stock has dipped to the
+            // low-stock threshold; if so, fire a one-shot procurement alert.
+            var remaining = await _db.Stickers.CountAsync(s => s.State == StickerState.Unallocated, ct);
+            var threshold = _config.GetValue<int?>("Stickers:LowStockThreshold") ?? 50;
+            if (remaining <= threshold)
             {
-                var sticker = await _db.Stickers
-                    .Where(s => s.State == StickerState.Unallocated)
-                    .OrderBy(s => s.StickerNo)
-                    .FirstOrDefaultAsync(ct);
-                if (sticker is null)
-                    throw new InvalidOperationException(
-                        "No Blue Sticker stock available. Manager: procure new stickers first.");
-                sticker.Issue(cert.Id, cert.EquipmentId, cert.ClientId,
-                    cert.NextDueDate, _clock.UtcNow);
-                cert.LinkSticker(sticker.Id, sticker.StickerNo);
+                await _outbox.Enqueue(new StickerLowStockAlertEmail(
+                    remaining, threshold, cert.CertificateNo, _clock.UtcNow), ct);
             }
+        }
+
+        // Tech Reviewer queue alert when an inspector hands a cert off for review.
+        if (cert.State == CertificateState.Submitted)
+        {
+            var ctx = await _db.Clients.IgnoreQueryFilters()
+                .Where(cl => cl.Id == cert.ClientId)
+                .Select(cl => new { ClientName = cl.Name })
+                .FirstAsync(ct);
+            var equipIdNo = await _db.Equipment.IgnoreQueryFilters()
+                .Where(e => e.Id == cert.EquipmentId)
+                .Select(e => e.IdNo)
+                .FirstOrDefaultAsync(ct) ?? "";
+            await _outbox.Enqueue(new CertificateSubmittedNotifyEmail(
+                cert.Id, cert.CertificateNo, cert.ClientId, ctx.ClientName,
+                equipIdNo, _clock.UtcNow), ct);
         }
 
         // Side-effect outbox: when certificate moves to ClientSent, queue an email payload.

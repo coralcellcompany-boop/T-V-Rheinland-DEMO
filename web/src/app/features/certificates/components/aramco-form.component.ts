@@ -5,6 +5,23 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+import { CheckboxModule } from 'primeng/checkbox';
+
+export enum DeficiencySeverity {
+  Minor = 0,
+  Major = 1,
+  Critical = 2,
+}
+
+export interface DeficiencyItem {
+  code: string | null;
+  description: string | null;
+  severity: DeficiencySeverity;
+  correctiveAction: string | null;
+  deadline: string | null;          // "YYYY-MM-DD"
+  resolved: boolean;
+}
 
 /**
  * Aramco Annex 1 (MS0053813) inspection report fields.
@@ -24,6 +41,7 @@ export interface AramcoFormDoc {
   inspectionTime: string | null;          // "HH:mm"
   previousStickerNo: string | null;
   previousStickerIssuedBy: string | null;
+  previousStickerId: string | null;       // optional FK to Sticker.Id (Guid)
   areaOfInspection: string | null;
   capacity: string | null;
   equipmentLocationOnSite: string | null;
@@ -39,23 +57,34 @@ export interface AramcoFormDoc {
   reviewedDate: string | null;            // "YYYY-MM-DD"
   deficiencies: string | null;
   correctiveActionsTaken: string | null;
+  deficiencyItems: DeficiencyItem[];
 }
 
 const EMPTY: AramcoFormDoc = {
   tuvJobOrderNo: null, aramcoCategoryNo: null, orgCode: null, rpoNo: null,
   crmNo: null, reportNo: null, departmentContractor: null, inspectionTime: null,
-  previousStickerNo: null, previousStickerIssuedBy: null,
+  previousStickerNo: null, previousStickerIssuedBy: null, previousStickerId: null,
   areaOfInspection: null, capacity: null, equipmentLocationOnSite: null,
   manufacturer: null, model: null, equipmentSerialNo: null, stickerExpirationDate: null,
   receiverName: null, receiverBadgeNo: null, receiverTelephone: null,
   inspectorTelephone: null, receivedDate: null, reviewedDate: null,
   deficiencies: null, correctiveActionsTaken: null,
+  deficiencyItems: [],
 };
+
+const SEVERITY_OPTIONS = [
+  { label: 'Minor', value: DeficiencySeverity.Minor },
+  { label: 'Major', value: DeficiencySeverity.Major },
+  { label: 'Critical', value: DeficiencySeverity.Critical },
+];
 
 @Component({
   selector: 'tuv-aramco-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, DatePickerModule],
+  imports: [
+    CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule,
+    DatePickerModule, SelectModule, CheckboxModule,
+  ],
   template: `
     <div class="hint" *ngIf="!readonly">
       Fields below match the Aramco-approved Annex 1 (MS0053813) report. They appear on the
@@ -79,6 +108,10 @@ const EMPTY: AramcoFormDoc = {
         <label>Inspection Time (HH:mm)<input pInputText [(ngModel)]="form.inspectionTime" placeholder="e.g. 09:30" [disabled]="readonly" /></label>
         <label>Previous Sticker No.<input pInputText [(ngModel)]="form.previousStickerNo" [disabled]="readonly" /></label>
         <label>Previous Sticker Issued By<input pInputText [(ngModel)]="form.previousStickerIssuedBy" [disabled]="readonly" /></label>
+        <label>Previous Sticker ID (optional FK)
+          <input pInputText [(ngModel)]="form.previousStickerId" [disabled]="readonly"
+            placeholder="Sticker Guid if known" />
+        </label>
         <label>Area of Inspection<input pInputText [(ngModel)]="form.areaOfInspection" [disabled]="readonly" /></label>
         <label>Equipment Location on Site<input pInputText [(ngModel)]="form.equipmentLocationOnSite" [disabled]="readonly" /></label>
       </fieldset>
@@ -104,17 +137,57 @@ const EMPTY: AramcoFormDoc = {
     </div>
 
     <fieldset class="full">
-      <legend>Deficiencies &amp; corrective actions</legend>
-      <div class="two-col">
-        <label>Deficiencies / Observations
-          <textarea pTextarea rows="4" [(ngModel)]="form.deficiencies" [disabled]="readonly"
-            placeholder="List defects observed during inspection."></textarea>
-        </label>
-        <label>Corrective Action Taken
-          <textarea pTextarea rows="4" [(ngModel)]="form.correctiveActionsTaken" [disabled]="readonly"
-            placeholder="Repairs done to address each deficiency."></textarea>
-        </label>
+      <legend>Deficiencies &amp; corrective actions (structured)</legend>
+      <table class="def-table" *ngIf="form.deficiencyItems.length > 0; else emptyDefs">
+        <thead>
+          <tr>
+            <th class="c-code">Code</th>
+            <th>Description</th>
+            <th class="c-sev">Severity</th>
+            <th>Corrective Action</th>
+            <th class="c-due">Deadline</th>
+            <th class="c-done">Resolved</th>
+            <th class="c-act" *ngIf="!readonly"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of form.deficiencyItems; let i = index">
+            <td><input pInputText [(ngModel)]="row.code" [disabled]="readonly" placeholder="e.g. SAIC-7001-3" /></td>
+            <td><input pInputText [(ngModel)]="row.description" [disabled]="readonly" placeholder="What was observed" /></td>
+            <td>
+              <p-select [options]="severityOptions" [(ngModel)]="row.severity"
+                optionLabel="label" optionValue="value" appendTo="body" [disabled]="readonly" />
+            </td>
+            <td><input pInputText [(ngModel)]="row.correctiveAction" [disabled]="readonly" placeholder="What was done" /></td>
+            <td><input pInputText type="date" [(ngModel)]="row.deadline" [disabled]="readonly" /></td>
+            <td class="c-done"><p-checkbox [(ngModel)]="row.resolved" [binary]="true" [disabled]="readonly" /></td>
+            <td class="c-act" *ngIf="!readonly">
+              <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
+                (onClick)="removeDeficiency(i)" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #emptyDefs>
+        <p class="empty">No structured deficiencies recorded.</p>
+      </ng-template>
+      <div class="row-add" *ngIf="!readonly">
+        <p-button label="Add deficiency row" icon="pi pi-plus" [text]="true" (onClick)="addDeficiency()" />
       </div>
+
+      <details class="legacy-defs">
+        <summary>Free-text notes (legacy)</summary>
+        <div class="two-col">
+          <label>Deficiencies / Observations
+            <textarea pTextarea rows="3" [(ngModel)]="form.deficiencies" [disabled]="readonly"
+              placeholder="Optional free-text notes."></textarea>
+          </label>
+          <label>Corrective Action Taken
+            <textarea pTextarea rows="3" [(ngModel)]="form.correctiveActionsTaken" [disabled]="readonly"
+              placeholder="Optional free-text notes."></textarea>
+          </label>
+        </div>
+      </details>
     </fieldset>
 
     <div class="actions" *ngIf="!readonly">
@@ -160,21 +233,41 @@ const EMPTY: AramcoFormDoc = {
         color: #b91c1c; text-decoration: none; font-size: 0.85rem; display: inline-flex; gap: 0.4rem; align-items: center;
       }
       .pdf:hover { text-decoration: underline; }
+      table.def-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+      table.def-table th, table.def-table td {
+        border-bottom: 1px solid #e5e9f2; padding: 0.4rem 0.5rem; text-align: left; vertical-align: middle;
+      }
+      table.def-table th { font-weight: 600; color: #334155; background: #f8fafc; }
+      .c-code { width: 9rem; }
+      .c-sev  { width: 8rem; }
+      .c-due  { width: 9rem; }
+      .c-done { width: 5.5rem; text-align: center; }
+      .c-act  { width: 3rem; text-align: right; }
+      .row-add { margin-top: 0.5rem; }
+      .empty { color: #94a3b8; font-style: italic; font-size: 0.82rem; }
+      details.legacy-defs { margin-top: 1rem; }
+      details.legacy-defs summary {
+        cursor: pointer; font-size: 0.78rem; color: #475569; padding: 0.25rem 0;
+      }
     `,
   ],
 })
 export class AramcoFormComponent {
   @Input() set value(json: string | null | undefined) {
     if (!json) {
-      this.form = { ...EMPTY };
+      this.form = { ...EMPTY, deficiencyItems: [] };
       this.original = JSON.stringify(this.form);
       return;
     }
     try {
       const parsed = JSON.parse(json) as Partial<AramcoFormDoc>;
-      this.form = { ...EMPTY, ...parsed };
+      this.form = {
+        ...EMPTY,
+        ...parsed,
+        deficiencyItems: Array.isArray(parsed.deficiencyItems) ? parsed.deficiencyItems : [],
+      };
     } catch {
-      this.form = { ...EMPTY };
+      this.form = { ...EMPTY, deficiencyItems: [] };
     }
     this.original = JSON.stringify(this.form);
   }
@@ -183,11 +276,30 @@ export class AramcoFormComponent {
   @Input() aramcoPdfUrl = '';
   @Output() save = new EventEmitter<string>();
 
-  protected form: AramcoFormDoc = { ...EMPTY };
+  protected form: AramcoFormDoc = { ...EMPTY, deficiencyItems: [] };
   protected saving = signal(false);
+  protected severityOptions = SEVERITY_OPTIONS;
   private original = JSON.stringify(EMPTY);
 
   protected dirty = () => JSON.stringify(this.form) !== this.original;
+
+  addDeficiency() {
+    this.form.deficiencyItems = [
+      ...this.form.deficiencyItems,
+      {
+        code: null,
+        description: null,
+        severity: DeficiencySeverity.Minor,
+        correctiveAction: null,
+        deadline: null,
+        resolved: false,
+      },
+    ];
+  }
+
+  removeDeficiency(index: number) {
+    this.form.deficiencyItems = this.form.deficiencyItems.filter((_, i) => i !== index);
+  }
 
   emit() {
     this.saving.set(true);

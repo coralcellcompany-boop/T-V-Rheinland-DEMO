@@ -29,7 +29,19 @@ public sealed class AramcoWeeklyExporter
         ExcelPackage.License.SetNonCommercialPersonal("TuvInspection-Dev");
     }
 
-    public async Task<(byte[] bytes, string fileName)> Generate(DateOnly cutoff, Guid? clientId, CancellationToken ct)
+    public Task<(byte[] bytes, string fileName)> Generate(DateOnly cutoff, Guid? clientId, CancellationToken ct)
+        => GenerateInternal(cutoff, clientId, systemUnscoped: false, ct);
+
+    /// <summary>
+    /// Unfiltered overload for background schedulers. Bypasses the tenant query filter because
+    /// the scheduler has no HTTP context (and therefore no Manager role) but legitimately needs
+    /// to see every client's certificates for the weekly Aramco submission.
+    /// </summary>
+    public Task<(byte[] bytes, string fileName)> GenerateSystem(DateOnly cutoff, CancellationToken ct)
+        => GenerateInternal(cutoff, clientId: null, systemUnscoped: true, ct);
+
+    private async Task<(byte[] bytes, string fileName)> GenerateInternal(
+        DateOnly cutoff, Guid? clientId, bool systemUnscoped, CancellationToken ct)
     {
         // Find the Mon..Sun window that contains the cutoff.
         var dow = (int)cutoff.DayOfWeek;            // Sunday=0, Monday=1, ..., Saturday=6
@@ -37,7 +49,7 @@ public sealed class AramcoWeeklyExporter
         var weekStart = cutoff.AddDays(-daysFromMonday);
         var weekEnd = weekStart.AddDays(6);
 
-        IQueryable<InspectionCertificate> certs = _tenant.IsInRole(Roles.Manager)
+        IQueryable<InspectionCertificate> certs = (systemUnscoped || _tenant.IsInRole(Roles.Manager))
             ? _db.Certificates.IgnoreQueryFilters().AsNoTracking()
             : _db.Certificates.AsNoTracking();
         if (clientId is { } cid) certs = certs.Where(c => c.ClientId == cid);

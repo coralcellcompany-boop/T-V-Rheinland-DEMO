@@ -26,6 +26,7 @@ public sealed record UpdateJobOrderCommand(Guid Id, UpdateJobOrderRequest Body) 
 public sealed record BeginJobOrderCommand(Guid Id) : ICommand<JobOrderDetailDto>;
 public sealed record CompleteJobOrderCommand(Guid Id) : ICommand<JobOrderDetailDto>;
 public sealed record CancelJobOrderCommand(Guid Id) : ICommand<JobOrderDetailDto>;
+public sealed record AutoAssignJobOrderInspectorCommand(Guid Id) : ICommand<JobOrderDetailDto>;
 
 // DWR / Timesheets
 public sealed record ListDwrQuery(

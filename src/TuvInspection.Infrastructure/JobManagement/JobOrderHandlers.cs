@@ -1,4 +1,5 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
@@ -6,9 +7,11 @@ using TuvInspection.Application.Common.Time;
 using TuvInspection.Application.JobManagement;
 using TuvInspection.Contracts.Common;
 using TuvInspection.Contracts.JobManagement;
+using TuvInspection.Domain.Certificates;
 using TuvInspection.Domain.Clients;
 using TuvInspection.Domain.Identity;
 using TuvInspection.Domain.JobOrders;
+using TuvInspection.Infrastructure.Identity;
 using TuvInspection.Infrastructure.Persistence;
 
 namespace TuvInspection.Infrastructure.JobManagement;
@@ -246,5 +249,84 @@ public sealed class CancelJobOrderHandler : JobOrderStatusFlipHandlerBase, IComm
             throw new InvalidOperationException($"Job order is already in terminal state {jo.Status}.");
         jo.Cancel();
         return await Persist(jo, ct);
+    }
+}
+
+/// <summary>
+/// Picks the least-loaded active Inspector eligible to work on this Job Order's client and
+/// adds them to <c>AssignedInspectorIds</c>. "Least loaded" = fewest in-flight certificates
+/// (Draft / Submitted / UnderReview). Eligibility = active Inspector with the client in their
+/// assigned-clients CSV (or any Inspector if AssignedClientIdsCsv is empty, since that means
+/// the user has cross-client scope).
+/// </summary>
+public sealed class AutoAssignJobOrderInspectorHandler
+    : ICommandHandler<AutoAssignJobOrderInspectorCommand, JobOrderDetailDto>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+    private readonly UserManager<ApplicationUser> _users;
+
+    public AutoAssignJobOrderInspectorHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        UserManager<ApplicationUser> users)
+    { _db = db; _tenant = tenant; _clock = clock; _users = users; }
+
+    public async Task<JobOrderDetailDto> Handle(AutoAssignJobOrderInspectorCommand c, CancellationToken ct)
+    {
+        if (!_tenant.IsInRole(Roles.Manager) && !_tenant.IsInRole(Roles.Coordinator))
+            throw new UnauthorizedAccessException("Manager or Coordinator required.");
+
+        var query = _tenant.IsInRole(Roles.Manager) ? _db.JobOrders.IgnoreQueryFilters() : _db.JobOrders;
+        var jo = await query.FirstOrDefaultAsync(x => x.Id == c.Id, ct)
+            ?? throw new KeyNotFoundException($"Job order {c.Id} not found.");
+
+        var inspectorUsers = await _users.GetUsersInRoleAsync(Roles.Inspector);
+        var clientIdString = jo.ClientId.ToString();
+
+        // Eligibility filter: must be active, and either no client scope (cross-client) or
+        // explicitly assigned to this client.
+        var eligible = inspectorUsers
+            .Where(u => u.IsActive)
+            .Where(u => string.IsNullOrWhiteSpace(u.AssignedClientIdsCsv)
+                || u.AssignedClientIdsCsv
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                    .Contains(clientIdString, StringComparer.OrdinalIgnoreCase))
+            .Where(u => !jo.AssignedInspectorIds.Contains(u.Id))   // skip already-assigned
+            .ToList();
+
+        if (eligible.Count == 0)
+            throw new InvalidOperationException(
+                "No eligible inspector found for this client. Assign one manually or grant a user the Inspector role and client scope.");
+
+        // Workload = open certs created by this user that haven't reached a terminal state.
+        var inflightActive = new[]
+        {
+            CertificateState.Draft,
+            CertificateState.Submitted,
+            CertificateState.UnderReview,
+            CertificateState.AwaitingApproval,
+        };
+        var eligibleIds = eligible.Select(u => u.Id).ToList();
+        var loads = await _db.Certificates.IgnoreQueryFilters().AsNoTracking()
+            .Where(cert => cert.CreatedById != null
+                && eligibleIds.Contains(cert.CreatedById)
+                && inflightActive.Contains(cert.State))
+            .GroupBy(cert => cert.CreatedById!)
+            .Select(g => new { UserId = g.Key, Count = g.Count() })
+            .ToDictionaryAsync(g => g.UserId, g => g.Count, ct);
+
+        // Pick the inspector with the smallest in-flight load; tie-break by username for
+        // deterministic behaviour in tests.
+        var pick = eligible
+            .OrderBy(u => loads.GetValueOrDefault(u.Id, 0))
+            .ThenBy(u => u.UserName, StringComparer.OrdinalIgnoreCase)
+            .First();
+
+        jo.AssignInspector(pick.Id);
+        jo.UpdatedAtUtc = _clock.UtcNow;
+        jo.UpdatedById = _tenant.UserId;
+        await _db.SaveChangesAsync(ct);
+
+        return (await new GetJobOrderByIdHandler(_db, _tenant).Handle(new(c.Id), ct))!;
     }
 }

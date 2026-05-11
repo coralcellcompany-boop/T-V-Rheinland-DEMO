@@ -82,6 +82,26 @@ public sealed record CertificateDetailDto(
     IReadOnlyList<CertificateTransitionDto> Transitions);
 
 /// <summary>
+/// One row of the Annex 1 deficiencies/corrective actions table. Persisted inside
+/// <see cref="AramcoReportData.DeficiencyItems"/>. Severity follows the SAIC
+/// classification (Minor/Major/Critical) so the report renderer can colour-code rows.
+/// </summary>
+public sealed record DeficiencyItem(
+    string? Code,
+    string? Description,
+    DeficiencySeverity Severity,
+    string? CorrectiveAction,
+    DateOnly? Deadline,
+    bool Resolved);
+
+public enum DeficiencySeverity
+{
+    Minor = 0,
+    Major = 1,
+    Critical = 2,
+}
+
+/// <summary>
 /// Aramco-specific Annex 1 inspection report fields. Persisted as JSON in
 /// <c>InspectionCertificate.AramcoReportJson</c> and unfolded by the report renderer.
 /// </summary>
@@ -96,6 +116,10 @@ public sealed record AramcoReportData(
     TimeOnly? InspectionTime,
     string? PreviousStickerNo,
     string? PreviousStickerIssuedBy,
+    /// <summary>Optional FK to the previously-issued <c>Sticker</c> row, when the
+    /// inspector picks it from the dropdown instead of typing the number free-text.
+    /// Lets the report renderer cross-link the equipment's sticker history.</summary>
+    Guid? PreviousStickerId,
     string? AreaOfInspection,
     string? Capacity,
     string? EquipmentLocationOnSite,
@@ -110,7 +134,11 @@ public sealed record AramcoReportData(
     DateOnly? ReceivedDate,
     DateOnly? ReviewedDate,
     string? Deficiencies,
-    string? CorrectiveActionsTaken);
+    string? CorrectiveActionsTaken,
+    /// <summary>Structured deficiency rows. Preferred over the free-text
+    /// <c>Deficiencies</c>/<c>CorrectiveActionsTaken</c> fields, which remain for
+    /// backwards compatibility with older drafts.</summary>
+    IReadOnlyList<DeficiencyItem>? DeficiencyItems);
 
 public sealed record CreateCertificateRequest(
     Guid EquipmentId,

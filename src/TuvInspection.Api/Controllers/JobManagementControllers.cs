@@ -111,6 +111,16 @@ public class JobOrdersController : ControllerBase
     [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
     public Task<JobOrderDetailDto> Cancel(Guid id, CancellationToken ct) =>
         _d.Send(new CancelJobOrderCommand(id), ct);
+
+    /// <summary>
+    /// Auto-assign the least-loaded eligible inspector. Picks active Inspector role users whose
+    /// client scope covers this Job Order's client, ordered by in-flight certificate count.
+    /// Manager/Coordinator only.
+    /// </summary>
+    [HttpPost("{id:guid}/auto-assign-inspector")]
+    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
+    public Task<JobOrderDetailDto> AutoAssignInspector(Guid id, CancellationToken ct) =>
+        _d.Send(new AutoAssignJobOrderInspectorCommand(id), ct);
 }
 
 [ApiController]

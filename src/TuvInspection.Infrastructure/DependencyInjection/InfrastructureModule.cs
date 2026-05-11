@@ -116,6 +116,10 @@ public static class InfrastructureModule
             ServiceLifetime.Scoped,
             includeInternalTypes: true);
 
+        // Concrete validator types we inject directly (the certificate Submit-trigger gate
+        // calls a helper on AramcoReportValidator that isn't part of the IValidator<T> surface).
+        services.AddScoped<TuvInspection.Application.Certificates.AramcoReportValidator>();
+
         // Side-effect ports
         services.AddScoped<IOutbox, EfOutbox>();
         services.AddSingleton<IDocumentStore, LocalDocumentStore>();
@@ -125,6 +129,12 @@ public static class InfrastructureModule
         services.AddHostedService<OutboxProcessor>();
         services.AddScoped<IOutboxMessageHandler<ClientSentCertificateEmail>, ClientSentEmailHandler>();
         services.AddScoped<IOutboxMessageHandler<StickerRequestDecidedEmail>, StickerRequestDecidedEmailHandler>();
+        services.AddScoped<IOutboxMessageHandler<StickerLowStockAlertEmail>, LowStockAlertEmailHandler>();
+        services.AddScoped<IOutboxMessageHandler<CertificateSubmittedNotifyEmail>, TechReviewerNotifyEmailHandler>();
+
+        // Background sweeps + schedules
+        services.AddHostedService<StickerExpiryService>();
+        services.AddHostedService<AramcoWeeklyExportScheduler>();
 
         // Excel import services
         services.AddScoped<EquipmentImportService>();
