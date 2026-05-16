@@ -1,6 +1,5 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.BlueSticker;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
@@ -186,17 +185,17 @@ public sealed class FireBlueStickerTriggerHandler
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
-    private readonly IConfiguration _config;
 
-    public FireBlueStickerTriggerHandler(AppDbContext db, ITenantContext tenant, IClock clock,
-        IConfiguration config)
-    { _db = db; _tenant = tenant; _clock = clock; _config = config; }
+    public FireBlueStickerTriggerHandler(AppDbContext db, ITenantContext tenant, IClock clock)
+    { _db = db; _tenant = tenant; _clock = clock; }
 
     public async Task<BlueStickerReportDetailDto> Handle(
         FireBlueStickerTriggerCommand command, CancellationToken ct)
     {
-        var r = await _db.BlueStickerReports.Include(x => x.Transitions)
-            .FirstOrDefaultAsync(x => x.Id == command.Id, ct)
+        var query = _tenant.IsInRole(Roles.Manager)
+            ? _db.BlueStickerReports.IgnoreQueryFilters().Include(x => x.Transitions)
+            : _db.BlueStickerReports.Include(x => x.Transitions);
+        var r = await query.FirstOrDefaultAsync(x => x.Id == command.Id, ct)
             ?? throw new KeyNotFoundException($"Report {command.Id} not found.");
 
         var trigger = (BlueStickerReportTrigger)(int)command.Trigger;
@@ -215,8 +214,8 @@ public sealed class FireBlueStickerTriggerHandler
 
         if (trigger == BlueStickerReportTrigger.StartInspection)
         {
-            var nowLocal = _clock.UtcNow; // store UTC date/time of start
-            r.StampInspectionStart(DateOnly.FromDateTime(nowLocal), TimeOnly.FromDateTime(nowLocal));
+            var nowUtc = _clock.UtcNow; // store UTC date/time of start
+            r.StampInspectionStart(DateOnly.FromDateTime(nowUtc), TimeOnly.FromDateTime(nowUtc));
         }
 
         if (trigger == BlueStickerReportTrigger.Approve && r.Result == BlueStickerResult.Fail)
@@ -238,7 +237,7 @@ public sealed class FireBlueStickerTriggerHandler
             var inspDate = r.InspectionDate ?? DateOnly.FromDateTime(_clock.UtcNow);
             // TODO(spec): per-Aramco-category validity (spec open dependency) — interim 1 year
             var expiry = inspDate.AddYears(1);
-            r.ApplyApprovalStamp(reviewer!, command.Body?.TechnicalReviewerSignaturePng,
+            r.ApplyApprovalStamp(reviewer, command.Body?.TechnicalReviewerSignaturePng,
                 DateOnly.FromDateTime(_clock.UtcNow), expiry);
 
             if (r.StickerId is null)
