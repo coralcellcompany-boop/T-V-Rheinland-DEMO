@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.BlueSticker;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
@@ -8,6 +9,7 @@ using TuvInspection.Contracts.BlueSticker;
 using TuvInspection.Contracts.Common;
 using TuvInspection.Domain.BlueSticker;
 using TuvInspection.Domain.Identity;
+using TuvInspection.Domain.Stickers;
 using TuvInspection.Infrastructure.Persistence;
 
 namespace TuvInspection.Infrastructure.BlueSticker;
@@ -171,6 +173,87 @@ public sealed class UpdateBlueStickerInspectionHandler
         r.UpdateInspectionData(b.AreaOfInspection, (BlueStickerResult)(int)b.Result,
             b.Deficiencies, b.CorrectiveActionsTaken, b.EquipmentLocation,
             b.ReceiverName, b.ReceiverBadgeNo, b.ReceiverTelephone, b.InspectorTelephone);
+        r.UpdatedAtUtc = _clock.UtcNow;
+        r.UpdatedById = _tenant.UserId;
+        await _db.SaveChangesAsync(ct);
+        return BlueStickerMapper.ToDetail(r);
+    }
+}
+
+public sealed class FireBlueStickerTriggerHandler
+    : ICommandHandler<FireBlueStickerTriggerCommand, BlueStickerReportDetailDto>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+    private readonly IConfiguration _config;
+
+    public FireBlueStickerTriggerHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IConfiguration config)
+    { _db = db; _tenant = tenant; _clock = clock; _config = config; }
+
+    public async Task<BlueStickerReportDetailDto> Handle(
+        FireBlueStickerTriggerCommand command, CancellationToken ct)
+    {
+        var r = await _db.BlueStickerReports.Include(x => x.Transitions)
+            .FirstOrDefaultAsync(x => x.Id == command.Id, ct)
+            ?? throw new KeyNotFoundException($"Report {command.Id} not found.");
+
+        var trigger = (BlueStickerReportTrigger)(int)command.Trigger;
+
+        if (trigger == BlueStickerReportTrigger.SubmitForReview)
+        {
+            if (r.Result == BlueStickerResult.NotSet || string.IsNullOrWhiteSpace(r.AreaOfInspection))
+                throw new InvalidOperationException(
+                    "Cannot submit — area of inspection and inspection result are required.");
+            var insp = _tenant.UserId is null ? null : await _db.Users.AsNoTracking()
+                .Where(u => u.Id == _tenant.UserId)
+                .Select(u => new { Name = u.FullName ?? u.UserName ?? u.Email, u.SapNo })
+                .FirstOrDefaultAsync(ct);
+            r.SetInspectorSnapshot(insp?.Name, insp?.SapNo, command.Body?.InspectorSignaturePng);
+        }
+
+        if (trigger == BlueStickerReportTrigger.StartInspection)
+        {
+            var nowLocal = _clock.UtcNow; // store UTC date/time of start
+            r.StampInspectionStart(DateOnly.FromDateTime(nowLocal), TimeOnly.FromDateTime(nowLocal));
+        }
+
+        if (trigger == BlueStickerReportTrigger.Approve && r.Result == BlueStickerResult.Fail)
+            throw new InvalidOperationException(
+                "Cannot approve a Failed Blue Sticker inspection. Re-inspect or void.");
+
+        var sm = new BlueStickerReportStateMachine(r, _tenant, _clock);
+        if (!sm.CanFire(trigger))
+            throw new InvalidOperationException(
+                $"Cannot {trigger} a report currently in state {r.State}.");
+        sm.Fire(trigger, command.Body?.Comments);
+
+        if (r.State == BlueStickerReportState.Approved)
+        {
+            var reviewer = _tenant.UserId is null ? "Reviewer" : await _db.Users.AsNoTracking()
+                .Where(u => u.Id == _tenant.UserId)
+                .Select(u => u.FullName ?? u.UserName ?? u.Email)
+                .FirstOrDefaultAsync(ct) ?? "Reviewer";
+            var inspDate = r.InspectionDate ?? DateOnly.FromDateTime(_clock.UtcNow);
+            // TODO(spec): per-Aramco-category validity (spec open dependency) — interim 1 year
+            var expiry = inspDate.AddYears(1);
+            r.ApplyApprovalStamp(reviewer!, command.Body?.TechnicalReviewerSignaturePng,
+                DateOnly.FromDateTime(_clock.UtcNow), expiry);
+
+            if (r.StickerId is null)
+            {
+                var sticker = await _db.Stickers
+                    .Where(s => s.State == StickerState.Unallocated)
+                    .OrderBy(s => s.StickerNo)
+                    .FirstOrDefaultAsync(ct)
+                    ?? throw new InvalidOperationException(
+                        "No Blue Sticker stock available. Manager: procure new stickers first.");
+                sticker.Issue(r.Id, r.EquipmentId, r.ClientId, expiry, _clock.UtcNow);
+                r.LinkSticker(sticker.Id, sticker.StickerNo);
+            }
+        }
+
         r.UpdatedAtUtc = _clock.UtcNow;
         r.UpdatedById = _tenant.UserId;
         await _db.SaveChangesAsync(ct);
