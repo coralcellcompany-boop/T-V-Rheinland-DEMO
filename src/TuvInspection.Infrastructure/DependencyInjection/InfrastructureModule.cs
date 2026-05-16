@@ -131,6 +131,7 @@ public static class InfrastructureModule
         services.AddScoped<IOutboxMessageHandler<StickerRequestDecidedEmail>, StickerRequestDecidedEmailHandler>();
         services.AddScoped<IOutboxMessageHandler<StickerLowStockAlertEmail>, LowStockAlertEmailHandler>();
         services.AddScoped<IOutboxMessageHandler<CertificateSubmittedNotifyEmail>, TechReviewerNotifyEmailHandler>();
+        services.AddScoped<IOutboxMessageHandler<ClientOtpEmail>, ClientOtpEmailHandler>();
 
         // Background sweeps + schedules
         services.AddHostedService<StickerExpiryService>();
@@ -147,6 +148,8 @@ public static class InfrastructureModule
         services.AddSingleton<Annex1TemplateFiller>();
         services.AddHttpClient<GotenbergClient>();
         services.AddScoped<AramcoReportPdfRenderer>();
+        services.AddScoped<TuvInspection.Application.BlueSticker.IOtpService,
+            TuvInspection.Infrastructure.BlueSticker.EmailOtpService>();
 
         // Stickers
         services.AddScoped<StickerNumberGenerator>();

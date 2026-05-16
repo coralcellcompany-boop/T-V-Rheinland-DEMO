@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\TuvInspection.Domain\TuvInspection.Domain.csproj" />
     <ProjectReference Include="..\..\src\TuvInspection.Application\TuvInspection.Application.csproj" />
+    <ProjectReference Include="..\..\src\TuvInspection.Infrastructure\TuvInspection.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
