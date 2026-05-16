@@ -53,3 +53,19 @@ public class BlueStickerReportConfiguration : IEntityTypeConfiguration<BlueStick
         e.Ignore(x => x.DomainEvents);
     }
 }
+
+public class BlueStickerReportStateTransitionConfiguration : IEntityTypeConfiguration<BlueStickerReportStateTransition>
+{
+    public void Configure(EntityTypeBuilder<BlueStickerReportStateTransition> e)
+    {
+        e.ToTable("BlueStickerReportTransitions");
+        e.HasKey(x => x.Id);
+        e.Property(x => x.Id).ValueGeneratedNever();
+        e.Property(x => x.FromState).HasConversion<int>();
+        e.Property(x => x.ToState).HasConversion<int>();
+        e.Property(x => x.ActorUserId).IsRequired().HasMaxLength(450);
+        e.Property(x => x.ActorRole).IsRequired().HasMaxLength(50);
+        e.Property(x => x.Comments).HasMaxLength(2000);
+        e.HasIndex(x => x.ReportId);
+    }
+}
