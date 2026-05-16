@@ -118,25 +118,31 @@ public sealed class ListBlueStickerReportsHandler
     : IQueryHandler<ListBlueStickerReportsQuery, PagedResult<BlueStickerReportListItemDto>>
 {
     private readonly AppDbContext _db;
-    public ListBlueStickerReportsHandler(AppDbContext db) => _db = db;
+    private readonly ITenantContext _tenant;
+    public ListBlueStickerReportsHandler(AppDbContext db, ITenantContext tenant)
+    { _db = db; _tenant = tenant; }
 
     public async Task<PagedResult<BlueStickerReportListItemDto>> Handle(
         ListBlueStickerReportsQuery q, CancellationToken ct)
     {
-        var query = _db.BlueStickerReports.AsNoTracking().AsQueryable();
+        IQueryable<BlueStickerReport> query = _tenant.IsInRole(Roles.Manager)
+            ? _db.BlueStickerReports.IgnoreQueryFilters().AsNoTracking()
+            : _db.BlueStickerReports.AsNoTracking();
         if (q.JobOrderId is { } jid) query = query.Where(r => r.JobOrderId == jid);
         if (q.State is { } st) query = query.Where(r => (int)r.State == (int)st);
         if (!string.IsNullOrWhiteSpace(q.Search))
             query = query.Where(r => r.ReportNo.Contains(q.Search) ||
                                      r.EquipmentIdNo.Contains(q.Search));
         var total = await query.CountAsync(ct);
+        var page = Math.Max(1, q.Page);
+        var pageSize = Math.Clamp(q.PageSize, 1, 200);
         var items = await query.OrderByDescending(r => r.CreatedAtUtc)
-            .Skip((q.Page - 1) * q.PageSize).Take(q.PageSize)
+            .Skip((page - 1) * pageSize).Take(pageSize)
             .Select(r => new BlueStickerReportListItemDto(
                 r.Id, r.ReportNo, r.TuvJobOrderNo, r.EquipmentIdNo,
                 (BlueStickerReportStateDto)(int)r.State, r.InspectionDate, r.CreatedAtUtc))
             .ToListAsync(ct);
-        return new PagedResult<BlueStickerReportListItemDto>(items, total, q.Page, q.PageSize);
+        return new PagedResult<BlueStickerReportListItemDto>(items, total, page, pageSize);
     }
 }
 
@@ -156,8 +162,10 @@ public sealed class UpdateBlueStickerInspectionHandler
         UpdateBlueStickerInspectionCommand command, CancellationToken ct)
     {
         await _validator.ValidateAndThrowAsync(command.Body, ct);
-        var r = await _db.BlueStickerReports.Include(x => x.Transitions)
-            .FirstOrDefaultAsync(x => x.Id == command.Id, ct)
+        var reportQuery = _tenant.IsInRole(Roles.Manager)
+            ? _db.BlueStickerReports.IgnoreQueryFilters().Include(x => x.Transitions)
+            : _db.BlueStickerReports.Include(x => x.Transitions);
+        var r = await reportQuery.FirstOrDefaultAsync(x => x.Id == command.Id, ct)
             ?? throw new KeyNotFoundException($"Report {command.Id} not found.");
         var b = command.Body;
         r.UpdateInspectionData(b.AreaOfInspection, (BlueStickerResult)(int)b.Result,
