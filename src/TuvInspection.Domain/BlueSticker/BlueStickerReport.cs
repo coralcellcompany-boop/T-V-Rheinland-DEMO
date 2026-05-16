@@ -141,6 +141,7 @@ public class BlueStickerReport : AggregateRoot<Guid>, IAuditable, ITenantScoped
         Result = result;
         Deficiencies = deficiencies?.Trim();
         CorrectiveActionsTaken = correctiveActions?.Trim();
+        // Location is snapshot data — only overwrite when the inspector actually supplies one.
         if (!string.IsNullOrWhiteSpace(equipmentLocation)) EquipmentLocation = equipmentLocation.Trim();
         ReceiverName = receiverName?.Trim();
         ReceiverBadgeNo = receiverBadgeNo?.Trim();
@@ -191,8 +192,10 @@ public class BlueStickerReport : AggregateRoot<Guid>, IAuditable, ITenantScoped
     {
         ReceiverSignaturePng = receiverSignaturePng;
         ReceivedDate = receivedDate;
-        // clear the OTP secret once consumed
+        // OTP is single-use — clear all OTP state once consumed.
         ClientOtpHash = null;
+        ClientOtpExpiresAtUtc = null;
+        ClientOtpSentToEmail = null;
     }
 
     /// <summary>Internal use by BlueStickerReportStateMachine. Records the transition and sets state.</summary>
