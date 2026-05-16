@@ -17,6 +17,7 @@ public class BlueStickerReportStateMachineTests
         Sm(r, Roles.Inspector).Fire(BlueStickerReportTrigger.StartInspection);
         r.State.Should().Be(BlueStickerReportState.InProgress);
         r.Transitions.Should().HaveCount(1);
+        r.Transitions.First().ActorRole.Should().Be(Roles.Inspector);
     }
 
     [Fact]
@@ -51,6 +52,7 @@ public class BlueStickerReportStateMachineTests
         Sm(r, Roles.Inspector).Fire(BlueStickerReportTrigger.SubmitForReview);
         Sm(r, Roles.TechReviewer).Fire(BlueStickerReportTrigger.Reject, "Fix area of inspection");
         r.State.Should().Be(BlueStickerReportState.InProgress);
+        r.Transitions.Last().Comments.Should().Be("Fix area of inspection");
     }
 
     [Fact]
