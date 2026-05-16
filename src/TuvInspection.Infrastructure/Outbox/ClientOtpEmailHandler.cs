@@ -12,6 +12,7 @@ public sealed record ClientOtpEmail(
     Guid ReportId,
     string ToEmail,
     string Code,
+    DateTime ExpiresAtUtc,
     DateTime AtUtc);
 
 public sealed class ClientOtpEmailHandler : IOutboxMessageHandler<ClientOtpEmail>
@@ -27,9 +28,10 @@ public sealed class ClientOtpEmailHandler : IOutboxMessageHandler<ClientOtpEmail
 
     public async Task Handle(ClientOtpEmail payload, CancellationToken ct)
     {
+        var minutes = (int)Math.Round((payload.ExpiresAtUtc - payload.AtUtc).TotalMinutes);
         var html = $@"
 <p>Your one-time code to sign the Blue Sticker inspection report is: <strong>{payload.Code}</strong>.</p>
-<p>It expires in 15 minutes. If you did not request this, ignore this email.</p>
+<p>It expires in {minutes} minutes (at {payload.ExpiresAtUtc:HH:mm} UTC). If you did not request this, ignore this email.</p>
 <p>TÜV Rheinland Arabia LLC</p>";
 
         await _email.Send(new EmailMessage(

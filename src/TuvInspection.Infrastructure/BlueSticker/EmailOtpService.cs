@@ -35,8 +35,8 @@ public sealed class EmailOtpService : IOtpService
         return CryptographicOperations.FixedTimeEquals(a, b);
     }
 
-    public Task SendAsync(string toEmail, string code, Guid reportId, CancellationToken ct) =>
-        _outbox.Enqueue(new ClientOtpEmail(reportId, toEmail, code, _clock.UtcNow), ct);
+    public Task SendAsync(string toEmail, string code, DateTime expiresAtUtc, Guid reportId, CancellationToken ct) =>
+        _outbox.Enqueue(new ClientOtpEmail(reportId, toEmail, code, expiresAtUtc, _clock.UtcNow), ct);
 
     private static string Hash(string code)
     {
