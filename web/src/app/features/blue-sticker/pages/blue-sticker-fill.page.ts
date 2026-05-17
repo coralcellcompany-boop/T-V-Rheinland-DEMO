@@ -146,9 +146,13 @@ export class BlueStickerFillPage {
   goFinalize() { this.router.navigate(['/blue-sticker', this.id, 'finalize']); }
 
   download() {
-    this.api.pdf(this.id).subscribe((blob) => {
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
+    this.api.pdf(this.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+      },
+      error: (e) => showHttpError(this.notify, e),
     });
   }
 }
