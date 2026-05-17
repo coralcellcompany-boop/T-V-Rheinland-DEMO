@@ -64,9 +64,9 @@ public sealed class BlueStickerReportTemplateFiller
 
             // Signature row (row 15) — 3 cells: Receiver / Inspector / Technical Reviewer
             var sigCells = rows[15].Elements<TableCell>().ToList();
-            PlaceSignature(doc, sigCells.ElementAtOrDefault(0), r.ReceiverSignaturePng);
-            PlaceSignature(doc, sigCells.ElementAtOrDefault(1), r.InspectorSignaturePng);
-            PlaceSignature(doc, sigCells.ElementAtOrDefault(2), r.TechnicalReviewerSignaturePng);
+            PlaceSignature(doc, sigCells.ElementAtOrDefault(0), r.ReceiverSignaturePng, 1u);
+            PlaceSignature(doc, sigCells.ElementAtOrDefault(1), r.InspectorSignaturePng, 2u);
+            PlaceSignature(doc, sigCells.ElementAtOrDefault(2), r.TechnicalReviewerSignaturePng, 3u);
 
             doc.MainDocumentPart.Document.Save();
         }
@@ -95,14 +95,14 @@ public sealed class BlueStickerReportTemplateFiller
         paragraph.AppendChild(newRun);
     }
 
-    private static void PlaceSignature(WordprocessingDocument doc, TableCell? cell, string? dataUrl)
+    private static void PlaceSignature(WordprocessingDocument doc, TableCell? cell, string? dataUrl, uint drawingId)
     {
         if (cell is null || string.IsNullOrWhiteSpace(dataUrl)) return;
         var comma = dataUrl.IndexOf(',');
         if (comma < 0) return;
         byte[] png;
         try { png = Convert.FromBase64String(dataUrl[(comma + 1)..]); }
-        catch { return; }
+        catch (FormatException) { return; }
 
         var part = doc.MainDocumentPart!.AddImagePart(ImagePartType.Png);
         using (var s = new MemoryStream(png)) part.FeedData(s);
@@ -112,12 +112,12 @@ public sealed class BlueStickerReportTemplateFiller
         var drawing = new Drawing(
             new DW.Inline(
                 new DW.Extent { Cx = cx, Cy = cy },
-                new DW.DocProperties { Id = (UInt32Value)(uint)Random.Shared.Next(1, 100000),
-                    Name = "sig" },
+                new DW.EffectExtent { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L },
+                new DW.DocProperties { Id = (UInt32Value)drawingId, Name = "sig" },
                 new A.Graphic(new A.GraphicData(
                     new PIC.Picture(
                         new PIC.NonVisualPictureProperties(
-                            new PIC.NonVisualDrawingProperties { Id = 0U, Name = "sig.png" },
+                            new PIC.NonVisualDrawingProperties { Id = drawingId, Name = "sig.png" },
                             new PIC.NonVisualPictureDrawingProperties()),
                         new PIC.BlipFill(
                             new A.Blip { Embed = relId },
