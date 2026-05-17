@@ -21,27 +21,27 @@ export class BlueStickerApi {
     });
     return this.http.get<PagedResult<BlueStickerReportListItem>>(this.base, { params: p });
   }
-  get(id: string) {
+  get(id: string): Observable<BlueStickerReportDetail> {
     return this.http.get<BlueStickerReportDetail>(`${this.base}/${id}`);
   }
-  create(body: CreateBlueStickerReportsRequest) {
+  create(body: CreateBlueStickerReportsRequest): Observable<BlueStickerReportDetail[]> {
     return this.http.post<BlueStickerReportDetail[]>(this.base, body);
   }
-  updateInspection(id: string, body: UpdateBlueStickerInspectionRequest) {
+  updateInspection(id: string, body: UpdateBlueStickerInspectionRequest): Observable<BlueStickerReportDetail> {
     return this.http.put<BlueStickerReportDetail>(`${this.base}/${id}/inspection`, body);
   }
   transition(id: string, trigger: BlueStickerTrigger, comments?: string,
-    inspectorSignaturePng?: string, technicalReviewerSignaturePng?: string) {
+    inspectorSignaturePng?: string, technicalReviewerSignaturePng?: string): Observable<BlueStickerReportDetail> {
     return this.http.post<BlueStickerReportDetail>(
       `${this.base}/${id}/transitions/${trigger}`,
       { comments: comments ?? null,
         inspectorSignaturePng: inspectorSignaturePng ?? null,
         technicalReviewerSignaturePng: technicalReviewerSignaturePng ?? null });
   }
-  requestOtp(id: string) {
+  requestOtp(id: string): Observable<BlueStickerReportDetail> {
     return this.http.post<BlueStickerReportDetail>(`${this.base}/${id}/request-otp`, {});
   }
-  verifyAndSign(id: string, otp: string, receiverSignaturePng: string) {
+  verifyAndSign(id: string, otp: string, receiverSignaturePng: string): Observable<BlueStickerReportDetail> {
     return this.http.post<BlueStickerReportDetail>(
       `${this.base}/${id}/verify-and-sign`, { otp, receiverSignaturePng });
   }

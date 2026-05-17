@@ -1,12 +1,14 @@
-export enum BlueStickerState {
-  Draft = 0, InProgress = 1, UnderReview = 2, Approved = 3,
-  AwaitingClientSignature = 4, ClientSigned = 5, Rejected = 6, Voided = 7,
-}
+export const BlueStickerState = {
+  Draft: 0, InProgress: 1, UnderReview: 2, Approved: 3,
+  AwaitingClientSignature: 4, ClientSigned: 5, Rejected: 6, Voided: 7,
+} as const;
+export type BlueStickerState = (typeof BlueStickerState)[keyof typeof BlueStickerState];
 export const BlueStickerStateName: Record<number, string> = {
   0: 'Draft', 1: 'In progress', 2: 'Under review', 3: 'Approved',
   4: 'Awaiting client signature', 5: 'Client signed', 6: 'Rejected', 7: 'Voided',
 };
-export enum BlueStickerResult { NotSet = 0, Pass = 1, Fail = 2 }
+export const BlueStickerResult = { NotSet: 0, Pass: 1, Fail: 2 } as const;
+export type BlueStickerResult = (typeof BlueStickerResult)[keyof typeof BlueStickerResult];
 
 export interface CreateBlueStickerReportsRequest {
   jobOrderId: string;
