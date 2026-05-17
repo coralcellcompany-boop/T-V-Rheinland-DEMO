@@ -163,7 +163,8 @@ import {
               [readonly]="!isMutable()"
               [canDownloadPdf]="true"
               [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
-              (save)="saveAramcoReport($event)" />
+              (save)="saveAramcoReport($event)"
+              (downloadPdf)="downloadAramcoPdf($event)" />
           </section>
         } @else {
           <section class="aramco card tpi-note">
@@ -355,6 +356,7 @@ export class CertificateDetailPage implements OnInit {
   protected comments = '';
   protected firing = signal(false);
   protected downloadingPdf = signal(false);
+  protected downloadingAramcoPdf = signal(false);
 
   protected confirmText = computed(() => {
     const t = this.pendingTrigger();
@@ -475,6 +477,49 @@ export class CertificateDetailPage implements OnInit {
 
   saveAramcoReport(json: string) {
     this.partialUpdate({ aramcoReportJson: json }, 'Annex 1 fields saved.');
+  }
+
+  downloadAramcoPdf(json: string) {
+    const c = this.cert();
+    if (!c) return;
+    this.downloadingAramcoPdf.set(true);
+    // First persist the current form data, then fetch and open the PDF blob.
+    this.api.update(c.id, {
+      inspectionDate: c.inspectionDate,
+      reportIssueDate: c.reportIssueDate,
+      nextDueDate: c.nextDueDate,
+      inspectionType: c.inspectionType,
+      loadTest: c.loadTest,
+      result: c.result,
+      standards: c.standards,
+      stickerNo: c.stickerNo,
+      checklistJson: c.checklistJson,
+      findingsJson: c.findingsJson,
+      photosJson: c.photosJson,
+      signaturesJson: c.signaturesJson,
+      aramcoReportJson: json,
+    }).subscribe({
+      next: (updated) => {
+        this.cert.set(updated);
+        this.notify.success('Annex 1 fields saved.');
+        this.api.aramcoPdf(c.id).subscribe({
+          next: (blob) => {
+            this.downloadingAramcoPdf.set(false);
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+          },
+          error: (err) => {
+            this.downloadingAramcoPdf.set(false);
+            showHttpError(this.notify, err);
+          },
+        });
+      },
+      error: (err) => {
+        this.downloadingAramcoPdf.set(false);
+        showHttpError(this.notify, err);
+      },
+    });
   }
 
   aramcoPdfUrl(certId: string): string {

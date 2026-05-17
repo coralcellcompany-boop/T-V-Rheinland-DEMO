@@ -57,6 +57,10 @@ export class CertificatesApi {
   pdf(id: string): Observable<Blob> {
     return this.http.get(`${this.base}/${id}/pdf`, { responseType: 'blob' });
   }
+
+  aramcoPdf(id: string): Observable<Blob> {
+    return this.http.get(`${this.base}/${id}/aramco-report`, { responseType: 'blob' });
+  }
 }
 
 @Injectable({ providedIn: 'root' })

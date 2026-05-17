@@ -192,14 +192,14 @@ const ARAMCO_CATEGORY_OPTIONS = [
     <div class="actions" *ngIf="!readonly">
       <p-button label="Save Annex 1 fields" icon="pi pi-save"
         [loading]="saving()" [disabled]="!dirty()" (onClick)="emit()" />
-      <a *ngIf="canDownloadPdf" class="pdf" [href]="aramcoPdfUrl" target="_blank" rel="noopener">
-        <i class="pi pi-file-pdf"></i> Download Annex 1 PDF
-      </a>
+      <p-button *ngIf="canDownloadPdf" label="Download Annex 1 PDF" icon="pi pi-file-pdf"
+        severity="danger" [text]="true" [disabled]="saving()"
+        (onClick)="emitDownloadPdf()" />
     </div>
     <div class="actions" *ngIf="readonly && canDownloadPdf">
-      <a class="pdf" [href]="aramcoPdfUrl" target="_blank" rel="noopener">
-        <i class="pi pi-file-pdf"></i> Download Annex 1 PDF
-      </a>
+      <p-button label="Download Annex 1 PDF" icon="pi pi-file-pdf"
+        severity="danger" [text]="true"
+        (onClick)="emitDownloadPdf()" />
     </div>
   `,
   styles: [
@@ -277,6 +277,7 @@ export class AramcoFormComponent {
   @Input() canDownloadPdf = false;
   @Input() aramcoPdfUrl = '';
   @Output() save = new EventEmitter<string>();
+  @Output() downloadPdf = new EventEmitter<string>();
 
   protected form: AramcoFormDoc = { ...EMPTY, deficiencyItems: [] };
   protected saving = signal(false);
@@ -304,11 +305,19 @@ export class AramcoFormComponent {
     this.form.deficiencyItems = this.form.deficiencyItems.filter((_, i) => i !== index);
   }
 
+  private buildJson(): string {
+    return JSON.stringify(this.form);
+  }
+
   emit() {
     this.saving.set(true);
-    const json = JSON.stringify(this.form);
+    const json = this.buildJson();
     this.original = json;
     this.save.emit(json);
     setTimeout(() => this.saving.set(false), 200);
+  }
+
+  emitDownloadPdf() {
+    this.downloadPdf.emit(this.buildJson());
   }
 }
