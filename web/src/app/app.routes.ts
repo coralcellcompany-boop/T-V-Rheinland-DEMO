@@ -118,6 +118,12 @@ export const routes: Routes = [
             .then((m) => m.BlueStickerFillPage),
       },
       {
+        path: 'blue-sticker/:id/finalize',
+        loadComponent: () =>
+          import('./features/blue-sticker/pages/blue-sticker-finalize.page')
+            .then((m) => m.BlueStickerFinalizePage),
+      },
+      {
         path: 'timesheets',
         loadComponent: () =>
           import('./features/job-management/pages/timesheets.page').then((m) => m.TimesheetsPage),
