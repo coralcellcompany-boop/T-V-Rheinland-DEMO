@@ -446,13 +446,21 @@ export class CertificateDetailPage implements OnInit {
     const c = this.cert();
     if (!c) return;
     this.downloadingPdf.set(true);
-    this.api.pdf(c.id).subscribe({
+    // Blue Sticker (Aramco) certs use the Annex 1 report as their PDF, not the
+    // generic certificate PDF. TPI certs keep the generic one.
+    const pdf$ = c.isBlueStickerCertificate
+      ? this.api.aramcoPdf(c.id)
+      : this.api.pdf(c.id);
+    const fileName = c.isBlueStickerCertificate
+      ? `${c.certificateNo}-Annex1.pdf`
+      : `${c.certificateNo}.pdf`;
+    pdf$.subscribe({
       next: (blob) => {
         this.downloadingPdf.set(false);
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${c.certificateNo}.pdf`;
+        a.download = fileName;
         a.click();
         window.URL.revokeObjectURL(url);
       },
