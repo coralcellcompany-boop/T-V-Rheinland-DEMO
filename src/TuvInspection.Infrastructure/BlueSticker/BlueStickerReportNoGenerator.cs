@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TuvInspection.Application.Common.Time;
+using TuvInspection.Domain.BlueSticker;
 using TuvInspection.Infrastructure.Persistence;
 
 namespace TuvInspection.Infrastructure.BlueSticker;
@@ -22,10 +23,19 @@ public sealed class BlueStickerReportNoGenerator
         var prefix = $"BSR-{year}-";
 
         // Use IgnoreQueryFilters so counters aren't biased by tenant scope.
-        var countThisYear = await _db.BlueStickerReports
+        var persisted = await _db.BlueStickerReports
             .IgnoreQueryFilters()
             .CountAsync(r => r.ReportNo.StartsWith(prefix), ct);
 
-        return $"{prefix}{(countThisYear + 1):D4}";
+        // The create handler adds several reports (one per Aramco equipment) in a
+        // single SaveChanges. Persisted count alone would return the same value for
+        // every call in that loop and collide on the unique ReportNo index — so also
+        // count reports already Added to this context but not yet saved.
+        var pending = _db.ChangeTracker.Entries<BlueStickerReport>()
+            .Count(e => e.State == EntityState.Added
+                        && e.Entity.ReportNo != null
+                        && e.Entity.ReportNo.StartsWith(prefix, StringComparison.Ordinal));
+
+        return $"{prefix}{(persisted + pending + 1):D4}";
     }
 }
