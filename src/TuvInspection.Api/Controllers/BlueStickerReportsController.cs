@@ -19,7 +19,10 @@ public class BlueStickerReportsController : ControllerBase
     private readonly BlueStickerReportPdfRenderer _pdf;
 
     public BlueStickerReportsController(IDispatcher dispatcher, BlueStickerReportPdfRenderer pdf)
-    { _dispatcher = dispatcher; _pdf = pdf; }
+    {
+        _dispatcher = dispatcher;
+        _pdf = pdf;
+    }
 
     [HttpGet]
     public Task<PagedResult<BlueStickerReportListItemDto>> List(
