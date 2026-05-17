@@ -26,12 +26,22 @@ export interface UpdateBlueStickerInspectionRequest {
   receiverTelephone?: string | null;
   inspectorTelephone?: string | null;
 }
+export interface BlueStickerTransitionDto {
+  fromState: string;
+  toState: string;
+  actorUserId: string;
+  actorRole: string;
+  comments?: string | null;
+  atUtc: string;
+}
 export interface BlueStickerReportDetail {
   id: string; reportNo: string; jobOrderId: string; equipmentId: string;
+  clientId: string;
   tuvJobOrderNo: string; aramcoCategoryNo?: string | null;
   orgCode?: string | null; rpoNo?: string | null; crmNo?: string | null;
   departmentContractor?: string | null;
   inspectionDate?: string | null; inspectionTime?: string | null;
+  previousStickerNo?: string | null; previousStickerIssuedBy?: string | null;
   areaOfInspection?: string | null; result: BlueStickerResult;
   equipmentIdNo: string; capacity?: string | null; equipmentLocation?: string | null;
   manufacturer?: string | null; model?: string | null; equipmentType?: string | null;
@@ -46,6 +56,8 @@ export interface BlueStickerReportDetail {
   receiverSignaturePng?: string | null; inspectorSignaturePng?: string | null;
   technicalReviewerSignaturePng?: string | null;
   state: BlueStickerState; createdAtUtc: string;
+  updatedAtUtc?: string | null;
+  transitions: BlueStickerTransitionDto[];
 }
 export interface BlueStickerReportListItem {
   id: string; reportNo: string; tuvJobOrderNo: string; equipmentIdNo: string;
