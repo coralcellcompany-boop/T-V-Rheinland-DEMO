@@ -73,7 +73,13 @@ public sealed class BlueStickerReportPdfRenderer
                 L(1, "Area of Inspection"); L(3, "Equipment ID No."); L(2, "Capacity");
                 L(2, "Equipment Location"); L(1, "Inspection Result"); L(2, "New Sticker No.");
                 D(1, r.AreaOfInspection); D(3, r.EquipmentIdNo); D(2, r.Capacity);
-                D(2, r.EquipmentLocation); D(1, r.Result.ToString()); D(2, r.NewStickerNo);
+                D(2, r.EquipmentLocation);
+                D(1, r.Result switch {
+                    BlueStickerResultDto.Pass => "PASS",
+                    BlueStickerResultDto.Fail => "FAIL",
+                    _ => "—"
+                });
+                D(2, r.NewStickerNo);
                 L(1, "Manufacturer"); L(3, "Model"); L(4, "Equipment Type");
                 L(1, "Equipment Serial No."); L(2, "Sticker Expiration Date");
                 D(1, r.Manufacturer); D(3, r.Model); D(4, r.EquipmentType);
@@ -86,6 +92,36 @@ public sealed class BlueStickerReportPdfRenderer
                     .Text(r.Deficiencies ?? " ").FontSize(8.5f);
                 t.Cell().ColumnSpan(3).Border(0.4f).Padding(8).MinHeight(60)
                     .Text(r.CorrectiveActionsTaken ?? " ").FontSize(8.5f);
+
+                // ── Signature section (mirrors AramcoReportPdfRenderer fallback) ──
+                void BH(int s, string v) =>
+                    t.Cell().ColumnSpan((uint)s).Background("#548DD4").Border(0.4f)
+                        .Padding(4).AlignCenter().Text(v).FontSize(9).Bold().FontColor("#FFFFFF");
+
+                // Blue header row: 3 + 5 + 3 = 11
+                BH(3, "RECIEVER");
+                BH(5, "INSPECTOR");
+                BH(3, "TECHNICAL REVIEWER");
+
+                // Label row: 1+1+1 | 2+2+1 | 1+1+1 = 11
+                L(1, "Name"); L(1, "Badge No."); L(1, "Telephone #");
+                L(2, "Name"); L(2, "SAP NO."); L(1, "Telephone #");
+                L(1, "Name"); L(1, "Received date"); L(1, "Reviewed date");
+
+                // Data row: 1+1+1 | 2+2+1 | 1+1+1 = 11
+                D(1, r.ReceiverName); D(1, r.ReceiverBadgeNo); D(1, r.ReceiverTelephone);
+                D(2, r.InspectorName); D(2, r.InspectorSapNo); D(1, r.InspectorTelephone);
+                D(1, r.TechnicalReviewerName);
+                D(1, r.ReceivedDate?.ToString("dd MMM yyyy"));
+                D(1, r.ReviewedDate?.ToString("dd MMM yyyy"));
+
+                // Signature placeholder row: 3 + 5 + 3 = 11
+                t.Cell().ColumnSpan(3).Border(0.4f).Padding(6).MinHeight(40)
+                    .Text("Signature").FontSize(7).FontColor("#64748b");
+                t.Cell().ColumnSpan(5).Border(0.4f).Padding(6).MinHeight(40)
+                    .Text("Signature").FontSize(7).FontColor("#64748b");
+                t.Cell().ColumnSpan(3).Border(0.4f).Padding(6).MinHeight(40)
+                    .Text("Signature").FontSize(7).FontColor("#64748b");
             });
         })).GeneratePdf();
 }
