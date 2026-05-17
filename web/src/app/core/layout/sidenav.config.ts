@@ -40,6 +40,7 @@ export const PRIMARY_SECTIONS: NavSection[] = [
   {
     label: 'nav.section.blueSticker',
     items: [
+      { label: 'nav.blueStickerInspections', icon: 'pi-clipboard', route: '/blue-sticker' },
       { label: 'nav.blueStickerCertificates', icon: 'pi-file-check', route: '/certificates',
         queryParams: { service: 'blue-sticker' } },
       { label: 'nav.stickers',         icon: 'pi-qrcode', route: '/stickers',

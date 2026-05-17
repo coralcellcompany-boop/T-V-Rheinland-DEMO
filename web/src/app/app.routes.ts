@@ -106,6 +106,12 @@ export const routes: Routes = [
           import('./features/job-management/pages/job-orders.page').then((m) => m.JobOrdersPage),
       },
       {
+        path: 'blue-sticker',
+        loadComponent: () =>
+          import('./features/blue-sticker/pages/blue-sticker-list.page')
+            .then((m) => m.BlueStickerListPage),
+      },
+      {
         path: 'timesheets',
         loadComponent: () =>
           import('./features/job-management/pages/timesheets.page').then((m) => m.TimesheetsPage),
