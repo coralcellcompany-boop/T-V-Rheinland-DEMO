@@ -12,6 +12,8 @@ import {
 import { SignaturePad } from '../../certificates/components/signature-pad.component';
 import { NotifyService } from '../../../shared/services/notify.service';
 import { showHttpError } from '../../../shared/services/api-error.handler';
+import { AuthService } from '../../../core/auth/auth.service';
+import { Roles } from '../../../core/models/auth.models';
 
 @Component({
   standalone: true,
@@ -58,7 +60,17 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       }
 
       @if (rep.state === S.UnderReview) {
-        <p>Submitted — awaiting technical reviewer.</p>
+        @if (auth.hasAnyRole([Roles.TechReviewer, Roles.Manager])) {
+          <h3>Technical reviewer signature</h3>
+          <tuv-signature-pad (commitSignature)="reviewerSig.set($event)" />
+          <p-button label="Approve" icon="pi pi-check" severity="success"
+            [disabled]="!reviewerSig()" [loading]="busy()"
+            (onClick)="approve()" />
+          <p-button label="Reject" icon="pi pi-times" severity="danger" [text]="true"
+            [loading]="busy()" (onClick)="fire('Reject')" />
+        } @else {
+          <p>Submitted — awaiting technical reviewer.</p>
+        }
       }
       @if (rep.state === S.Approved || rep.state === S.AwaitingClientSignature) {
         <p-button label="Go to client signing" icon="pi pi-pencil"
@@ -78,11 +90,14 @@ export class BlueStickerFillPage {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private notify = inject(NotifyService);
+  protected auth = inject(AuthService);
 
   protected S = BlueStickerState;
+  protected Roles = Roles;
   protected r = signal<BlueStickerReportDetail | null>(null);
   protected busy = signal(false);
   protected inspectorSig = signal<string | null>(null);
+  protected reviewerSig = signal<string | null>(null);
   private id = this.route.snapshot.paramMap.get('id')!;
 
   protected resultOptions = [
@@ -153,6 +168,16 @@ export class BlueStickerFillPage {
         setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
       },
       error: (e) => showHttpError(this.notify, e),
+    });
+  }
+
+  approve() {
+    this.busy.set(true);
+    this.api.transition(this.id, 'Approve', undefined, undefined,
+      this.reviewerSig() ?? undefined).subscribe({
+      next: (rep) => { this.r.set(rep); this.busy.set(false);
+        this.notify.success('Approved — sticker issued'); },
+      error: (e) => { this.busy.set(false); showHttpError(this.notify, e); },
     });
   }
 }
