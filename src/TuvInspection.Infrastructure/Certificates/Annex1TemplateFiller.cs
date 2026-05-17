@@ -91,7 +91,44 @@ public sealed class Annex1TemplateFiller
                 data.EquipmentSerialNo,
                 (data.StickerExpirationDate ?? cert.NextDueDate)?.ToString("dd MMM yyyy"));
 
-            FillRowCells(rows[11], data.Deficiencies, data.CorrectiveActionsTaken);
+            // Build deficiency / corrective-action text from structured items when present;
+            // fall back to the legacy free-text scalars for older certificates.
+            string? deficienciesText;
+            string? correctiveText;
+            if (data.DeficiencyItems is { Count: > 0 })
+            {
+                var defLines = new System.Text.StringBuilder();
+                var corrLines = new System.Text.StringBuilder();
+                var idx = 0;
+                foreach (var item in data.DeficiencyItems)
+                {
+                    idx++;
+                    var prefix = $"{idx}. ";
+                    var codePrefix = string.IsNullOrWhiteSpace(item.Code) ? string.Empty : $"[{item.Code}] ";
+                    var desc = string.IsNullOrWhiteSpace(item.Description)
+                        ? string.Empty
+                        : $"{prefix}{codePrefix}{item.Description}";
+                    var corr = string.IsNullOrWhiteSpace(item.CorrectiveAction)
+                        ? string.Empty
+                        : $"{prefix}{item.CorrectiveAction}";
+
+                    if (defLines.Length > 0) defLines.Append('\n');
+                    defLines.Append(desc);
+
+                    if (corrLines.Length > 0) corrLines.Append('\n');
+                    corrLines.Append(corr);
+                }
+                deficienciesText = defLines.ToString();
+                correctiveText = corrLines.ToString();
+            }
+            else
+            {
+                // Legacy fallback: older certs that still have free-text fields.
+                deficienciesText = data.Deficiencies;
+                correctiveText = data.CorrectiveActionsTaken;
+            }
+
+            FillRowCells(rows[11], deficienciesText, correctiveText);
 
             // Row 14 — signatures data row (9 cells)
             FillRowCells(rows[14],
@@ -150,10 +187,30 @@ public sealed class Annex1TemplateFiller
         // Drop other paragraphs in the cell that might carry stale text.
         foreach (var extra in cell.Elements<Paragraph>().Skip(1).ToList()) extra.Remove();
 
-        var newRun = new Run();
-        if (rPr is not null) newRun.AppendChild(rPr);
-        newRun.AppendChild(new Text(text) { Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve });
-        paragraph.AppendChild(newRun);
+        // Multi-line support: when the value contains '\n', emit a <w:br/> between
+        // text runs so line breaks appear correctly in Word/gotenberg. Single-line
+        // values follow the original single-run path unchanged.
+        if (text.Contains('\n'))
+        {
+            var lines = text.Split('\n');
+            for (var li = 0; li < lines.Length; li++)
+            {
+                var lineRun = new Run();
+                if (rPr is not null) lineRun.AppendChild(rPr.CloneNode(true) as RunProperties);
+                lineRun.AppendChild(new Text(lines[li])
+                    { Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve });
+                if (li < lines.Length - 1)
+                    lineRun.AppendChild(new DocumentFormat.OpenXml.Wordprocessing.Break());
+                paragraph.AppendChild(lineRun);
+            }
+        }
+        else
+        {
+            var newRun = new Run();
+            if (rPr is not null) newRun.AppendChild(rPr);
+            newRun.AppendChild(new Text(text) { Space = DocumentFormat.OpenXml.SpaceProcessingModeValues.Preserve });
+            paragraph.AppendChild(newRun);
+        }
     }
 
     private static string ResultLabel(InspectionResultDto r) => r switch

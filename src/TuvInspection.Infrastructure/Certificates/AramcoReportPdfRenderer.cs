@@ -194,11 +194,48 @@ public sealed class AramcoReportPdfRenderer
             BlueHeaderCell(t, 8, "DEFICIENCES / OBSERVATIONS");
             BlueHeaderCell(t, 3, "CORRECTIVE ACTION TAKEN");
 
+            // Build deficiency / corrective-action text from structured items when present;
+            // fall back to the legacy free-text scalars for older certificates.
+            string deficienciesText;
+            string correctiveText;
+            if (data.DeficiencyItems is { Count: > 0 })
+            {
+                var defLines = new System.Text.StringBuilder();
+                var corrLines = new System.Text.StringBuilder();
+                var idx = 0;
+                foreach (var item in data.DeficiencyItems)
+                {
+                    idx++;
+                    var prefix = $"{idx}. ";
+                    var codePrefix = string.IsNullOrWhiteSpace(item.Code) ? string.Empty : $"[{item.Code}] ";
+                    var desc = string.IsNullOrWhiteSpace(item.Description)
+                        ? string.Empty
+                        : $"{prefix}{codePrefix}{item.Description}";
+                    var corr = string.IsNullOrWhiteSpace(item.CorrectiveAction)
+                        ? string.Empty
+                        : $"{prefix}{item.CorrectiveAction}";
+
+                    if (defLines.Length > 0) defLines.Append('\n');
+                    defLines.Append(desc);
+
+                    if (corrLines.Length > 0) corrLines.Append('\n');
+                    corrLines.Append(corr);
+                }
+                deficienciesText = defLines.ToString();
+                correctiveText = corrLines.ToString();
+            }
+            else
+            {
+                // Legacy fallback: older certs that still have free-text fields.
+                deficienciesText = string.IsNullOrWhiteSpace(data.Deficiencies) ? " " : data.Deficiencies;
+                correctiveText = string.IsNullOrWhiteSpace(data.CorrectiveActionsTaken) ? " " : data.CorrectiveActionsTaken;
+            }
+
             t.Cell().ColumnSpan(8).Border(0.4f).BorderColor(Ink).Padding(8).MinHeight(70)
-                .Text(string.IsNullOrWhiteSpace(data.Deficiencies) ? " " : data.Deficiencies)
+                .Text(string.IsNullOrWhiteSpace(deficienciesText) ? " " : deficienciesText)
                 .FontSize(8.5f);
             t.Cell().ColumnSpan(3).Border(0.4f).BorderColor(Ink).Padding(8).MinHeight(70)
-                .Text(string.IsNullOrWhiteSpace(data.CorrectiveActionsTaken) ? " " : data.CorrectiveActionsTaken)
+                .Text(string.IsNullOrWhiteSpace(correctiveText) ? " " : correctiveText)
                 .FontSize(8.5f);
 
             BlueHeaderCell(t, 3, "RECIEVER");
