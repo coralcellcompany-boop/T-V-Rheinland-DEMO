@@ -141,26 +141,15 @@ const SEVERITY_OPTIONS = [
       <table class="def-table" *ngIf="form.deficiencyItems.length > 0; else emptyDefs">
         <thead>
           <tr>
-            <th class="c-code">Code</th>
-            <th>Description</th>
-            <th class="c-sev">Severity</th>
-            <th>Corrective Action</th>
-            <th class="c-due">Deadline</th>
-            <th class="c-done">Resolved</th>
+            <th>Deficiencies / Observations</th>
+            <th>Corrective Action Taken</th>
             <th class="c-act" *ngIf="!readonly"></th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let row of form.deficiencyItems; let i = index">
-            <td><input pInputText [(ngModel)]="row.code" [disabled]="readonly" placeholder="e.g. SAIC-7001-3" /></td>
             <td><input pInputText [(ngModel)]="row.description" [disabled]="readonly" placeholder="What was observed" /></td>
-            <td>
-              <p-select [options]="severityOptions" [(ngModel)]="row.severity"
-                optionLabel="label" optionValue="value" appendTo="body" [disabled]="readonly" />
-            </td>
             <td><input pInputText [(ngModel)]="row.correctiveAction" [disabled]="readonly" placeholder="What was done" /></td>
-            <td><input pInputText type="date" [(ngModel)]="row.deadline" [disabled]="readonly" /></td>
-            <td class="c-done"><p-checkbox [(ngModel)]="row.resolved" [binary]="true" [disabled]="readonly" /></td>
             <td class="c-act" *ngIf="!readonly">
               <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
                 (onClick)="removeDeficiency(i)" />
@@ -174,20 +163,6 @@ const SEVERITY_OPTIONS = [
       <div class="row-add" *ngIf="!readonly">
         <p-button label="Add deficiency row" icon="pi pi-plus" [text]="true" (onClick)="addDeficiency()" />
       </div>
-
-      <details class="legacy-defs">
-        <summary>Free-text notes (legacy)</summary>
-        <div class="two-col">
-          <label>Deficiencies / Observations
-            <textarea pTextarea rows="3" [(ngModel)]="form.deficiencies" [disabled]="readonly"
-              placeholder="Optional free-text notes."></textarea>
-          </label>
-          <label>Corrective Action Taken
-            <textarea pTextarea rows="3" [(ngModel)]="form.correctiveActionsTaken" [disabled]="readonly"
-              placeholder="Optional free-text notes."></textarea>
-          </label>
-        </div>
-      </details>
     </fieldset>
 
     <div class="actions" *ngIf="!readonly">
