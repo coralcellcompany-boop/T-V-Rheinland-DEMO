@@ -123,21 +123,24 @@ import {
           </ul>
         </section>
 
-        <!-- Checklist -->
-        <section class="checklist card">
-          <header class="block-header">
-            <h3>Inspection checklist</h3>
-            <span class="muted" *ngIf="!isMutable()">
-              <i class="pi pi-lock"></i>
-              Read-only — certificate is in {{ stateName(c.state) }} state.
-            </span>
-          </header>
-          <tuv-checklist-editor
-            [value]="c.checklistJson"
-            [equipmentTypeId]="c.equipmentTypeId"
-            [readonly]="!isMutable()"
-            (save)="saveChecklist($event)" />
-        </section>
+        <!-- Checklist — Third Party Inspection only. Blue Sticker (Aramco) uses
+             the Annex 1 sheet exclusively; no checklist applies. -->
+        @if (!c.isBlueStickerCertificate) {
+          <section class="checklist card">
+            <header class="block-header">
+              <h3>Inspection checklist</h3>
+              <span class="muted" *ngIf="!isMutable()">
+                <i class="pi pi-lock"></i>
+                Read-only — certificate is in {{ stateName(c.state) }} state.
+              </span>
+            </header>
+            <tuv-checklist-editor
+              [value]="c.checklistJson"
+              [equipmentTypeId]="c.equipmentTypeId"
+              [readonly]="!isMutable()"
+              (save)="saveChecklist($event)" />
+          </section>
+        }
 
         <!-- Aramco Annex 1 — Blue Sticker only (Aramco-categorised equipment).
              Third Party Inspection certs use the per-equipment-type checklist above
@@ -171,20 +174,23 @@ import {
           </section>
         }
 
-        <!-- Photos -->
-        <section class="photos card">
-          <header class="block-header">
-            <h3>Photos</h3>
-            <span class="muted" *ngIf="!isMutable()">
-              <i class="pi pi-lock"></i>
-              Read-only — certificate is in {{ stateName(c.state) }} state.
-            </span>
-          </header>
-          <tuv-photo-gallery
-            [value]="c.photosJson"
-            [readonly]="!isMutable()"
-            (valueChange)="savePhotos($event)" />
-        </section>
+        <!-- Photos — Third Party Inspection only. Blue Sticker (Aramco) uses
+             the Annex 1 sheet exclusively; no photos section applies. -->
+        @if (!c.isBlueStickerCertificate) {
+          <section class="photos card">
+            <header class="block-header">
+              <h3>Photos</h3>
+              <span class="muted" *ngIf="!isMutable()">
+                <i class="pi pi-lock"></i>
+                Read-only — certificate is in {{ stateName(c.state) }} state.
+              </span>
+            </header>
+            <tuv-photo-gallery
+              [value]="c.photosJson"
+              [readonly]="!isMutable()"
+              (valueChange)="savePhotos($event)" />
+          </section>
+        }
 
         <!-- Signatures -->
         <section class="signatures card">
