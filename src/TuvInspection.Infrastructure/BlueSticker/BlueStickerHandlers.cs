@@ -84,7 +84,18 @@ public sealed class CreateBlueStickerReportsHandler
                 .Select(s => new { s.StickerNo, s.AssignedToInspectorId })
                 .FirstOrDefaultAsync(ct);
             if (prev is not null)
-                report.SetPreviousSticker(prev.StickerNo, prev.AssignedToInspectorId);
+            {
+                string? prevIssuedBy = null;
+                if (!string.IsNullOrWhiteSpace(prev.AssignedToInspectorId))
+                {
+                    var inspId = prev.AssignedToInspectorId;
+                    prevIssuedBy = await _db.Users.AsNoTracking()
+                        .Where(u => u.Id == inspId)
+                        .Select(u => u.FullName ?? u.UserName ?? u.Email)
+                        .FirstOrDefaultAsync(ct) ?? prev.AssignedToInspectorId;
+                }
+                report.SetPreviousSticker(prev.StickerNo, prevIssuedBy);
+            }
 
             report.CreatedAtUtc = _clock.UtcNow;
             report.CreatedById = _tenant.UserId;
