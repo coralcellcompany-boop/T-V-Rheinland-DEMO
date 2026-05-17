@@ -14,6 +14,7 @@ import { PageHeader } from '../../../shared/components/page-header.component';
 import { StatusPill } from '../../../shared/components/status-pill.component';
 import { EmptyState } from '../../../shared/components/empty-state.component';
 import { JobOrdersApi } from '../../../core/api/job-management.api';
+import { BlueStickerApi } from '../../../core/api/blue-sticker.api';
 import { ClientsApi } from '../../../core/api/clients.api';
 import { InspectorLookup, UsersApi } from '../../../core/api/users.api';
 import {
@@ -110,6 +111,12 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           <div><label>To</label><input pInputText type="date" [(ngModel)]="newTo" /></div>
         </div>
         <label>Location</label><input pInputText [(ngModel)]="newLocation" />
+        <ng-container *ngIf="isBlueSticker()">
+          <label>Org Code</label><input pInputText [(ngModel)]="newOrgCode" />
+          <label>RPO No.</label><input pInputText [(ngModel)]="newRpoNo" />
+          <label>CRM No.</label><input pInputText [(ngModel)]="newCrmNo" />
+          <label>Department / Contractor</label><input pInputText [(ngModel)]="newDepartment" />
+        </ng-container>
       </div>
       <ng-template pTemplate="footer">
         <p-button severity="secondary" label="Cancel" (onClick)="newDialog = false" />
@@ -158,6 +165,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
 })
 export class JobOrdersPage {
   private api = inject(JobOrdersApi);
+  private bsApi = inject(BlueStickerApi);
   private clientsApi = inject(ClientsApi);
   protected auth = inject(AuthService);
   private notify = inject(NotifyService);
@@ -180,10 +188,15 @@ export class JobOrdersPage {
   protected newDialog = false;
   protected creating = signal(false);
   protected newClientId: string | null = null;
-  protected newService = ServiceType.ThirdPartyInspection;
+  protected newService: number = ServiceType.ThirdPartyInspection;
   protected newFrom = new Date().toISOString().substring(0, 10);
   protected newTo = new Date(Date.now() + 86400000 * 5).toISOString().substring(0, 10);
   protected newLocation = '';
+  protected newOrgCode = '';
+  protected newRpoNo = '';
+  protected newCrmNo = '';
+  protected newDepartment = '';
+  protected isBlueSticker = () => this.newService === 2 || this.newService === 7;
 
   protected serviceOptions = [
     { value: 1, label: 'TPI' },
@@ -266,8 +279,22 @@ export class JobOrdersPage {
       dateFrom: this.newFrom, dateTo: this.newTo, location: this.newLocation || null,
     }).subscribe({
       next: (jo) => {
-        this.creating.set(false); this.notify.success(`Created ${jo.jobOrderNo}`);
-        this.newDialog = false; this.newLocation = '';
+        this.creating.set(false);
+        this.newDialog = false;
+        if (this.isBlueSticker()) {
+          this.bsApi.create({
+            jobOrderId: jo.id, orgCode: this.newOrgCode || null,
+            rpoNo: this.newRpoNo || null, crmNo: this.newCrmNo || null,
+            departmentContractor: this.newDepartment || null,
+          }).subscribe({
+            next: (reports) => this.notify.success(
+              `Created ${jo.jobOrderNo} + ${reports.length} Blue Sticker report(s)`),
+            error: (err) => showHttpError(this.notify, err),
+          });
+        } else {
+          this.notify.success(`Created ${jo.jobOrderNo}`);
+        }
+        this.newLocation = '';
         this.refresh();
       },
       error: (err) => { this.creating.set(false); showHttpError(this.notify, err); },
