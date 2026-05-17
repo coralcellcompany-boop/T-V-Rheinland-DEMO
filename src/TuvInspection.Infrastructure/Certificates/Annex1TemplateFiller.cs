@@ -87,7 +87,7 @@ public sealed class Annex1TemplateFiller
             FillRowCells(rows[8],
                 data.Manufacturer,
                 data.Model,
-                cert.EquipmentTypeName,
+                data.EquipmentType ?? cert.EquipmentTypeName,
                 data.EquipmentSerialNo,
                 (data.StickerExpirationDate ?? cert.NextDueDate)?.ToString("dd MMM yyyy"));
 

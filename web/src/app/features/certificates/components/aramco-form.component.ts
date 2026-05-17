@@ -47,6 +47,7 @@ export interface AramcoFormDoc {
   equipmentLocationOnSite: string | null;
   manufacturer: string | null;
   model: string | null;
+  equipmentType: string | null;
   equipmentSerialNo: string | null;
   stickerExpirationDate: string | null;   // "YYYY-MM-DD"
   receiverName: string | null;
@@ -65,7 +66,7 @@ const EMPTY: AramcoFormDoc = {
   crmNo: null, reportNo: null, departmentContractor: null, inspectionTime: null,
   previousStickerNo: null, previousStickerIssuedBy: null, previousStickerId: null,
   areaOfInspection: null, capacity: null, equipmentLocationOnSite: null,
-  manufacturer: null, model: null, equipmentSerialNo: null, stickerExpirationDate: null,
+  manufacturer: null, model: null, equipmentType: null, equipmentSerialNo: null, stickerExpirationDate: null,
   receiverName: null, receiverBadgeNo: null, receiverTelephone: null,
   inspectorTelephone: null, receivedDate: null, reviewedDate: null,
   deficiencies: null, correctiveActionsTaken: null,
@@ -98,6 +99,24 @@ const ARAMCO_CATEGORY_OPTIONS = [
   { label: 'CR14 — Tower Crane', value: 'CR14' },
 ];
 
+// Canonical mapping from "Aramco Category & Equipment Types.xlsx"
+const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
+  CR01: ['Mobile Crane - All Terrain', 'Mobile Crane - Rough Terrain', 'Mobile Crane - Truck Mounted Crane', 'Mobile Crane - Boom Truck', 'Crawler Crane'],
+  CR02: ['Elevator', 'Escalator'],
+  CR03: ['Manlift - Boom Supported EWP', 'Scissor Lift - Self Propelled EWP', 'Manually Propelled EWP', 'Mast Climbing Personal Platform'],
+  CR04: ['Pedestal Crane', 'Pedestal Crane - Articulating Boom', 'Floating Crane - Articulating Boom', 'Floating Crane', 'Overhead Crane', 'Monorail Crane', 'Tower Crane', 'Portal Crane'],
+  CR05: ['Storage Retrieval Machine (SRM)'],
+  CR06: ['Articulating Boom Crane'],
+  CR07: ['Lifting Beam', 'Spreader Beam'],
+  CR08: ['Powered Platform / Sky Climber'],
+  CR09: ['Bucket Truck'],
+  CR10: ['Manbasket'],
+  CR11: ['Overhead Crane', 'Monorail Crane', 'Jib Crane'],
+  CR12: ['Side Boom Tractor'],
+  CR13: ['A-frame', 'Gantry Crane'],
+  CR14: ['Tower Crane'],
+};
+
 @Component({
   selector: 'tuv-aramco-form',
   standalone: true,
@@ -118,7 +137,8 @@ const ARAMCO_CATEGORY_OPTIONS = [
         <label>Aramco Category No.
           <p-select [options]="aramcoCategoryOptions" [(ngModel)]="form.aramcoCategoryNo"
             optionLabel="label" optionValue="value" appendTo="body" [filter]="true"
-            placeholder="Select Aramco category" [disabled]="readonly" />
+            placeholder="Select Aramco category" [disabled]="readonly"
+            (onChange)="onCategoryChange()" />
         </label>
         <label>Org. Code<input pInputText [(ngModel)]="form.orgCode" [disabled]="readonly" /></label>
         <label>RPO No.<input pInputText [(ngModel)]="form.rpoNo" [disabled]="readonly" /></label>
@@ -145,6 +165,12 @@ const ARAMCO_CATEGORY_OPTIONS = [
         <label>Capacity<input pInputText [(ngModel)]="form.capacity" placeholder="e.g. 5 t" [disabled]="readonly" /></label>
         <label>Manufacturer<input pInputText [(ngModel)]="form.manufacturer" [disabled]="readonly" /></label>
         <label>Model<input pInputText [(ngModel)]="form.model" [disabled]="readonly" /></label>
+        <label>Equipment Type
+          <p-select [options]="equipmentTypeOptions()" [(ngModel)]="form.equipmentType"
+            appendTo="body" [filter]="true"
+            placeholder="Select Aramco category first"
+            [disabled]="readonly || !form.aramcoCategoryNo" />
+        </label>
         <label>Equipment Serial No.<input pInputText [(ngModel)]="form.equipmentSerialNo" [disabled]="readonly" /></label>
         <label>Sticker Expiration Date<input pInputText type="date" [(ngModel)]="form.stickerExpirationDate" [disabled]="readonly" /></label>
       </fieldset>
@@ -286,6 +312,20 @@ export class AramcoFormComponent {
   private original = JSON.stringify(EMPTY);
 
   protected dirty = () => JSON.stringify(this.form) !== this.original;
+
+  protected equipmentTypeOptions = () =>
+    this.form.aramcoCategoryNo
+      ? (CATEGORY_EQUIPMENT_TYPES[this.form.aramcoCategoryNo] ?? [])
+      : [];
+
+  onCategoryChange() {
+    if (
+      this.form.equipmentType &&
+      !this.equipmentTypeOptions().includes(this.form.equipmentType)
+    ) {
+      this.form.equipmentType = null;
+    }
+  }
 
   addDeficiency() {
     this.form.deficiencyItems = [

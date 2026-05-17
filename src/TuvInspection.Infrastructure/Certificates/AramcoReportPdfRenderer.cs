@@ -93,7 +93,7 @@ public sealed class AramcoReportPdfRenderer
     private static readonly AramcoReportData Empty = new(
         null, null, null, null, null, null, null, null, null, null, null, null,
         null, null, null, null, null, null, null, null, null, null, null, null,
-        null, null, null);
+        null, null, null, null);
 
     // ─── Fallback (inline QuestPDF) ─────────────────────────────────────────────
     // Same 11-column grid as the docx so the layout is reasonably faithful even
