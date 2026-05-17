@@ -196,7 +196,8 @@ export class JobOrdersPage {
   protected newRpoNo = '';
   protected newCrmNo = '';
   protected newDepartment = '';
-  protected isBlueSticker = () => this.newService === 2 || this.newService === 7;
+  protected isBlueSticker = () =>
+    this.newService === ServiceType.BlueSticker || this.newService === ServiceType.All;
 
   protected serviceOptions = [
     { value: 1, label: 'TPI' },
