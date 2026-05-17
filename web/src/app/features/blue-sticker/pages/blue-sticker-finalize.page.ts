@@ -92,6 +92,7 @@ export class BlueStickerFinalizePage {
     });
   }
   onClientSign(dataUrl: string) {
+    if (this.busy()) return; // guard against a double signature commit while verify is in-flight
     if (!/^\d{6}$/.test(this.otp.trim())) {
       this.notify.error('Enter the 6-digit OTP before the client signs.');
       return;
