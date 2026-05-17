@@ -32,7 +32,8 @@
     },
     "myStickers": "ملصقاتي",
     "tpiCertificates": "فحوص الطرف الثالث",
-    "blueStickerCertificates": "فحوص الملصق الأزرق"
+    "blueStickerCertificates": "فحوص الملصق الأزرق",
+    "blueStickerInspections": "فحوصات الملصق الأزرق"
   },
   "topbar": {
     "search": "ابحث في الشهادات والمعدات والعملاء…",

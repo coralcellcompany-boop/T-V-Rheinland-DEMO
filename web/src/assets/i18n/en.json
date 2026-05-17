@@ -32,7 +32,8 @@
     },
     "myStickers": "My stickers",
     "tpiCertificates": "TPI inspections",
-    "blueStickerCertificates": "Blue Sticker inspections"
+    "blueStickerCertificates": "Blue Sticker inspections",
+    "blueStickerInspections": "Blue Sticker Inspections"
   },
   "topbar": {
     "search": "Search certificates, equipment, clients…",
