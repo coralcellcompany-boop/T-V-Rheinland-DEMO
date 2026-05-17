@@ -4,6 +4,7 @@ using System.Text.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TuvInspection.Contracts.Auth;
@@ -12,7 +13,10 @@ using TuvInspection.Domain.Clients;
 using TuvInspection.Domain.Equipment;
 using TuvInspection.Domain.JobOrders;
 using TuvInspection.Domain.Stickers;
+using TuvInspection.Infrastructure.Outbox;
 using TuvInspection.Infrastructure.Persistence;
+using TuvInspection.Infrastructure.Reports;
+using TuvInspection.Infrastructure.Stickers;
 using EquipmentEntity = TuvInspection.Domain.Equipment.Equipment;
 
 namespace TuvInspection.IntegrationTests.BlueSticker;
@@ -65,12 +69,16 @@ public sealed class BlueStickerApiFixture : IAsyncLifetime
                 {
                     // Remove hosted services that fire on startup and would try SMTP or
                     // attempt outbox processing (they time out in a container environment).
+                    var hostedToRemove = new HashSet<Type>
+                    {
+                        typeof(OutboxProcessor),
+                        typeof(StickerExpiryService),
+                        typeof(AramcoWeeklyExportScheduler),
+                    };
                     var hosted = services
                         .Where(d => d.ServiceType == typeof(Microsoft.Extensions.Hosting.IHostedService)
                             && d.ImplementationType is not null
-                            && (d.ImplementationType.Name == "OutboxProcessor"
-                                || d.ImplementationType.Name == "StickerExpiryService"
-                                || d.ImplementationType.Name == "AramcoWeeklyExportScheduler"))
+                            && hostedToRemove.Contains(d.ImplementationType))
                         .ToList();
                     foreach (var h in hosted)
                         services.Remove(h);
@@ -85,18 +93,22 @@ public sealed class BlueStickerApiFixture : IAsyncLifetime
     {
         Factory?.Dispose();
 
+        // Flush the EF/ADO.NET connection pool so the DROP DATABASE reliably succeeds —
+        // otherwise live connections held by the pool can block the ALTER/DROP.
+        SqlConnection.ClearAllPools();
+
         // Drop the test database
         try
         {
-            await using var conn = new Microsoft.Data.SqlClient.SqlConnection(_devServerConn);
+            await using var conn = new SqlConnection(_devServerConn);
             await conn.OpenAsync();
             await using var cmd = conn.CreateCommand();
             cmd.CommandText = $"ALTER DATABASE [{_dbName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{_dbName}]";
             await cmd.ExecuteNonQueryAsync();
         }
-        catch
+        catch (Exception ex)
         {
-            // Best-effort cleanup; don't fail the test run on disposal errors
+            Console.Error.WriteLine($"[BlueStickerApiFixture] Failed to drop test DB '{_dbName}': {ex.Message}");
         }
     }
 
