@@ -78,6 +78,26 @@ const SEVERITY_OPTIONS = [
   { label: 'Critical', value: DeficiencySeverity.Critical },
 ];
 
+// Official Aramco category list — canonical source:
+// "Aramco Category & Equipment Types.xlsx" (Blue Sticker Services). value = the
+// "Aramco Category Number" that prints on the Annex 1 sheet.
+const ARAMCO_CATEGORY_OPTIONS = [
+  { label: 'CR01 — Mobile Crane', value: 'CR01' },
+  { label: 'CR02 — Elevator & Escalator', value: 'CR02' },
+  { label: 'CR03 — Elevation Work Platform', value: 'CR03' },
+  { label: 'CR04 — Marine & Offshore Cranes', value: 'CR04' },
+  { label: 'CR05 — Storage Retrieval Machine', value: 'CR05' },
+  { label: 'CR06 — Articulating Boom Crane', value: 'CR06' },
+  { label: 'CR07 — Lifting / Spreader Beam', value: 'CR07' },
+  { label: 'CR08 — Powered Platform / Sky Climber', value: 'CR08' },
+  { label: 'CR09 — Vehicle Mounted Elevation & Rotating Aerial Device', value: 'CR09' },
+  { label: 'CR10 — Manbasket', value: 'CR10' },
+  { label: 'CR11 — Fixed Cranes & Hoists', value: 'CR11' },
+  { label: 'CR12 — Side Boom Tractor', value: 'CR12' },
+  { label: 'CR13 — A-frame & Mobile Gantry', value: 'CR13' },
+  { label: 'CR14 — Tower Crane', value: 'CR14' },
+];
+
 @Component({
   selector: 'tuv-aramco-form',
   standalone: true,
@@ -95,7 +115,11 @@ const SEVERITY_OPTIONS = [
       <fieldset>
         <legend>Job order &amp; references</legend>
         <label>TUV Job Order No.<input pInputText [(ngModel)]="form.tuvJobOrderNo" [disabled]="readonly" /></label>
-        <label>Aramco Category No.<input pInputText [(ngModel)]="form.aramcoCategoryNo" [disabled]="readonly" /></label>
+        <label>Aramco Category No.
+          <p-select [options]="aramcoCategoryOptions" [(ngModel)]="form.aramcoCategoryNo"
+            optionLabel="label" optionValue="value" appendTo="body" [filter]="true"
+            placeholder="Select Aramco category" [disabled]="readonly" />
+        </label>
         <label>Org. Code<input pInputText [(ngModel)]="form.orgCode" [disabled]="readonly" /></label>
         <label>RPO No.<input pInputText [(ngModel)]="form.rpoNo" [disabled]="readonly" /></label>
         <label>CRM No.<input pInputText [(ngModel)]="form.crmNo" [disabled]="readonly" /></label>
@@ -131,7 +155,7 @@ const SEVERITY_OPTIONS = [
         <label>Receiver Badge No.<input pInputText [(ngModel)]="form.receiverBadgeNo" [disabled]="readonly" /></label>
         <label>Receiver Telephone<input pInputText [(ngModel)]="form.receiverTelephone" [disabled]="readonly" /></label>
         <label>Inspector Telephone<input pInputText [(ngModel)]="form.inspectorTelephone" [disabled]="readonly" /></label>
-        <label>Received Date<input pInputText type="date" [(ngModel)]="form.receivedDate" [disabled]="readonly" /></label>
+        <label>Received Date (auto)<input pInputText type="date" [(ngModel)]="form.receivedDate" [disabled]="true" /></label>
         <label>Reviewed Date<input pInputText type="date" [(ngModel)]="form.reviewedDate" [disabled]="readonly" /></label>
       </fieldset>
     </div>
@@ -231,18 +255,21 @@ export class AramcoFormComponent {
   @Input() set value(json: string | null | undefined) {
     if (!json) {
       this.form = { ...EMPTY, deficiencyItems: [] };
-      this.original = JSON.stringify(this.form);
-      return;
+    } else {
+      try {
+        const parsed = JSON.parse(json) as Partial<AramcoFormDoc>;
+        this.form = {
+          ...EMPTY,
+          ...parsed,
+          deficiencyItems: Array.isArray(parsed.deficiencyItems) ? parsed.deficiencyItems : [],
+        };
+      } catch {
+        this.form = { ...EMPTY, deficiencyItems: [] };
+      }
     }
-    try {
-      const parsed = JSON.parse(json) as Partial<AramcoFormDoc>;
-      this.form = {
-        ...EMPTY,
-        ...parsed,
-        deficiencyItems: Array.isArray(parsed.deficiencyItems) ? parsed.deficiencyItems : [],
-      };
-    } catch {
-      this.form = { ...EMPTY, deficiencyItems: [] };
+    // Received Date is system-set (the date the report is received) — never typed.
+    if (!this.form.receivedDate) {
+      this.form.receivedDate = new Date().toISOString().slice(0, 10);
     }
     this.original = JSON.stringify(this.form);
   }
@@ -254,6 +281,7 @@ export class AramcoFormComponent {
   protected form: AramcoFormDoc = { ...EMPTY, deficiencyItems: [] };
   protected saving = signal(false);
   protected severityOptions = SEVERITY_OPTIONS;
+  protected aramcoCategoryOptions = ARAMCO_CATEGORY_OPTIONS;
   private original = JSON.stringify(EMPTY);
 
   protected dirty = () => JSON.stringify(this.form) !== this.original;
