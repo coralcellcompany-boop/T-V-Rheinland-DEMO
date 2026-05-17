@@ -259,3 +259,106 @@ public sealed class FireBlueStickerTriggerHandler
         return BlueStickerMapper.ToDetail(r);
     }
 }
+
+public sealed class RequestClientOtpHandler
+    : ICommandHandler<RequestClientOtpCommand, BlueStickerReportDetailDto>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+    private readonly IOtpService _otp;
+
+    public RequestClientOtpHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IOtpService otp)
+    { _db = db; _tenant = tenant; _clock = clock; _otp = otp; }
+
+    public async Task<BlueStickerReportDetailDto> Handle(
+        RequestClientOtpCommand command, CancellationToken ct)
+    {
+        var query = _tenant.IsInRole(Roles.Manager)
+            ? _db.BlueStickerReports.IgnoreQueryFilters().Include(x => x.Transitions)
+            : _db.BlueStickerReports.Include(x => x.Transitions);
+        var r = await query.FirstOrDefaultAsync(x => x.Id == command.Id, ct)
+            ?? throw new KeyNotFoundException($"Report {command.Id} not found.");
+
+        var email = await _db.Clients.IgnoreQueryFilters()
+            .Where(c => c.Id == r.ClientId).Select(c => c.ContactEmail)
+            .FirstOrDefaultAsync(ct);
+        if (string.IsNullOrWhiteSpace(email))
+            throw new InvalidOperationException(
+                "Client has no contact email on file — cannot send the signature OTP. " +
+                "Set the client's contact email first.");
+
+        var sm = new BlueStickerReportStateMachine(r, _tenant, _clock);
+        if (!sm.CanFire(BlueStickerReportTrigger.RequestClientOtp))
+            throw new InvalidOperationException(
+                $"Cannot request a client OTP while report is in state {r.State}.");
+        sm.Fire(BlueStickerReportTrigger.RequestClientOtp);
+
+        var gen = _otp.Generate(_clock.UtcNow, TimeSpan.FromMinutes(15));
+        r.SetClientOtp(gen.Hash, gen.ExpiresAtUtc, email!);
+        await _otp.SendAsync(email!, gen.Code, gen.ExpiresAtUtc, r.Id, ct);   // CORRECTED signature
+
+        r.UpdatedAtUtc = _clock.UtcNow;
+        r.UpdatedById = _tenant.UserId;
+        await _db.SaveChangesAsync(ct);
+        return BlueStickerMapper.ToDetail(r);
+    }
+}
+
+public sealed class VerifyOtpAndSignHandler
+    : ICommandHandler<VerifyOtpAndSignCommand, BlueStickerReportDetailDto>
+{
+    private const int MaxAttempts = 5;
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+    private readonly IOtpService _otp;
+    private readonly IValidator<VerifyOtpAndSignRequest> _validator;
+
+    public VerifyOtpAndSignHandler(AppDbContext db, ITenantContext tenant, IClock clock,
+        IOtpService otp, IValidator<VerifyOtpAndSignRequest> validator)
+    { _db = db; _tenant = tenant; _clock = clock; _otp = otp; _validator = validator; }
+
+    public async Task<BlueStickerReportDetailDto> Handle(
+        VerifyOtpAndSignCommand command, CancellationToken ct)
+    {
+        await _validator.ValidateAndThrowAsync(command.Body, ct);
+        var query = _tenant.IsInRole(Roles.Manager)
+            ? _db.BlueStickerReports.IgnoreQueryFilters().Include(x => x.Transitions)
+            : _db.BlueStickerReports.Include(x => x.Transitions);
+        var r = await query.FirstOrDefaultAsync(x => x.Id == command.Id, ct)
+            ?? throw new KeyNotFoundException($"Report {command.Id} not found.");
+
+        if (r.State != BlueStickerReportState.AwaitingClientSignature)
+            throw new InvalidOperationException(
+                $"Report is not awaiting a client signature (state {r.State}).");
+        if (r.ClientOtpHash is null || r.ClientOtpExpiresAtUtc is null)
+            throw new InvalidOperationException("No OTP has been requested for this report.");
+        if (_clock.UtcNow > r.ClientOtpExpiresAtUtc)
+            throw new InvalidOperationException("OTP has expired — request a new one.");
+        if (r.ClientOtpAttempts >= MaxAttempts)
+            throw new InvalidOperationException(
+                "Too many incorrect attempts — request a new OTP.");
+
+        if (!_otp.Verify(command.Body.Otp, r.ClientOtpHash))
+        {
+            r.RecordOtpAttempt();
+            await _db.SaveChangesAsync(ct);
+            throw new InvalidOperationException("Incorrect OTP.");
+        }
+
+        var sm = new BlueStickerReportStateMachine(r, _tenant, _clock);
+        if (!sm.CanFire(BlueStickerReportTrigger.VerifyOtpAndSign))
+            throw new InvalidOperationException(
+                $"Cannot finalize from state {r.State}.");
+        sm.Fire(BlueStickerReportTrigger.VerifyOtpAndSign);
+        r.CaptureClientSignature(command.Body.ReceiverSignaturePng,
+            DateOnly.FromDateTime(_clock.UtcNow));
+
+        r.UpdatedAtUtc = _clock.UtcNow;
+        r.UpdatedById = _tenant.UserId;
+        await _db.SaveChangesAsync(ct);
+        return BlueStickerMapper.ToDetail(r);
+    }
+}
