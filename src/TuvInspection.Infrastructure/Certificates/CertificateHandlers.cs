@@ -10,7 +10,6 @@ using TuvInspection.Contracts.Certificates;
 using TuvInspection.Contracts.Common;
 using TuvInspection.Domain.Certificates;
 using TuvInspection.Domain.Equipment;
-using TuvInspection.Domain.Stickers;
 using TuvInspection.Domain.Identity;
 using TuvInspection.Infrastructure.Outbox;
 using TuvInspection.Infrastructure.Persistence;
@@ -401,33 +400,6 @@ public sealed class FireCertificateTriggerHandler : ICommandHandler<FireCertific
                 $"Cannot {trigger} a certificate currently in state {cert.State}.");
 
         sm.Fire(trigger, command.Comments);
-
-        // Auto-issue Blue Sticker: when a cert with an Aramco-categorized equipment hits
-        // Approved, pull the next Unallocated sticker and link it. The Fail guard above
-        // ensures we never get here with InspectionResult.Fail.
-        if (cert.State == CertificateState.Approved && cert.StickerId is null && isBlueSticker)
-        {
-            var sticker = await _db.Stickers
-                .Where(s => s.State == StickerState.Unallocated)
-                .OrderBy(s => s.StickerNo)
-                .FirstOrDefaultAsync(ct);
-            if (sticker is null)
-                throw new InvalidOperationException(
-                    "No Blue Sticker stock available. Manager: procure new stickers first.");
-            sticker.Issue(cert.Id, cert.EquipmentId, cert.ClientId,
-                cert.NextDueDate, _clock.UtcNow);
-            cert.LinkSticker(sticker.Id, sticker.StickerNo);
-
-            // After taking one out of the pool, check whether stock has dipped to the
-            // low-stock threshold; if so, fire a one-shot procurement alert.
-            var remaining = await _db.Stickers.CountAsync(s => s.State == StickerState.Unallocated, ct);
-            var threshold = _config.GetValue<int?>("Stickers:LowStockThreshold") ?? 50;
-            if (remaining <= threshold)
-            {
-                await _outbox.Enqueue(new StickerLowStockAlertEmail(
-                    remaining, threshold, cert.CertificateNo, _clock.UtcNow), ct);
-            }
-        }
 
         // Tech Reviewer queue alert when an inspector hands a cert off for review.
         if (cert.State == CertificateState.Submitted)

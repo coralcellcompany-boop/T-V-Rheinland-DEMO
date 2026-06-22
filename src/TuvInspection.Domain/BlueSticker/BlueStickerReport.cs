@@ -149,6 +149,27 @@ public class BlueStickerReport : AggregateRoot<Guid>, IAuditable, ITenantScoped
         InspectorTelephone = inspectorTelephone?.Trim();
     }
 
+    /// <summary>Inspector edits the equipment snapshot at inspection time. The Coordinator
+    /// pre-populates these from the Equipment catalog at Create, but field reality often
+    /// differs (wrong category, missing serial, model upgraded, etc.) so the inspector gets the
+    /// final say while the report is InProgress.</summary>
+    public void UpdateEquipmentDetails(
+        string? aramcoCategoryNo,
+        string? manufacturer,
+        string? model,
+        string? equipmentType,
+        string? equipmentSerialNo,
+        string? capacity)
+    {
+        EnsureState(BlueStickerReportState.InProgress);
+        AramcoCategoryNo = aramcoCategoryNo?.Trim();
+        Manufacturer = manufacturer?.Trim();
+        Model = model?.Trim();
+        EquipmentType = equipmentType?.Trim();
+        EquipmentSerialNo = equipmentSerialNo?.Trim();
+        Capacity = capacity?.Trim();
+    }
+
     public void StampInspectionStart(DateOnly date, TimeOnly time)
     {
         InspectionDate = date;

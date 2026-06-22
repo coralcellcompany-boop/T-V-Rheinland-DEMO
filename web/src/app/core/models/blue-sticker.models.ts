@@ -16,6 +16,18 @@ export interface CreateBlueStickerReportsRequest {
   rpoNo?: string | null;
   crmNo?: string | null;
   departmentContractor?: string | null;
+  /** Empty/omitted = include ALL Aramco-categorised equipment under the job order's client.
+   *  Non-empty = include only the listed equipment IDs. */
+  equipmentIds?: string[] | null;
+}
+export interface UpdateBlueStickerAdminRequest {
+  orgCode?: string | null;
+  rpoNo?: string | null;
+  crmNo?: string | null;
+  departmentContractor?: string | null;
+  aramcoCategoryNo?: string | null;
+  previousStickerNo?: string | null;
+  previousStickerIssuedBy?: string | null;
 }
 export interface UpdateBlueStickerInspectionRequest {
   areaOfInspection?: string | null;
@@ -27,6 +39,13 @@ export interface UpdateBlueStickerInspectionRequest {
   receiverBadgeNo?: string | null;
   receiverTelephone?: string | null;
   inspectorTelephone?: string | null;
+  // Equipment snapshot — Inspector confirms / corrects on site.
+  aramcoCategoryNo?: string | null;
+  manufacturer?: string | null;
+  model?: string | null;
+  equipmentType?: string | null;
+  equipmentSerialNo?: string | null;
+  capacity?: string | null;
 }
 export interface BlueStickerTransitionDto {
   fromState: string;
@@ -60,6 +79,8 @@ export interface BlueStickerReportDetail {
   state: BlueStickerState; createdAtUtc: string;
   updatedAtUtc?: string | null;
   transitions: BlueStickerTransitionDto[];
+  /** SAIC-U-70## checklist number derived from the equipment's Aramco category. */
+  inspectionChecklistNumber?: string | null;
 }
 export interface BlueStickerReportListItem {
   id: string; reportNo: string; tuvJobOrderNo: string; equipmentIdNo: string;
@@ -67,3 +88,9 @@ export interface BlueStickerReportListItem {
 }
 export type BlueStickerTrigger =
   'StartInspection' | 'SubmitForReview' | 'Approve' | 'Reject' | 'Void';
+
+export interface RequestClientOtpResponse {
+  report: BlueStickerReportDetail;
+  /** Populated only in Development — the raw OTP code to ease manual testing. */
+  devOtp?: string | null;
+}

@@ -28,29 +28,6 @@ public sealed record StickerListItemDto(
 
 public enum StickerColorDto { Blue = 0, Green = 1, Red = 2, White = 3 }
 
-public enum StickerRequestStateDto { Pending = 0, Approved = 1, Rejected = 2, Cancelled = 3 }
-
-public sealed record StickerRequestDto(
-    Guid Id,
-    string RequestNo,
-    string InspectorUserId,
-    string? InspectorName,
-    StickerColorDto Color,
-    int Quantity,
-    string? Justification,
-    StickerRequestStateDto State,
-    string? DecidedByUserId,
-    string? DecidedByName,
-    DateTime? DecidedAtUtc,
-    string? DecisionComments,
-    int AllocatedCount,
-    DateTime CreatedAtUtc);
-
-public sealed record CreateStickerRequest(
-    StickerColorDto Color,
-    int Quantity,
-    string? Justification);
-
 public sealed record StickerStockSummaryDto(
     int Unallocated,
     int Issued,
@@ -65,10 +42,6 @@ public sealed record AssignStickersRequest(
     string InspectorUserId,
     StickerColorDto Color,
     int Count);
-
-public sealed record RejectStickerRequestBody(string Reason);
-
-public sealed record DecisionCommentsBody(string? Comments);
 
 public sealed record VoidStickerRequest(string Reason);
 

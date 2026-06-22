@@ -46,7 +46,6 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<Sticker> Stickers => Set<Sticker>();
     public DbSet<BlueStickerReport> BlueStickerReports => Set<BlueStickerReport>();
     public DbSet<BlueStickerReportStateTransition> BlueStickerReportTransitions => Set<BlueStickerReportStateTransition>();
-    public DbSet<StickerRequest> StickerRequests => Set<StickerRequest>();
     public DbSet<Candidate> Candidates => Set<Candidate>();
     public DbSet<Assessment> Assessments => Set<Assessment>();
     public DbSet<AssessmentTransition> AssessmentTransitions => Set<AssessmentTransition>();

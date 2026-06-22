@@ -13,7 +13,6 @@ import {
 export class StickersApi {
   private http = inject(HttpClient);
   private base = `${environment.apiBaseUrl}/api/stickers`;
-  private requestsBase = `${environment.apiBaseUrl}/api/sticker-requests`;
 
   list(filters: {
     state?: number; color?: number; assignedToInspectorId?: string;
@@ -51,45 +50,6 @@ export class StickersApi {
     if (color != null) p = p.set('color', String(color));
     return this.http.get(`${this.base}/print-batch`, { params: p, responseType: 'blob' });
   }
-
-  // ─── Requests ───
-  listRequests(state?: number, inspectorUserId?: string, page = 1, pageSize = 25)
-    : Observable<PagedResult<StickerRequest>> {
-    let p = new HttpParams().set('page', String(page)).set('pageSize', String(pageSize));
-    if (state != null) p = p.set('state', String(state));
-    if (inspectorUserId) p = p.set('inspectorUserId', inspectorUserId);
-    return this.http.get<PagedResult<StickerRequest>>(this.requestsBase, { params: p });
-  }
-  createRequest(body: { color: number; quantity: number; justification?: string | null })
-    : Observable<StickerRequest> {
-    return this.http.post<StickerRequest>(this.requestsBase, body);
-  }
-  approveRequest(id: string, comments?: string | null): Observable<StickerRequest> {
-    return this.http.post<StickerRequest>(`${this.requestsBase}/${id}/approve`, { comments });
-  }
-  rejectRequest(id: string, reason: string): Observable<StickerRequest> {
-    return this.http.post<StickerRequest>(`${this.requestsBase}/${id}/reject`, { reason });
-  }
-  cancelRequest(id: string): Observable<StickerRequest> {
-    return this.http.post<StickerRequest>(`${this.requestsBase}/${id}/cancel`, {});
-  }
-}
-
-export interface StickerRequest {
-  id: string;
-  requestNo: string;
-  inspectorUserId: string;
-  inspectorName: string | null;
-  color: number;
-  quantity: number;
-  justification: string | null;
-  state: number;
-  decidedByUserId: string | null;
-  decidedByName: string | null;
-  decidedAtUtc: string | null;
-  decisionComments: string | null;
-  allocatedCount: number;
-  createdAtUtc: string;
 }
 
 @Injectable({ providedIn: 'root' })

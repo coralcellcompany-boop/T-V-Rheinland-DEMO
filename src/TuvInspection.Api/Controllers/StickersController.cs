@@ -92,39 +92,3 @@ public class StickersController : ControllerBase
     }
 }
 
-[ApiController]
-[Authorize]
-[Route("api/sticker-requests")]
-[Produces("application/json")]
-public class StickerRequestsController : ControllerBase
-{
-    private readonly IDispatcher _dispatcher;
-    public StickerRequestsController(IDispatcher dispatcher) => _dispatcher = dispatcher;
-
-    [HttpGet]
-    public Task<PagedResult<StickerRequestDto>> List(
-        [FromQuery] StickerRequestStateDto? state,
-        [FromQuery] string? inspectorUserId,
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 25,
-        CancellationToken ct = default) =>
-        _dispatcher.Query(new ListStickerRequestsQuery(state, inspectorUserId, page, pageSize), ct);
-
-    [HttpPost]
-    public Task<StickerRequestDto> Create([FromBody] CreateStickerRequest body, CancellationToken ct) =>
-        _dispatcher.Send(new CreateStickerRequestCommand(body), ct);
-
-    [HttpPost("{id:guid}/approve")]
-    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
-    public Task<StickerRequestDto> Approve(Guid id, [FromBody] DecisionCommentsBody? body, CancellationToken ct) =>
-        _dispatcher.Send(new ApproveStickerRequestCommand(id, body?.Comments), ct);
-
-    [HttpPost("{id:guid}/reject")]
-    [Authorize(Roles = $"{Roles.Manager},{Roles.Coordinator}")]
-    public Task<StickerRequestDto> Reject(Guid id, [FromBody] RejectStickerRequestBody body, CancellationToken ct) =>
-        _dispatcher.Send(new RejectStickerRequestCommand(id, body.Reason), ct);
-
-    [HttpPost("{id:guid}/cancel")]
-    public Task<StickerRequestDto> Cancel(Guid id, CancellationToken ct) =>
-        _dispatcher.Send(new CancelStickerRequestCommand(id), ct);
-}

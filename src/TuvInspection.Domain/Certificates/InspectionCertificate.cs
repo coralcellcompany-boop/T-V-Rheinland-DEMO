@@ -107,13 +107,6 @@ public class InspectionCertificate : AggregateRoot<Guid>, IAuditable, ITenantSco
         SignaturesJson = signaturesJson;
     }
 
-    /// <summary>Called by the sticker auto-issue hook when this cert hits Approved.</summary>
-    public void LinkSticker(Guid stickerId, string stickerNo)
-    {
-        StickerId = stickerId;
-        StickerNo = stickerNo;
-    }
-
     /// <summary>
     /// Internal use by <c>CertificateStateMachine</c>. Records the transition and updates state.
     /// </summary>

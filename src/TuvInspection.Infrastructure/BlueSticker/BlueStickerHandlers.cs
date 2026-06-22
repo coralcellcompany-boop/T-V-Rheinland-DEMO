@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using TuvInspection.Application.BlueSticker;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
@@ -7,6 +8,7 @@ using TuvInspection.Application.Common.Time;
 using TuvInspection.Contracts.BlueSticker;
 using TuvInspection.Contracts.Common;
 using TuvInspection.Domain.BlueSticker;
+using TuvInspection.Domain.Equipment;
 using TuvInspection.Domain.Identity;
 using TuvInspection.Domain.Stickers;
 using TuvInspection.Infrastructure.Persistence;
@@ -28,7 +30,30 @@ internal static class BlueStickerMapper
         (BlueStickerReportStateDto)(int)r.State, r.CreatedAtUtc, r.UpdatedAtUtc,
         r.Transitions.OrderBy(t => t.AtUtc).Select(t => new BlueStickerTransitionDto(
             t.FromState.ToString(), t.ToState.ToString(), t.ActorUserId, t.ActorRole,
-            t.Comments, t.AtUtc)).ToList());
+            t.Comments, t.AtUtc)).ToList(),
+        InspectionChecklistNumber: ChecklistFor(r.AramcoCategoryNo));
+
+    /// <summary>Map "CR##" back to the SAIC-U-70## checklist. Reverse of
+    /// <c>AramcoCategoryInfo.ChecklistNumber</c> — we store the short code on the report so the
+    /// lookup is purely string-driven here.</summary>
+    private static string? ChecklistFor(string? shortCode) => shortCode switch
+    {
+        "CR01" => "SAIC-U-7007",
+        "CR02" => "SAIC-U-7005",
+        "CR03" => "SAIC-U-7013",
+        "CR04" => "SAIC-U-7018",
+        "CR05" => "SAIC-U-7012",
+        "CR06" => "SAIC-U-7004",
+        "CR07" => "SAIC-U-7002",
+        "CR08" => "SAIC-U-7016",
+        "CR09" => "SAIC-U-7013",
+        "CR10" => "SAIC-U-7017",
+        "CR11" => "SAIC-U-7008",
+        "CR12" => "SAIC-U-7010",
+        "CR13" => "SAIC-U-7008",
+        "CR14" => "SAIC-U-7003",
+        _ => null,
+    };
 }
 
 public sealed class CreateBlueStickerReportsHandler
@@ -51,14 +76,20 @@ public sealed class CreateBlueStickerReportsHandler
             .FirstOrDefaultAsync(j => j.Id == b.JobOrderId, ct)
             ?? throw new KeyNotFoundException($"Job order {b.JobOrderId} not found.");
 
-        var equipment = await _db.Equipment.IgnoreQueryFilters()
+        var equipQuery = _db.Equipment.IgnoreQueryFilters()
             .Where(e => e.ClientId == jo.ClientId
                         && e.AramcoCategory != null
-                        && e.AramcoCategory != TuvInspection.Domain.Equipment.AramcoCategory.None)
-            .ToListAsync(ct);
+                        && e.AramcoCategory != AramcoCategory.None);
+        if (b.EquipmentIds is { Count: > 0 })
+        {
+            var ids = b.EquipmentIds.ToHashSet();
+            equipQuery = equipQuery.Where(e => ids.Contains(e.Id));
+        }
+        var equipment = await equipQuery.ToListAsync(ct);
         if (equipment.Count == 0)
-            throw new InvalidOperationException(
-                "No Aramco-categorised equipment for this client — nothing to inspect for Blue Sticker.");
+            throw new InvalidOperationException(b.EquipmentIds is { Count: > 0 }
+                ? "None of the selected equipment match this client + Aramco-categorisation."
+                : "No Aramco-categorised equipment for this client — nothing to inspect for Blue Sticker.");
 
         var created = new List<BlueStickerReport>();
         foreach (var eq in equipment)
@@ -74,7 +105,7 @@ public sealed class CreateBlueStickerReportsHandler
             var report = new BlueStickerReport(Guid.NewGuid(), await _no.Next(ct),
                 jo.Id, eq.Id, jo.ClientId, jo.JobOrderNo, eq.IdNo);
             report.SetAdminFields(b.OrgCode, b.RpoNo, b.CrmNo, b.DepartmentContractor,
-                eq.AramcoCategory?.ToString());
+                eq.AramcoCategory?.ShortCode());
             report.SetEquipmentSnapshot(eq.Swl, eq.Location, eq.Manufacturer, eq.Model,
                 typeName, eq.SerialNo);
 
@@ -104,6 +135,32 @@ public sealed class CreateBlueStickerReportsHandler
         }
         await _db.SaveChangesAsync(ct);
         return created.Select(BlueStickerMapper.ToDetail).ToList();
+    }
+}
+
+public sealed class GetBlueStickerReportByStickerNoHandler
+    : IQueryHandler<GetBlueStickerReportByStickerNoQuery, BlueStickerReportDetailDto?>
+{
+    private readonly AppDbContext _db;
+    public GetBlueStickerReportByStickerNoHandler(AppDbContext db) => _db = db;
+
+    public async Task<BlueStickerReportDetailDto?> Handle(
+        GetBlueStickerReportByStickerNoQuery q, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(q.StickerNo)) return null;
+        var no = q.StickerNo.Trim().ToUpperInvariant();
+        // IgnoreQueryFilters because this is an anonymous public endpoint — the QR on the
+        // physical sticker has no tenant context. A sticker is only linked at Approve, so any
+        // report bound to it is at least Approved. Voided reports are excluded so a withdrawn
+        // sticker doesn't continue to serve its old certificate. Most recently created wins
+        // for the "sticker re-issued after a re-inspection" case.
+        var r = await _db.BlueStickerReports.IgnoreQueryFilters()
+            .Include(x => x.Transitions)
+            .Where(x => x.NewStickerNo == no
+                && x.State != BlueStickerReportState.Voided)
+            .OrderByDescending(x => x.CreatedAtUtc)
+            .FirstOrDefaultAsync(ct);
+        return r is null ? null : BlueStickerMapper.ToDetail(r);
     }
 }
 
@@ -158,6 +215,34 @@ public sealed class ListBlueStickerReportsHandler
     }
 }
 
+public sealed class UpdateBlueStickerAdminHandler
+    : ICommandHandler<UpdateBlueStickerAdminCommand, BlueStickerReportDetailDto>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+
+    public UpdateBlueStickerAdminHandler(AppDbContext db, ITenantContext tenant, IClock clock)
+    { _db = db; _tenant = tenant; _clock = clock; }
+
+    public async Task<BlueStickerReportDetailDto> Handle(
+        UpdateBlueStickerAdminCommand command, CancellationToken ct)
+    {
+        var reportQuery = _tenant.IsInRole(Roles.Manager)
+            ? _db.BlueStickerReports.IgnoreQueryFilters().Include(x => x.Transitions)
+            : _db.BlueStickerReports.Include(x => x.Transitions);
+        var r = await reportQuery.FirstOrDefaultAsync(x => x.Id == command.Id, ct)
+            ?? throw new KeyNotFoundException($"Report {command.Id} not found.");
+        var b = command.Body;
+        r.SetAdminFields(b.OrgCode, b.RpoNo, b.CrmNo, b.DepartmentContractor, b.AramcoCategoryNo);
+        r.SetPreviousSticker(b.PreviousStickerNo, b.PreviousStickerIssuedBy);
+        r.UpdatedAtUtc = _clock.UtcNow;
+        r.UpdatedById = _tenant.UserId;
+        await _db.SaveChangesAsync(ct);
+        return BlueStickerMapper.ToDetail(r);
+    }
+}
+
 public sealed class UpdateBlueStickerInspectionHandler
     : ICommandHandler<UpdateBlueStickerInspectionCommand, BlueStickerReportDetailDto>
 {
@@ -183,6 +268,8 @@ public sealed class UpdateBlueStickerInspectionHandler
         r.UpdateInspectionData(b.AreaOfInspection, (BlueStickerResult)(int)b.Result,
             b.Deficiencies, b.CorrectiveActionsTaken, b.EquipmentLocation,
             b.ReceiverName, b.ReceiverBadgeNo, b.ReceiverTelephone, b.InspectorTelephone);
+        r.UpdateEquipmentDetails(b.AramcoCategoryNo, b.Manufacturer, b.Model,
+            b.EquipmentType, b.EquipmentSerialNo, b.Capacity);
         r.UpdatedAtUtc = _clock.UtcNow;
         r.UpdatedById = _tenant.UserId;
         await _db.SaveChangesAsync(ct);
@@ -213,14 +300,26 @@ public sealed class FireBlueStickerTriggerHandler
 
         if (trigger == BlueStickerReportTrigger.SubmitForReview)
         {
-            if (r.Result == BlueStickerResult.NotSet || string.IsNullOrWhiteSpace(r.AreaOfInspection))
+            var missing = new List<string>();
+            if (string.IsNullOrWhiteSpace(r.AreaOfInspection)) missing.Add("Area of Inspection");
+            if (r.Result == BlueStickerResult.NotSet) missing.Add("Inspection Result");
+            if (string.IsNullOrWhiteSpace(r.ReceiverName)) missing.Add("Receiver Name");
+            if (string.IsNullOrWhiteSpace(r.ReceiverBadgeNo)) missing.Add("Receiver Badge No.");
+            if (missing.Count > 0)
                 throw new InvalidOperationException(
-                    "Cannot submit — area of inspection and inspection result are required.");
+                    "Cannot submit — fill in: " + string.Join(", ", missing) + ".");
+
             var insp = _tenant.UserId is null ? null : await _db.Users.AsNoTracking()
                 .Where(u => u.Id == _tenant.UserId)
-                .Select(u => new { Name = u.FullName ?? u.UserName ?? u.Email, u.SapNo })
+                .Select(u => new { Name = u.FullName ?? u.UserName ?? u.Email, u.SapNo, u.SignaturePng })
                 .FirstOrDefaultAsync(ct);
-            r.SetInspectorSnapshot(insp?.Name, insp?.SapNo, command.Body?.InspectorSignaturePng);
+            // Auto-pull the inspector's stored signature when the caller didn't supply one.
+            // Forces inspectors to set their signature on their profile before they can submit.
+            var sig = command.Body?.InspectorSignaturePng ?? insp?.SignaturePng;
+            if (string.IsNullOrWhiteSpace(sig))
+                throw new InvalidOperationException(
+                    "Inspector signature missing — set your signature on your profile first.");
+            r.SetInspectorSnapshot(insp?.Name, insp?.SapNo, sig);
         }
 
         if (trigger == BlueStickerReportTrigger.StartInspection)
@@ -241,14 +340,23 @@ public sealed class FireBlueStickerTriggerHandler
 
         if (r.State == BlueStickerReportState.Approved)
         {
-            var reviewer = _tenant.UserId is null ? "Reviewer" : await _db.Users.AsNoTracking()
+            var reviewerRow = _tenant.UserId is null ? null : await _db.Users.AsNoTracking()
                 .Where(u => u.Id == _tenant.UserId)
-                .Select(u => u.FullName ?? u.UserName ?? u.Email)
-                .FirstOrDefaultAsync(ct) ?? "Reviewer";
+                .Select(u => new { Name = u.FullName ?? u.UserName ?? u.Email, u.SignaturePng })
+                .FirstOrDefaultAsync(ct);
+            var reviewer = reviewerRow?.Name ?? "Reviewer";
+            var reviewerSig = command.Body?.TechnicalReviewerSignaturePng ?? reviewerRow?.SignaturePng;
+            if (string.IsNullOrWhiteSpace(reviewerSig))
+                throw new InvalidOperationException(
+                    "Technical reviewer signature missing — set your signature on your profile first.");
             var inspDate = r.InspectionDate ?? DateOnly.FromDateTime(_clock.UtcNow);
-            // TODO(spec): per-Aramco-category validity (spec open dependency) — interim 1 year
-            var expiry = inspDate.AddYears(1);
-            r.ApplyApprovalStamp(reviewer, command.Body?.TechnicalReviewerSignaturePng,
+            // Per-Aramco-category validity — sourced from the Aramco reference sheet.
+            // CR01/CR04/CR06 = 3 months; CR05/CR11 = 12 months; everything else = 6 months.
+            var equipCat = await _db.Equipment.IgnoreQueryFilters()
+                .Where(e => e.Id == r.EquipmentId).Select(e => e.AramcoCategory)
+                .FirstOrDefaultAsync(ct) ?? AramcoCategory.None;
+            var expiry = inspDate.AddMonths(equipCat.ValidityMonths());
+            r.ApplyApprovalStamp(reviewer, reviewerSig,
                 DateOnly.FromDateTime(_clock.UtcNow), expiry);
 
             if (r.StickerId is null)
@@ -272,18 +380,19 @@ public sealed class FireBlueStickerTriggerHandler
 }
 
 public sealed class RequestClientOtpHandler
-    : ICommandHandler<RequestClientOtpCommand, BlueStickerReportDetailDto>
+    : ICommandHandler<RequestClientOtpCommand, RequestClientOtpResponse>
 {
     private readonly AppDbContext _db;
     private readonly ITenantContext _tenant;
     private readonly IClock _clock;
     private readonly IOtpService _otp;
+    private readonly IHostEnvironment _env;
 
     public RequestClientOtpHandler(AppDbContext db, ITenantContext tenant, IClock clock,
-        IOtpService otp)
-    { _db = db; _tenant = tenant; _clock = clock; _otp = otp; }
+        IOtpService otp, IHostEnvironment env)
+    { _db = db; _tenant = tenant; _clock = clock; _otp = otp; _env = env; }
 
-    public async Task<BlueStickerReportDetailDto> Handle(
+    public async Task<RequestClientOtpResponse> Handle(
         RequestClientOtpCommand command, CancellationToken ct)
     {
         var query = _tenant.IsInRole(Roles.Manager)
@@ -308,12 +417,14 @@ public sealed class RequestClientOtpHandler
 
         var gen = _otp.Generate(_clock.UtcNow, TimeSpan.FromMinutes(15));
         r.SetClientOtp(gen.Hash, gen.ExpiresAtUtc, email!);
-        await _otp.SendAsync(email!, gen.Code, gen.ExpiresAtUtc, r.Id, ct);   // CORRECTED signature
+        await _otp.SendAsync(email!, gen.Code, gen.ExpiresAtUtc, r.Id, ct);
 
         r.UpdatedAtUtc = _clock.UtcNow;
         r.UpdatedById = _tenant.UserId;
         await _db.SaveChangesAsync(ct);
-        return BlueStickerMapper.ToDetail(r);
+        return new RequestClientOtpResponse(
+            BlueStickerMapper.ToDetail(r),
+            _env.IsDevelopment() ? gen.Code : null);
     }
 }
 

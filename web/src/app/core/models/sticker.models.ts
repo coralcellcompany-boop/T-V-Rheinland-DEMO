@@ -24,13 +24,6 @@ export const StickerColorHex: Record<number, string> = {
   0: '#1d4ed8', 1: '#15803d', 2: '#b91c1c', 3: '#cbd5e1',
 };
 
-export const StickerRequestState = {
-  Pending: 0, Approved: 1, Rejected: 2, Cancelled: 3,
-} as const;
-export const StickerRequestStateName: Record<number, string> = {
-  0: 'Pending', 1: 'Approved', 2: 'Rejected', 3: 'Cancelled',
-};
-
 export interface StickerListItem {
   id: string;
   stickerNo: string;

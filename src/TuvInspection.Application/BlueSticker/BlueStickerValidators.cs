@@ -8,11 +8,23 @@ public sealed class UpdateBlueStickerInspectionRequestValidator
 {
     public UpdateBlueStickerInspectionRequestValidator()
     {
-        RuleFor(x => x.AreaOfInspection).NotEmpty().WithMessage("Area of inspection is required.");
-        RuleFor(x => x.Result).NotEqual(BlueStickerResultDto.NotSet)
-            .WithMessage("Inspection result must be Pass or Fail.");
-        RuleFor(x => x.ReceiverName).NotEmpty().WithMessage("Receiver name is required.");
-        RuleFor(x => x.ReceiverBadgeNo).NotEmpty().WithMessage("Receiver badge No. is required.");
+        // Save accepts partial drafts — required-field enforcement happens at SubmitForReview
+        // (see FireBlueStickerTriggerHandler). These rules only guard length / format so users
+        // can save mid-inspection without losing work.
+        RuleFor(x => x.AreaOfInspection).MaximumLength(300);
+        RuleFor(x => x.Deficiencies).MaximumLength(4000);
+        RuleFor(x => x.CorrectiveActionsTaken).MaximumLength(4000);
+        RuleFor(x => x.ReceiverName).MaximumLength(200);
+        RuleFor(x => x.ReceiverBadgeNo).MaximumLength(50);
+        RuleFor(x => x.ReceiverTelephone).MaximumLength(40);
+        RuleFor(x => x.InspectorTelephone).MaximumLength(40);
+        RuleFor(x => x.EquipmentLocation).MaximumLength(200);
+        RuleFor(x => x.AramcoCategoryNo).MaximumLength(20);
+        RuleFor(x => x.Manufacturer).MaximumLength(200);
+        RuleFor(x => x.Model).MaximumLength(200);
+        RuleFor(x => x.EquipmentType).MaximumLength(200);
+        RuleFor(x => x.EquipmentSerialNo).MaximumLength(100);
+        RuleFor(x => x.Capacity).MaximumLength(100);
     }
 }
 

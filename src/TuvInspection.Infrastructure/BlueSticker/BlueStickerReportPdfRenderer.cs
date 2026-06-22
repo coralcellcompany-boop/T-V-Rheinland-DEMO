@@ -115,13 +115,32 @@ public sealed class BlueStickerReportPdfRenderer
                 D(1, r.ReceivedDate?.ToString("dd MMM yyyy"));
                 D(1, r.ReviewedDate?.ToString("dd MMM yyyy"));
 
-                // Signature placeholder row: 3 + 5 + 3 = 11
-                t.Cell().ColumnSpan(3).Border(0.4f).Padding(6).MinHeight(40)
-                    .Text("Signature").FontSize(7).FontColor("#64748b");
-                t.Cell().ColumnSpan(5).Border(0.4f).Padding(6).MinHeight(40)
-                    .Text("Signature").FontSize(7).FontColor("#64748b");
-                t.Cell().ColumnSpan(3).Border(0.4f).Padding(6).MinHeight(40)
-                    .Text("Signature").FontSize(7).FontColor("#64748b");
+                // Signature row: 3 + 5 + 3 = 11. Embed the captured PNGs when present;
+                // otherwise show a faint "Signature" placeholder so the cell isn't blank.
+                SignatureCell(t, 3, r.ReceiverSignaturePng);
+                SignatureCell(t, 5, r.InspectorSignaturePng);
+                SignatureCell(t, 3, r.TechnicalReviewerSignaturePng);
             });
         })).GeneratePdf();
+
+    private static void SignatureCell(TableDescriptor t, uint span, string? dataUrl)
+    {
+        var png = DecodePng(dataUrl);
+        var cell = t.Cell().ColumnSpan(span).Border(0.4f).Padding(6).MinHeight(40);
+        if (png is null)
+        {
+            cell.Text("Signature").FontSize(7).FontColor("#64748b");
+            return;
+        }
+        cell.AlignCenter().AlignMiddle().Height(40).Image(png).FitArea();
+    }
+
+    private static byte[]? DecodePng(string? dataUrl)
+    {
+        if (string.IsNullOrWhiteSpace(dataUrl)) return null;
+        var comma = dataUrl.IndexOf(',');
+        if (comma < 0) return null;
+        try { return Convert.FromBase64String(dataUrl[(comma + 1)..]); }
+        catch (FormatException) { return null; }
+    }
 }

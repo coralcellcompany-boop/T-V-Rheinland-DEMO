@@ -128,7 +128,6 @@ public static class InfrastructureModule
         // Outbox processor + handlers
         services.AddHostedService<OutboxProcessor>();
         services.AddScoped<IOutboxMessageHandler<ClientSentCertificateEmail>, ClientSentEmailHandler>();
-        services.AddScoped<IOutboxMessageHandler<StickerRequestDecidedEmail>, StickerRequestDecidedEmailHandler>();
         services.AddScoped<IOutboxMessageHandler<StickerLowStockAlertEmail>, LowStockAlertEmailHandler>();
         services.AddScoped<IOutboxMessageHandler<CertificateSubmittedNotifyEmail>, TechReviewerNotifyEmailHandler>();
         services.AddScoped<IOutboxMessageHandler<ClientOtpEmail>, ClientOtpEmailHandler>();

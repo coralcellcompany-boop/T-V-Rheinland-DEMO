@@ -49,6 +49,20 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
         }
       } @else { <p>Loading…</p> }
     </div>
+
+    <!-- ── DEV: side panel that surfaces the OTP without checking MailHog ── -->
+    @if (devOtp(); as code) {
+      <aside class="dev-otp">
+        <div class="dev-otp-label">DEV OTP</div>
+        <div class="dev-otp-code">{{ code }}</div>
+        <p-button label="Copy" icon="pi pi-copy" size="small" [text]="true"
+          (onClick)="copyOtp(code)" />
+        <p-button label="Use" icon="pi pi-arrow-right" size="small"
+          (onClick)="useOtp(code)" />
+        <p-button icon="pi pi-times" size="small" [text]="true"
+          (onClick)="devOtp.set(null)" />
+      </aside>
+    }
   `,
   styles: [`
     .finalize{max-width:760px;margin:0 auto;padding:1.5rem;display:flex;
@@ -63,6 +77,13 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
     .done{text-align:center;color:#16a34a}
     .done .pi{font-size:3rem}
     :host ::ng-deep p-button button{min-height:48px;font-size:1.05rem}
+    .dev-otp{position:fixed;right:1rem;top:6rem;z-index:1000;
+      background:#fef3c7;border:2px dashed #d97706;border-radius:10px;
+      padding:.85rem 1rem;display:flex;flex-direction:column;gap:.4rem;
+      align-items:flex-start;box-shadow:0 4px 16px rgba(0,0,0,.12);min-width:160px}
+    .dev-otp-label{font-size:.7rem;color:#92400e;font-weight:700;letter-spacing:.1em}
+    .dev-otp-code{font-size:1.9rem;font-weight:700;letter-spacing:.35rem;
+      color:#7c2d12;font-family:ui-monospace,Menlo,monospace}
   `],
 })
 export class BlueStickerFinalizePage {
@@ -72,6 +93,7 @@ export class BlueStickerFinalizePage {
   protected S = BlueStickerState;
   protected r = signal<BlueStickerReportDetail | null>(null);
   protected busy = signal(false);
+  protected devOtp = signal<string | null>(null);
   protected otp = '';
   private id = this.route.snapshot.paramMap.get('id')!;
 
@@ -86,11 +108,22 @@ export class BlueStickerFinalizePage {
   requestOtp() {
     this.busy.set(true);
     this.api.requestOtp(this.id).subscribe({
-      next: (rep) => { this.r.set(rep); this.busy.set(false);
-        this.notify.success('OTP emailed to the client'); },
+      next: (res) => { this.r.set(res.report); this.busy.set(false);
+        if (res.devOtp) {
+          this.devOtp.set(res.devOtp);
+          this.notify.success(`OTP ready (dev): ${res.devOtp}`);
+        } else {
+          this.notify.success('OTP emailed to the client');
+        }
+      },
       error: (e) => { this.busy.set(false); showHttpError(this.notify, e); },
     });
   }
+  copyOtp(code: string) {
+    navigator.clipboard?.writeText(code);
+    this.notify.success('Copied');
+  }
+  useOtp(code: string) { this.otp = code; }
   onClientSign(dataUrl: string) {
     if (this.busy()) return; // guard against a double signature commit while verify is in-flight
     if (!/^\d{6}$/.test(this.otp.trim())) {

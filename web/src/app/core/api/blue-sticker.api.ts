@@ -5,7 +5,8 @@ import { environment } from '../../../environments/environment';
 import { PagedResult } from '../models/common.models';
 import {
   BlueStickerReportDetail, BlueStickerReportListItem, BlueStickerTrigger,
-  CreateBlueStickerReportsRequest, UpdateBlueStickerInspectionRequest,
+  CreateBlueStickerReportsRequest, RequestClientOtpResponse,
+  UpdateBlueStickerAdminRequest, UpdateBlueStickerInspectionRequest,
 } from '../models/blue-sticker.models';
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +28,9 @@ export class BlueStickerApi {
   create(body: CreateBlueStickerReportsRequest): Observable<BlueStickerReportDetail[]> {
     return this.http.post<BlueStickerReportDetail[]>(this.base, body);
   }
+  updateAdmin(id: string, body: UpdateBlueStickerAdminRequest): Observable<BlueStickerReportDetail> {
+    return this.http.put<BlueStickerReportDetail>(`${this.base}/${id}/admin`, body);
+  }
   updateInspection(id: string, body: UpdateBlueStickerInspectionRequest): Observable<BlueStickerReportDetail> {
     return this.http.put<BlueStickerReportDetail>(`${this.base}/${id}/inspection`, body);
   }
@@ -38,14 +42,15 @@ export class BlueStickerApi {
         inspectorSignaturePng: inspectorSignaturePng ?? null,
         technicalReviewerSignaturePng: technicalReviewerSignaturePng ?? null });
   }
-  requestOtp(id: string): Observable<BlueStickerReportDetail> {
-    return this.http.post<BlueStickerReportDetail>(`${this.base}/${id}/request-otp`, {});
+  requestOtp(id: string): Observable<RequestClientOtpResponse> {
+    return this.http.post<RequestClientOtpResponse>(`${this.base}/${id}/request-otp`, {});
   }
   verifyAndSign(id: string, otp: string, receiverSignaturePng: string): Observable<BlueStickerReportDetail> {
     return this.http.post<BlueStickerReportDetail>(
       `${this.base}/${id}/verify-and-sign`, { otp, receiverSignaturePng });
   }
-  pdf(id: string): Observable<Blob> {
-    return this.http.get(`${this.base}/${id}/report.pdf`, { responseType: 'blob' });
+  pdf(id: string, draft = false): Observable<Blob> {
+    const url = `${this.base}/${id}/report.pdf` + (draft ? '?draft=true' : '');
+    return this.http.get(url, { responseType: 'blob' });
   }
 }

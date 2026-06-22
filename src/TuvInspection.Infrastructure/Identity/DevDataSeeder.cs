@@ -54,7 +54,6 @@ public sealed class DevDataSeeder
         var clients = await SeedClients(ct);
         await SeedEquipment(clients, ct);
         await SeedStickerStock(ct);
-        await SeedStickerRequests(inspectors, ct);
         await SeedJobOrdersAndDraftCertificates(clients, inspectors, ct);
         await AssignClientsToStaff(clients, ct);
 
@@ -323,35 +322,4 @@ public sealed class DevDataSeeder
         await _db.SaveChangesAsync(ct);
     }
 
-    private async Task SeedStickerRequests(List<ApplicationUser> inspectors, CancellationToken ct)
-    {
-        if (inspectors.Count == 0) return;
-
-        var anyRequest = await _db.StickerRequests.AsNoTracking().AnyAsync(ct);
-        if (anyRequest) return;
-
-        var year = DateTime.UtcNow.Year;
-        var samples = new (ApplicationUser Inspector, StickerColor Color, int Quantity, string Justification)[]
-        {
-            (inspectors[0], StickerColor.Blue, 25, "JOD2026-0042 — 3-day visit at Yanbu refinery, lifting equipment campaign."),
-            (inspectors[1], StickerColor.Blue, 15, "Sabic Jubail site survey — 12 cranes scheduled."),
-            (inspectors.Count > 2 ? inspectors[2] : inspectors[0],
-                              StickerColor.Green, 10, "Aramco green-tagged forklifts batch."),
-        };
-
-        var seq = 0;
-        foreach (var (inspector, color, qty, just) in samples)
-        {
-            seq++;
-            var no = $"SR-{year}-{seq:D4}";
-            var r = new StickerRequest(Guid.NewGuid(), no, inspector.Id, color, qty, just)
-            {
-                CreatedAtUtc = DateTime.UtcNow.AddMinutes(-30 * seq),
-                CreatedById = inspector.Id,
-            };
-            _db.StickerRequests.Add(r);
-        }
-
-        await _db.SaveChangesAsync(ct);
-    }
 }

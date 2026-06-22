@@ -44,6 +44,12 @@ public class BlueStickerReportsController : ControllerBase
         [FromBody] CreateBlueStickerReportsRequest body, CancellationToken ct) =>
         _dispatcher.Send(new CreateBlueStickerReportsCommand(body), ct);
 
+    [HttpPut("{id:guid}/admin")]
+    [Authorize(Roles = $"{Roles.Coordinator},{Roles.Manager}")]
+    public Task<BlueStickerReportDetailDto> UpdateAdmin(
+        Guid id, [FromBody] UpdateBlueStickerAdminRequest body, CancellationToken ct) =>
+        _dispatcher.Send(new UpdateBlueStickerAdminCommand(id, body), ct);
+
     [HttpPut("{id:guid}/inspection")]
     [Authorize(Roles = $"{Roles.Inspector},{Roles.Manager}")]
     public Task<BlueStickerReportDetailDto> UpdateInspection(
@@ -61,7 +67,7 @@ public class BlueStickerReportsController : ControllerBase
 
     [HttpPost("{id:guid}/request-otp")]
     [Authorize(Roles = $"{Roles.Inspector},{Roles.Manager}")]
-    public Task<BlueStickerReportDetailDto> RequestOtp(Guid id, CancellationToken ct) =>
+    public Task<RequestClientOtpResponse> RequestOtp(Guid id, CancellationToken ct) =>
         _dispatcher.Send(new RequestClientOtpCommand(id), ct);
 
     [HttpPost("{id:guid}/verify-and-sign")]
@@ -71,11 +77,22 @@ public class BlueStickerReportsController : ControllerBase
         _dispatcher.Send(new VerifyOtpAndSignCommand(id, body), ct);
 
     [HttpGet("{id:guid}/report.pdf")]
-    public async Task<IActionResult> GetPdf(Guid id, CancellationToken ct)
+    public async Task<IActionResult> GetPdf(Guid id,
+        [FromQuery] bool draft = false, CancellationToken ct = default)
     {
         var dto = await _dispatcher.Query(new GetBlueStickerReportByIdQuery(id), ct);
         if (dto is null) return NotFound();
+        // The Annex 1 is only the final, archive-ready certificate after the Receiver has
+        // signed. A `?draft=true` query param exists so coordinators / reviewers can preview
+        // the layout mid-workflow, but the default download path enforces ClientSigned to
+        // prevent issuing an unsigned-by-client copy as the official record.
+        if (!draft && dto.State != BlueStickerReportStateDto.ClientSigned)
+            throw new InvalidOperationException(
+                "Cannot download the final Annex 1 yet — the Receiver has not signed. " +
+                "Capture the client's OTP + signature on the finalize page first, or call " +
+                "this endpoint with ?draft=true to preview.");
         var bytes = await _pdf.RenderAsync(dto, ct);
-        return File(bytes, "application/pdf", $"{dto.ReportNo}-Annex1.pdf");
+        var suffix = dto.State == BlueStickerReportStateDto.ClientSigned ? "" : "-DRAFT";
+        return File(bytes, "application/pdf", $"{dto.ReportNo}-Annex1{suffix}.pdf");
     }
 }

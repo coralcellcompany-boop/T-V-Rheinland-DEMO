@@ -62,3 +62,26 @@ public class UsersController : ControllerBase
         [FromBody] UpdateUserLicenseRequest body, CancellationToken ct) =>
         _dispatcher.Send(new UpdateUserLicenseCommand(id, body), ct);
 }
+
+/// <summary>Self-service profile endpoints — available to any authenticated user.</summary>
+[ApiController]
+[Authorize]
+[Route("api/profile")]
+[Produces("application/json")]
+public class ProfileController : ControllerBase
+{
+    private readonly IDispatcher _dispatcher;
+    public ProfileController(IDispatcher dispatcher) => _dispatcher = dispatcher;
+
+    [HttpGet("me")]
+    public async Task<ActionResult<ProfileDto>> Me(CancellationToken ct)
+    {
+        var dto = await _dispatcher.Query(new GetMyProfileQuery(), ct);
+        return dto is null ? NotFound() : Ok(dto);
+    }
+
+    [HttpPut("signature")]
+    public Task<ProfileDto> UpdateSignature(
+        [FromBody] UpdateProfileSignatureRequest body, CancellationToken ct) =>
+        _dispatcher.Send(new UpdateMySignatureCommand(body), ct);
+}

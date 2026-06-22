@@ -67,18 +67,6 @@ export const routes: Routes = [
           import('./features/stickers/pages/stickers-list.page').then((m) => m.StickersListPage),
       },
       {
-        path: 'sticker-requests',
-        canActivate: [roleGuard(Roles.Manager, Roles.Coordinator, Roles.Inspector)],
-        loadComponent: () =>
-          import('./features/stickers/pages/sticker-requests.page').then((m) => m.StickerRequestsPage),
-      },
-      {
-        path: 'my-stickers',
-        canActivate: [roleGuard(Roles.Inspector, Roles.Manager, Roles.Coordinator)],
-        loadComponent: () =>
-          import('./features/stickers/pages/my-stickers.page').then((m) => m.MyStickersPage),
-      },
-      {
         path: 'candidates',
         canActivate: [roleGuard(Roles.Manager, Roles.Coordinator, Roles.Inspector, Roles.TechReviewer)],
         loadComponent: () =>
@@ -144,6 +132,11 @@ export const routes: Routes = [
         canActivate: [roleGuard(Roles.Manager)],
         loadComponent: () =>
           import('./features/admin/pages/users-admin.page').then((m) => m.UsersAdminPage),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile.page').then((m) => m.ProfilePage),
       },
       {
         path: 'audit',

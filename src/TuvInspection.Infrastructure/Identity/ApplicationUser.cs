@@ -14,6 +14,10 @@ public class ApplicationUser : IdentityUser
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 
+    /// <summary>Stored signature as a PNG data URI (data:image/png;base64,…). Captured once on
+    /// the user's profile and auto-applied whenever they sign a Blue Sticker report.</summary>
+    public string? SignaturePng { get; set; }
+
     // ── Inspector licence (SRS §6 H7) ────────────────────────────────────────
     public string? LicenseNumber { get; set; }
     public string? LicenseAuthority { get; set; }

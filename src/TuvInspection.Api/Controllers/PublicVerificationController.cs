@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TuvInspection.Application.Assessments;
+using TuvInspection.Application.BlueSticker;
 using TuvInspection.Application.Common.Cqrs;
 using TuvInspection.Application.Stickers;
 using TuvInspection.Contracts.Assessments;
 using TuvInspection.Contracts.Stickers;
 using TuvInspection.Infrastructure.Assessments;
+using TuvInspection.Infrastructure.BlueSticker;
 using TuvInspection.Infrastructure.Stickers;
 
 namespace TuvInspection.Api.Controllers;
@@ -26,6 +28,7 @@ public class PublicVerificationController : ControllerBase
     private readonly QrCodeService _qr;
     private readonly StickerPdfRenderer _stickerPdf;
     private readonly CompetencyCardPdfRenderer _cardPdf;
+    private readonly BlueStickerReportPdfRenderer _annex1Pdf;
     private readonly string _apiBaseUrl;
 
     public PublicVerificationController(
@@ -33,12 +36,14 @@ public class PublicVerificationController : ControllerBase
         QrCodeService qr,
         StickerPdfRenderer stickerPdf,
         CompetencyCardPdfRenderer cardPdf,
+        BlueStickerReportPdfRenderer annex1Pdf,
         IConfiguration config)
     {
         _dispatcher = dispatcher;
         _qr = qr;
         _stickerPdf = stickerPdf;
         _cardPdf = cardPdf;
+        _annex1Pdf = annex1Pdf;
         _apiBaseUrl = config["Public:ApiBaseUrl"]?.TrimEnd('/') ?? "http://localhost:5282";
     }
 
@@ -65,12 +70,26 @@ public class PublicVerificationController : ControllerBase
     [HttpGet("stickers/{stickerNo}.pdf")]
     public async Task<IActionResult> StickerPdf(string stickerNo, CancellationToken ct)
     {
+        // Preferred: scanning the QR resolves to the full Annex 1 certificate (the report that
+        // was signed by Inspector + Tech Reviewer + Receiver). That's the artifact field
+        // inspectors / Aramco safety officers actually want to see.
+        var annex1 = await _dispatcher.Query(
+            new GetBlueStickerReportByStickerNoQuery(stickerNo), ct);
+        if (annex1 is not null)
+        {
+            var pdf = await _annex1Pdf.RenderAsync(annex1, ct);
+            Response.Headers.CacheControl = "public, max-age=300";
+            return File(pdf, "application/pdf", $"{annex1.ReportNo}-Annex1.pdf");
+        }
+
+        // Fallback: the sticker exists but no signed report points at it (legacy sticker,
+        // re-issued and not yet finalised, etc.) — return the minimal PII-masked public view.
         var view = await _dispatcher.Query(new GetStickerPublicViewQuery(stickerNo), ct);
         if (view is null) return NotFound();
 
         var qrUrl = StickerPdfUrl(view.StickerNo);
-        var qr = _qr.PngFor(qrUrl);
-        var bytes = _stickerPdf.RenderPublic(view, qr);
+        var qrPng = _qr.PngFor(qrUrl);
+        var bytes = _stickerPdf.RenderPublic(view, qrPng);
         Response.Headers.CacheControl = "public, max-age=300";
         return File(bytes, "application/pdf", $"{view.StickerNo}.pdf");
     }
