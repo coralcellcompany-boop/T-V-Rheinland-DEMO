@@ -61,6 +61,62 @@ public sealed class GetDashboardKpisHandler : IQueryHandler<GetDashboardKpisQuer
     }
 }
 
+/// <summary>
+/// Per-inspector dashboard analysis (Ahmed dashboard notes): distinct equipment handled,
+/// distinct companies covered, and certificate throughput per inspector over a window.
+/// </summary>
+public sealed class GetInspectorAnalysisHandler
+    : IQueryHandler<GetInspectorAnalysisQuery, IReadOnlyList<InspectorAnalysisRowDto>>
+{
+    private readonly AppDbContext _db;
+    private readonly ITenantContext _tenant;
+    private readonly IClock _clock;
+
+    public GetInspectorAnalysisHandler(AppDbContext db, ITenantContext tenant, IClock clock)
+    { _db = db; _tenant = tenant; _clock = clock; }
+
+    public async Task<IReadOnlyList<InspectorAnalysisRowDto>> Handle(
+        GetInspectorAnalysisQuery q, CancellationToken ct)
+    {
+        var days = Math.Clamp(q.Days <= 0 ? 90 : q.Days, 1, 365);
+        var since = _clock.UtcNow.AddDays(-days);
+
+        IQueryable<InspectionCertificate> certs = _tenant.IsInRole(Roles.Manager)
+            ? _db.Certificates.IgnoreQueryFilters().AsNoTracking()
+            : _db.Certificates.AsNoTracking();
+        certs = certs.Where(c => c.CreatedById != null && c.CreatedAtUtc >= since);
+
+        var grouped = await certs
+            .GroupBy(c => c.CreatedById!)
+            .Select(g => new
+            {
+                UserId = g.Key,
+                EquipmentCount = g.Select(c => c.EquipmentId).Distinct().Count(),
+                CompaniesCount = g.Select(c => c.ClientId).Distinct().Count(),
+                Created = g.Count(),
+                Approved = g.Count(c => c.State >= CertificateState.Approved
+                                     && c.State != CertificateState.Rejected
+                                     && c.State != CertificateState.Voided),
+            }).ToListAsync(ct);
+
+        var ids = grouped.Select(g => g.UserId).ToList();
+        var users = await _db.Users.IgnoreQueryFilters().AsNoTracking()
+            .Where(u => ids.Contains(u.Id))
+            .Select(u => new { u.Id, u.UserName, u.FullName })
+            .ToListAsync(ct);
+
+        return grouped.Select(g =>
+        {
+            var u = users.FirstOrDefault(x => x.Id == g.UserId);
+            return new InspectorAnalysisRowDto(
+                g.UserId, u?.FullName ?? u?.UserName ?? g.UserId,
+                g.EquipmentCount, g.CompaniesCount, g.Created, g.Approved);
+        })
+        .OrderByDescending(r => r.EquipmentCount)
+        .ToList();
+    }
+}
+
 public sealed class GetRecentActivityHandler : IQueryHandler<GetRecentActivityQuery, IReadOnlyList<RecentActivityItemDto>>
 {
     private readonly AuditDbContext _audit;

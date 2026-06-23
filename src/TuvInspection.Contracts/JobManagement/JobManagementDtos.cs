@@ -40,6 +40,7 @@ public sealed record JobOrderListItemDto(
     ServiceTypeDto Service, DateOnly DateFrom, DateOnly DateTo,
     string? Location, JobOrderStatusDto Status,
     int AssignedInspectorCount,
+    int AttachmentCount,
     DateTime CreatedAtUtc);
 
 public sealed record JobOrderDetailDto(
@@ -47,15 +48,24 @@ public sealed record JobOrderDetailDto(
     ServiceTypeDto Service, DateOnly DateFrom, DateOnly DateTo,
     string? Location, JobOrderStatusDto Status,
     IReadOnlyList<string> AssignedInspectorIds,
+    IReadOnlyList<string> AttachmentKeys,
     DateTime CreatedAtUtc, DateTime? UpdatedAtUtc);
 
+/// <summary>
+/// Creates one or more Job Orders. <see cref="Quantity"/> &gt; 1 spawns that many
+/// independent Job Orders (each with its own auto-generated JobOrderNo) sharing the
+/// same client/service/dates/location/attachments — per Ahmed comment #1.
+/// </summary>
 public sealed record CreateJobOrderRequest(
     Guid ClientId, ServiceTypeDto Service,
-    DateOnly DateFrom, DateOnly DateTo, string? Location);
+    DateOnly DateFrom, DateOnly DateTo, string? Location,
+    int Quantity = 1,
+    IReadOnlyList<string>? AttachmentKeys = null);
 
 public sealed record UpdateJobOrderRequest(
     DateOnly DateFrom, DateOnly DateTo, string? Location,
-    JobOrderStatusDto Status, IReadOnlyList<string> AssignedInspectorIds);
+    JobOrderStatusDto Status, IReadOnlyList<string> AssignedInspectorIds,
+    IReadOnlyList<string>? AttachmentKeys = null);
 
 // ---------- Daily Work Reports ----------
 public enum DwrStatusDto { Draft = 0, Submitted = 1, Approved = 2, Rejected = 3 }

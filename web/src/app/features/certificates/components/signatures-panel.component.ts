@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -25,7 +25,7 @@ const DEFAULT_ROLES = ['Inspector', 'Reviewed by (TÜV)', 'Receiver (Client)'];
     </div>
 
     <div class="grid">
-      @for (role of roles; track role) {
+      @for (role of visibleRoles(); track role) {
         <div class="slot" [class.signed]="byRole(role)">
           <div class="head">
             <span class="role">{{ role }}</span>
@@ -112,7 +112,12 @@ export class SignaturesPanel implements OnChanges {
   @Input() value: string | null = null;
   @Input() readonly = false;
   @Input() roles: string[] = DEFAULT_ROLES;
+  /** Roles to hide from the panel — e.g. the inspector slot until approval (comment #8). */
+  @Input() set hiddenRoles(v: string[]) { this._hidden.set(v ?? []); }
   @Output() valueChange = new EventEmitter<string>();
+
+  private _hidden = signal<string[]>([]);
+  protected visibleRoles = computed(() => this.roles.filter(r => !this._hidden().includes(r)));
 
   protected signatures = signal<SignatureEntry[]>([]);
   protected dialogOpen = false;

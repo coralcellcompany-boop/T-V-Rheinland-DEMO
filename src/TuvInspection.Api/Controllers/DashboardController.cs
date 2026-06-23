@@ -23,4 +23,9 @@ public class DashboardController : ControllerBase
     public Task<IReadOnlyList<RecentActivityItemDto>> Activity(
         [FromQuery] int limit = 12, CancellationToken ct = default) =>
         _dispatcher.Query(new GetRecentActivityQuery(limit), ct);
+
+    [HttpGet("inspector-analysis")]
+    public Task<IReadOnlyList<InspectorAnalysisRowDto>> InspectorAnalysis(
+        [FromQuery] int days = 90, CancellationToken ct = default) =>
+        _dispatcher.Query(new GetInspectorAnalysisQuery(days), ct);
 }

@@ -176,3 +176,16 @@ public sealed record DashboardKpisDto(
     int Expired,
     int ActiveEquipment,
     int Clients);
+
+/// <summary>
+/// Per-inspector analysis for the dashboard (Ahmed dashboard notes): how many distinct pieces
+/// of equipment an inspector handled, how many companies they covered, and their certificate
+/// throughput over the window.
+/// </summary>
+public sealed record InspectorAnalysisRowDto(
+    string InspectorId,
+    string InspectorName,
+    int EquipmentCount,
+    int CompaniesCount,
+    int CertificatesCreated,
+    int CertificatesApproved);

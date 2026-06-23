@@ -10,6 +10,7 @@ import {
   CertificateTrigger,
   CreateCertificateRequest,
   DashboardKpis,
+  InspectorAnalysisRow,
   RecentActivityItem,
   UpdateCertificateRequest,
 } from '../models/certificate.models';
@@ -88,5 +89,9 @@ export class DashboardApi {
 
   activity(limit = 12): Observable<RecentActivityItem[]> {
     return this.http.get<RecentActivityItem[]>(`${this.base}/activity?limit=${limit}`);
+  }
+
+  inspectorAnalysis(days = 90): Observable<InspectorAnalysisRow[]> {
+    return this.http.get<InspectorAnalysisRow[]>(`${this.base}/inspector-analysis?days=${days}`);
   }
 }

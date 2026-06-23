@@ -22,13 +22,14 @@ internal static class JobOrderMapper
         new(j.Id, j.JobOrderNo, j.ClientId, clientName,
             (ServiceTypeDto)(int)j.Service, j.DateFrom, j.DateTo,
             j.Location, (JobOrderStatusDto)j.Status,
-            j.AssignedInspectorIds.Count, j.CreatedAtUtc);
+            j.AssignedInspectorIds.Count, j.AttachmentKeys.Count, j.CreatedAtUtc);
 
     public static JobOrderDetailDto ToDetail(JobOrder j, string clientName) =>
         new(j.Id, j.JobOrderNo, j.ClientId, clientName,
             (ServiceTypeDto)(int)j.Service, j.DateFrom, j.DateTo,
             j.Location, (JobOrderStatusDto)j.Status,
             j.AssignedInspectorIds.ToList(),
+            j.AttachmentKeys.ToList(),
             j.CreatedAtUtc, j.UpdatedAtUtc);
 }
 
@@ -124,15 +125,28 @@ public sealed class CreateJobOrderHandler : ICommandHandler<CreateJobOrderComman
         var clientExists = await _db.Clients.IgnoreQueryFilters().AnyAsync(c => c.Id == command.Body.ClientId, ct);
         if (!clientExists) throw new ArgumentException("Unknown client.");
 
-        var no = await _gen.Next(ct);
-        var jo = new JobOrder(Guid.NewGuid(), no, command.Body.ClientId,
-            (ServiceType)(int)command.Body.Service, command.Body.DateFrom, command.Body.DateTo);
-        jo.UpdateLocation(command.Body.Location);
-        jo.CreatedAtUtc = _clock.UtcNow;
-        jo.CreatedById = _tenant.UserId;
-        _db.JobOrders.Add(jo);
-        await _db.SaveChangesAsync(ct);
-        return (await new GetJobOrderByIdHandler(_db, _tenant).Handle(new(jo.Id), ct))!;
+        // Comment #1: a quantity > 1 creates that many SEPARATE job orders, each with its own
+        // auto number. We save per-iteration so the JobOrderNoGenerator (which counts existing
+        // rows) sees the previously-created order and never collides.
+        var quantity = Math.Clamp(command.Body.Quantity <= 0 ? 1 : command.Body.Quantity, 1, 50);
+        var attachments = command.Body.AttachmentKeys ?? new List<string>();
+
+        JobOrder? first = null;
+        for (var i = 0; i < quantity; i++)
+        {
+            var no = await _gen.Next(ct);
+            var jo = new JobOrder(Guid.NewGuid(), no, command.Body.ClientId,
+                (ServiceType)(int)command.Body.Service, command.Body.DateFrom, command.Body.DateTo);
+            jo.UpdateLocation(command.Body.Location);
+            jo.SetAttachments(attachments);
+            jo.CreatedAtUtc = _clock.UtcNow;
+            jo.CreatedById = _tenant.UserId;
+            _db.JobOrders.Add(jo);
+            await _db.SaveChangesAsync(ct);
+            first ??= jo;
+        }
+
+        return (await new GetJobOrderByIdHandler(_db, _tenant).Handle(new(first!.Id), ct))!;
     }
 }
 
@@ -154,6 +168,7 @@ public sealed class UpdateJobOrderHandler : ICommandHandler<UpdateJobOrderComman
             ?? throw new KeyNotFoundException($"Job order {command.Id} not found.");
 
         jo.UpdateLocation(command.Body.Location);
+        if (command.Body.AttachmentKeys is { } keys) jo.SetAttachments(keys);
         // Status transitions
         switch (command.Body.Status)
         {

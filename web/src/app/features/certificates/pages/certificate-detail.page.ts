@@ -13,6 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { PageHeader } from '../../../shared/components/page-header.component';
 import { StatusPill } from '../../../shared/components/status-pill.component';
 import { CertificatesApi } from '../../../core/api/certificates.api';
+import { InspectorLookup, UsersApi } from '../../../core/api/users.api';
 import {
   CertificateDetail,
   CertificateInspectionTypeLabel,
@@ -135,6 +136,7 @@ import {
           <tuv-checklist-editor
             [value]="c.checklistJson"
             [equipmentTypeId]="c.equipmentTypeId"
+            [equipmentTypeName]="c.equipmentTypeName"
             [readonly]="!isMutable()"
             (save)="saveChecklist($event)" />
         </section>
@@ -160,6 +162,7 @@ import {
               [readonly]="!isMutable()"
               [canDownloadPdf]="true"
               [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
+              [issuedByOptions]="issuedByOptions()"
               (save)="saveAramcoReport($event)" />
           </section>
         } @else {
@@ -195,9 +198,14 @@ import {
               Read-only — certificate is in {{ stateName(c.state) }} state.
             </span>
           </header>
+          <p class="muted sig-note" *ngIf="inspectorSignatureHidden()">
+            <i class="pi pi-info-circle"></i>
+            The inspector signature appears once the certificate is approved.
+          </p>
           <tuv-signatures-panel
             [value]="c.signaturesJson"
             [readonly]="!isMutable()"
+            [hiddenRoles]="hiddenSignatureRoles()"
             (valueChange)="saveSignatures($event)" />
         </section>
 
@@ -300,6 +308,7 @@ import {
       .action-buttons :host ::ng-deep .p-button { width: 100%; justify-content: flex-start; }
       .legal-list { font-size: 0.78rem; color: #64748b; padding-left: 1.1rem; line-height: 1.55; margin: 0; }
       .muted { color: #94a3b8; }
+      .sig-note { margin: 0 0 0.75rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem; }
 
       .req { color: #dc2626; margin-left: 0.15rem; }
       label { display: block; font-size: 0.85rem; font-weight: 500; color: #334155; margin: 0.6rem 0 0.3rem; }
@@ -313,6 +322,7 @@ import {
 })
 export class CertificateDetailPage implements OnInit {
   private api = inject(CertificatesApi);
+  private usersApi = inject(UsersApi);
   private stickersApi = inject(PublicStickerApi);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -326,6 +336,17 @@ export class CertificateDetailPage implements OnInit {
   protected loading = signal(true);
   protected cert = signal<CertificateDetail | null>(null);
   protected previousCertId = signal<string | null>(null);
+
+  // Comment #5: TÜV inspectors/users populate the "Previous Sticker Issued By" dropdown.
+  protected inspectors = signal<InspectorLookup[]>([]);
+  protected issuedByOptions = computed(() =>
+    this.inspectors().map(i => ({ label: i.displayName, value: i.displayName })));
+
+  // Comment #8: the inspector signature slot is only shown once the certificate is approved
+  // (state >= Approved = 4). Before that it is hidden from the signatures panel.
+  protected inspectorSignatureHidden = computed(() => (this.cert()?.state ?? 0) < 4);
+  protected hiddenSignatureRoles = computed(() =>
+    this.inspectorSignatureHidden() ? ['Inspector'] : []);
 
   protected transitions = computed(() => {
     const c = this.cert();
@@ -366,6 +387,10 @@ export class CertificateDetailPage implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) { this.router.navigate(['/certificates']); return; }
+    this.usersApi.inspectors().subscribe({
+      next: (xs) => this.inspectors.set(xs),
+      error: () => { /* dropdown just stays empty */ },
+    });
     this.load(id);
   }
 

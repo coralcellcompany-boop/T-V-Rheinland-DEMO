@@ -30,6 +30,17 @@ public class JobOrderConfiguration : IEntityTypeConfiguration<JobOrder>
                 v => JsonSerializer.Serialize(v, jsonOptions),
                 v => JsonSerializer.Deserialize<List<string>>(v, jsonOptions) ?? new List<string>());
         e.Ignore(x => x.AssignedInspectorIds);
+
+        // Attachment storage keys (PDF/images) stored as JSON column — small list read with the job.
+        e.Property<List<string>>("_attachmentKeys")
+            .HasField("_attachmentKeys")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("AttachmentKeys")
+            .HasColumnType("nvarchar(max)")
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, jsonOptions),
+                v => JsonSerializer.Deserialize<List<string>>(v, jsonOptions) ?? new List<string>());
+        e.Ignore(x => x.AttachmentKeys);
         e.Ignore(x => x.DomainEvents);
     }
 }

@@ -14,6 +14,7 @@ import { PageHeader } from '../../../shared/components/page-header.component';
 import { StatusPill } from '../../../shared/components/status-pill.component';
 import { EmptyState } from '../../../shared/components/empty-state.component';
 import { JobOrdersApi } from '../../../core/api/job-management.api';
+import { FilesApi } from '../../../core/api/files.api';
 import { ClientsApi } from '../../../core/api/clients.api';
 import { InspectorLookup, UsersApi } from '../../../core/api/users.api';
 import {
@@ -65,6 +66,10 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
               </td>
               <td><tuv-status-pill [value]="statusName(j.status)" /></td>
               <td class="row-actions">
+                <p-button *ngIf="j.attachmentCount > 0" icon="pi pi-paperclip" severity="secondary"
+                  [text]="true" rounded size="small" [badge]="j.attachmentCount + ''"
+                  pTooltip="View attachments" (onClick)="openAttachments(j)" />
+
                 <p-button icon="pi pi-file-check" severity="secondary"
                   [text]="true" rounded size="small"
                   pTooltip="Open inspections for this job order"
@@ -110,11 +115,47 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           <div><label>To</label><input pInputText type="date" [(ngModel)]="newTo" /></div>
         </div>
         <label>Location</label><input pInputText [(ngModel)]="newLocation" />
+
+        <label>How many job orders?</label>
+        <input pInputText type="number" min="1" max="50" [(ngModel)]="newQuantity" />
+        <small class="muted" *ngIf="newQuantity > 1">
+          {{ newQuantity }} separate job orders will be created, each with its own number.
+        </small>
+
+        <label>Attachments (PDF or images)</label>
+        <input type="file" multiple accept="image/png,image/jpeg,image/webp,application/pdf"
+          (change)="onPickAttachments($event)" [disabled]="uploading()" />
+        <small class="muted" *ngIf="uploading()">Uploading…</small>
+        <ul class="attach-list" *ngIf="newAttachments().length > 0">
+          <li *ngFor="let a of newAttachments()">
+            <i class="pi pi-paperclip"></i> {{ a.fileName }}
+            <p-button icon="pi pi-times" severity="danger" [text]="true" rounded size="small"
+              (onClick)="removeAttachment(a.key)" />
+          </li>
+        </ul>
       </div>
       <ng-template pTemplate="footer">
-        <p-button severity="secondary" label="Cancel" (onClick)="newDialog = false" />
+        <p-button severity="secondary" label="Cancel" (onClick)="closeNew()" />
         <p-button label="Create" icon="pi pi-plus" [loading]="creating()"
           [disabled]="!newClientId" (onClick)="createOrder()" />
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="attachDialog" [modal]="true" [style]="{ width: '420px' }"
+      header="Attachments">
+      @if (attachTarget(); as t) {
+        <p>Job order <code class="mono">{{ t.jobOrderNo }}</code></p>
+        <ul class="attach-list">
+          <li *ngFor="let k of attachKeys(); let i = index">
+            <a href="javascript:void(0)" (click)="openAttachment(k)">
+              <i class="pi pi-file"></i> Attachment {{ i + 1 }}
+            </a>
+          </li>
+          <li *ngIf="attachKeys().length === 0" class="muted">No attachments.</li>
+        </ul>
+      }
+      <ng-template pTemplate="footer">
+        <p-button severity="secondary" label="Close" (onClick)="attachDialog = false" />
       </ng-template>
     </p-dialog>
 
@@ -153,11 +194,15 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
       :host ::ng-deep .form .ms { width: 100%; }
       .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
       .row-actions { display: flex; gap: 0.15rem; flex-wrap: nowrap; }
+      .attach-list { list-style: none; margin: 0.3rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+      .attach-list li { display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #334155; }
+      .attach-list a { color: #2563eb; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
     `,
   ],
 })
 export class JobOrdersPage {
   private api = inject(JobOrdersApi);
+  private filesApi = inject(FilesApi);
   private clientsApi = inject(ClientsApi);
   protected auth = inject(AuthService);
   private notify = inject(NotifyService);
@@ -184,6 +229,13 @@ export class JobOrdersPage {
   protected newFrom = new Date().toISOString().substring(0, 10);
   protected newTo = new Date(Date.now() + 86400000 * 5).toISOString().substring(0, 10);
   protected newLocation = '';
+  protected newQuantity = 1;
+  protected newAttachments = signal<{ key: string; fileName: string }[]>([]);
+  protected uploading = signal(false);
+
+  protected attachDialog = false;
+  protected attachTarget = signal<JobOrderListItem | null>(null);
+  protected attachKeys = signal<string[]>([]);
 
   protected serviceOptions = [
     { value: 1, label: 'TPI' },
@@ -260,18 +312,70 @@ export class JobOrdersPage {
 
   createOrder() {
     if (!this.newClientId) return;
+    const qty = Math.max(1, Math.min(50, Number(this.newQuantity) || 1));
     this.creating.set(true);
     this.api.create({
       clientId: this.newClientId, service: this.newService,
       dateFrom: this.newFrom, dateTo: this.newTo, location: this.newLocation || null,
+      quantity: qty,
+      attachmentKeys: this.newAttachments().map(a => a.key),
     }).subscribe({
       next: (jo) => {
-        this.creating.set(false); this.notify.success(`Created ${jo.jobOrderNo}`);
-        this.newDialog = false; this.newLocation = '';
+        this.creating.set(false);
+        this.notify.success(qty > 1 ? `Created ${qty} job orders` : `Created ${jo.jobOrderNo}`);
+        this.closeNew();
         this.refresh();
       },
       error: (err) => { this.creating.set(false); showHttpError(this.notify, err); },
     });
+  }
+
+  closeNew() {
+    this.newDialog = false;
+    this.newLocation = '';
+    this.newQuantity = 1;
+    this.newAttachments.set([]);
+  }
+
+  onPickAttachments(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const files = Array.from(input.files ?? []);
+    if (files.length === 0) return;
+    this.uploading.set(true);
+    let remaining = files.length;
+    files.forEach((file) => {
+      this.filesApi.upload(file).subscribe({
+        next: (res) => {
+          this.newAttachments.update(xs => [...xs, { key: res.key, fileName: res.fileName }]);
+          if (--remaining === 0) { this.uploading.set(false); input.value = ''; }
+        },
+        error: (err) => {
+          if (--remaining === 0) { this.uploading.set(false); input.value = ''; }
+          showHttpError(this.notify, err);
+        },
+      });
+    });
+  }
+
+  removeAttachment(key: string) {
+    this.newAttachments.update(xs => xs.filter(a => a.key !== key));
+  }
+
+  openAttachments(j: JobOrderListItem) {
+    this.attachTarget.set(j);
+    this.attachKeys.set([]);
+    this.attachDialog = true;
+    this.api.get(j.id).subscribe({
+      next: (d) => this.attachKeys.set(d.attachmentKeys ?? []),
+      error: (err) => showHttpError(this.notify, err),
+    });
+  }
+
+  async openAttachment(key: string) {
+    try {
+      const url = await this.filesApi.fetchAsObjectUrl(key);
+      window.open(url, '_blank');
+    } catch (err) { showHttpError(this.notify, err); }
   }
 
   openAssign(j: JobOrderListItem) {

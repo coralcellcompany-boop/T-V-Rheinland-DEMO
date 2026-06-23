@@ -36,6 +36,7 @@ export interface JobOrderListItem {
   id: string; jobOrderNo: string; clientId: string; clientName: string;
   service: number; dateFrom: string; dateTo: string;
   location: string | null; status: number; assignedInspectorCount: number;
+  attachmentCount: number;
   createdAtUtc: string;
 }
 export interface JobOrderDetail {
@@ -43,14 +44,17 @@ export interface JobOrderDetail {
   service: number; dateFrom: string; dateTo: string;
   location: string | null; status: number;
   assignedInspectorIds: string[];
+  attachmentKeys: string[];
   createdAtUtc: string; updatedAtUtc: string | null;
 }
 export interface CreateJobOrderRequest {
   clientId: string; service: number; dateFrom: string; dateTo: string; location?: string | null;
+  quantity?: number; attachmentKeys?: string[] | null;
 }
 export interface UpdateJobOrderRequest {
   dateFrom: string; dateTo: string; location?: string | null;
   status: number; assignedInspectorIds: string[];
+  attachmentKeys?: string[] | null;
 }
 
 // DWR

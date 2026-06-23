@@ -1,6 +1,9 @@
+using System.Text.Json;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using TuvInspection.Infrastructure.Identity;
 using TuvInspection.Application.Certificates;
 using TuvInspection.Application.Common;
 using TuvInspection.Application.Common.Cqrs;
@@ -240,11 +243,15 @@ public sealed class CreateCertificateHandler : ICommandHandler<CreateCertificate
     private readonly IClock _clock;
     private readonly IValidator<CreateCertificateRequest> _validator;
     private readonly CertificateNoGenerator _no;
+    private readonly UserManager<ApplicationUser> _users;
+
+    private static readonly JsonSerializerOptions WebJson = new(JsonSerializerDefaults.Web);
 
     public CreateCertificateHandler(AppDbContext db, ITenantContext tenant, IClock clock,
-        IValidator<CreateCertificateRequest> validator, CertificateNoGenerator no)
+        IValidator<CreateCertificateRequest> validator, CertificateNoGenerator no,
+        UserManager<ApplicationUser> users)
     {
-        _db = db; _tenant = tenant; _clock = clock; _validator = validator; _no = no;
+        _db = db; _tenant = tenant; _clock = clock; _validator = validator; _no = no; _users = users;
     }
 
     public async Task<CertificateDetailDto> Handle(CreateCertificateCommand command, CancellationToken ct)
@@ -268,6 +275,24 @@ public sealed class CreateCertificateHandler : ICommandHandler<CreateCertificate
 
         if (!string.IsNullOrWhiteSpace(command.Body.Standards))
             cert.UpdateInspectionData(command.Body.Standards, LoadTestKind.None, InspectionResult.NotSet, null, null);
+
+        // Comments #3 & #4: auto-fill the Annex-1 "TUV Job Order No." from the linked job order
+        // and auto-generate the "Report No." as IS-{inspector SapNo}-{year}-{NNN}, where NNN is
+        // a per-inspector, per-year running sequence. Seeded into AramcoReportJson so the form
+        // shows them read-only and the Annex-1 PDF renders them.
+        string? tuvJobOrderNo = null;
+        if (command.Body.JobOrderId is { } joId)
+            tuvJobOrderNo = await _db.JobOrders.IgnoreQueryFilters()
+                .Where(j => j.Id == joId).Select(j => j.JobOrderNo).FirstOrDefaultAsync(ct);
+
+        var year = _clock.UtcNow.Year;
+        var user = _tenant.UserId is null ? null : await _users.FindByIdAsync(_tenant.UserId);
+        var sapNo = string.IsNullOrWhiteSpace(user?.SapNo) ? "NA" : user!.SapNo!.Trim();
+        var seq = await _db.Certificates.IgnoreQueryFilters()
+            .CountAsync(c => c.CreatedById == _tenant.UserId && c.CreatedAtUtc.Year == year, ct) + 1;
+        var reportNo = $"IS-{sapNo}-{year}-{seq:D3}";
+
+        cert.UpdateAramcoReport(JsonSerializer.Serialize(new { reportNo, tuvJobOrderNo }, WebJson));
 
         cert.CreatedAtUtc = _clock.UtcNow;
         cert.CreatedById = _tenant.UserId;
@@ -401,6 +426,18 @@ public sealed class FireCertificateTriggerHandler : ICommandHandler<FireCertific
                 $"Cannot {trigger} a certificate currently in state {cert.State}.");
 
         sm.Fire(trigger, command.Comments);
+
+        // Comment #7: stamp the Annex-1 "Reviewed Date" the moment a Tech Reviewer finishes
+        // their review and advances the certificate for approval.
+        if (trigger == CertificateTrigger.AdvanceForApproval)
+        {
+            var node = string.IsNullOrWhiteSpace(cert.AramcoReportJson)
+                ? new System.Text.Json.Nodes.JsonObject()
+                : System.Text.Json.Nodes.JsonNode.Parse(cert.AramcoReportJson) as System.Text.Json.Nodes.JsonObject
+                    ?? new System.Text.Json.Nodes.JsonObject();
+            node["reviewedDate"] = _clock.UtcNow.ToString("yyyy-MM-dd");
+            cert.StampAramcoReportJson(node.ToJsonString());
+        }
 
         // Auto-issue Blue Sticker: when a cert with an Aramco-categorized equipment hits
         // Approved, pull the next Unallocated sticker and link it. The Fail guard above

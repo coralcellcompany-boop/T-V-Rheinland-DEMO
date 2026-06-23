@@ -96,6 +96,13 @@ public class InspectionCertificate : AggregateRoot<Guid>, IAuditable, ITenantSco
     public void UpdateAramcoReport(string? aramcoReportJson) { EnsureMutable(); AramcoReportJson = aramcoReportJson; }
 
     /// <summary>
+    /// System-driven stamp of the Annex-1 report JSON that intentionally bypasses the
+    /// Draft/Rejected mutability guard — used by the state machine to record the Reviewed
+    /// Date the moment a Tech Reviewer advances the certificate for approval (comment #7).
+    /// </summary>
+    public void StampAramcoReportJson(string? aramcoReportJson) => AramcoReportJson = aramcoReportJson;
+
+    /// <summary>
     /// Signatures can be captured at multiple lifecycle points (inspector signs at submission,
     /// TechReviewer at review, client at acceptance) so this is allowed in any non-terminal state.
     /// </summary>
