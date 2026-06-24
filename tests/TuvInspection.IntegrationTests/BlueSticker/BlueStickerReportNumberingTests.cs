@@ -247,7 +247,7 @@ public sealed class BlueStickerReportNumberingTests : IClassFixture<BlueStickerN
         var coordClient = await _fx.CreateAuthenticatedClient("coordinator@tuv-arabia.local");
 
         var createResp = await coordClient.PostAsJsonAsync("/api/blue-sticker-reports",
-            new CreateBlueStickerReportsRequest(jobOrderId, "ORG-NR", "RPO-NR", "CRM-NR", "NR Contractor"),
+            new CreateBlueStickerReportsRequest(jobOrderId, "ORG-NR", "RPO-NR", "CRM-NR", "NR Contractor", null),
             _json);
 
         // The bug manifests as HTTP 500 (duplicate-key SQL error); assert OK first.

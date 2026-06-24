@@ -254,7 +254,7 @@ public sealed class BlueStickerWorkflowTests : IClassFixture<BlueStickerApiFixtu
 
         // ── Step 1: Coordinator creates Blue Sticker reports for the job order ─
         var createResp = await coordClient.PostAsJsonAsync("/api/blue-sticker-reports",
-            new CreateBlueStickerReportsRequest(jobOrderId, "ORG-001", "RPO-001", "CRM-001", "TUV E2E Contractor"),
+            new CreateBlueStickerReportsRequest(jobOrderId, "ORG-001", "RPO-001", "CRM-001", "TUV E2E Contractor", null),
             _json);
         createResp.StatusCode.Should().Be(HttpStatusCode.OK,
             $"Create reports failed: {await createResp.Content.ReadAsStringAsync()}");
@@ -286,7 +286,13 @@ public sealed class BlueStickerWorkflowTests : IClassFixture<BlueStickerApiFixtu
                 ReceiverName: "Ali Hassan",
                 ReceiverBadgeNo: "AB-12345",
                 ReceiverTelephone: "+966 50 111 2222",
-                InspectorTelephone: "+966 50 333 4444"),
+                InspectorTelephone: "+966 50 333 4444",
+                AramcoCategoryNo: null,
+                Manufacturer: null,
+                Model: null,
+                EquipmentType: null,
+                EquipmentSerialNo: null,
+                Capacity: null),
             _json);
         fillResp.StatusCode.Should().Be(HttpStatusCode.OK,
             $"Fill inspection failed: {await fillResp.Content.ReadAsStringAsync()}");
