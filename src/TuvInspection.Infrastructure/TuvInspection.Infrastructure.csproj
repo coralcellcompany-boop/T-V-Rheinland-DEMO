@@ -34,6 +34,7 @@
        memory and forward to gotenberg for byte-perfect docx→pdf. -->
   <ItemGroup>
     <EmbeddedResource Include="Certificates\Templates\Annex1.docx" />
+    <EmbeddedResource Include="BlueSticker\SaicChecklists\*.json" />
   </ItemGroup>
 
 </Project>
