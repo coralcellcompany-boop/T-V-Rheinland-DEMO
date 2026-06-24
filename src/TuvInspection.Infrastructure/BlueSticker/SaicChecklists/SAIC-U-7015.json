@@ -1,0 +1,313 @@
+{
+  "saicNumber": "SAIC-U-7015",
+  "title": "Manually Propelled Elevating Aerial Platform",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.2"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.15.1 (2)"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 5.4.1"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Equipment is operated by a qualified operator",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.6"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Warning notice, cautions or restrictions for safe operation and maintenance are clearly displayed and legible",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (1)"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Manufacturer name, address, serial number and model are clearly marked or tagged",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (2)"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Safe working load and number of persons are clearly marked on the work platform",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (3)"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "Maximum platform height and reach are clearly marked",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (4)"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Maximum travel height and travel directions are clearly marked",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (4)"
+        },
+        {
+          "itemNo": "1.12",
+          "acceptanceCriteria": "Power rating are provided and marked (for AC and/or DC)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (6)"
+        },
+        {
+          "itemNo": "1.13",
+          "acceptanceCriteria": "Platform and guardrails electrical insulation data are provided",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.19 (10)"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "INSPECTION POINTS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Platform surfaces are at least 18\" (width & length) and are slip-resistant",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.12.1"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Platform guardrails are provided and secure",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.12.2"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Platform guardrails are 42\" height (+/- 3\")",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.12.2 (2)"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "Platform toeboard is fitted and at least 4\" high",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.12.3"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Cables and wirings (ropes and pulleys on manually operated mast type platform) are in good condition and free of damages",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (4)"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "Wheels and tires are serviceable and undamaged",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (6)"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "Travel brakes are working",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (2)"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "Safety harness anchorage is fitted in the platform",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.12.5 (4)"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "Battery is secure, guarded and ventilated",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.14.2"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "Outrigger position microswitches and interlocks are fully functional at their control panel",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.9"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "Slope indicator is fitted.",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.10"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Extendable elevating platform operation is satisfactory",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.12.4"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "Safety props and latches are installed and operable as described by the manufacturer",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.4 (5)"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "Electrical cables, wiring and components are undamaged",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (4)"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "Air, Hydraulic and fuel systems are not leaking",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (3)"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "All fluid levels for oil, water and hydraulic are adequate",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (3)"
+        },
+        {
+          "itemNo": "2.17",
+          "acceptanceCriteria": "All moving parts are lubricated",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.6 (5)"
+        },
+        {
+          "itemNo": "2.18",
+          "acceptanceCriteria": "The equipment is free of defective and/or corroded members/joints",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.6 (6)"
+        },
+        {
+          "itemNo": "2.19",
+          "acceptanceCriteria": "Emergency stop button is available at ground control station",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.3 (4)"
+        },
+        {
+          "itemNo": "2.20",
+          "acceptanceCriteria": "There are no loose nuts, bolts, missing, worn or damaged parts around the structure",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (3)"
+        },
+        {
+          "itemNo": "2.21",
+          "acceptanceCriteria": "Working environment is hazard free and machine ca be safely operated",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.10"
+        },
+        {
+          "itemNo": "2.22",
+          "acceptanceCriteria": "A fire extinguisher is fitted (type depends on operating location)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 8.9"
+        },
+        {
+          "itemNo": "2.23",
+          "acceptanceCriteria": "Platform controls are clearly marked with direction and mode of operation",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.1 (1)"
+        },
+        {
+          "itemNo": "2.24",
+          "acceptanceCriteria": "Platform raise/lower controls operate the machine correctly and are self- locking (for manually elevated platforms)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.1 (1)"
+        },
+        {
+          "itemNo": "2.25",
+          "acceptanceCriteria": "Controls are accessible from ground level (optional at the platform) (for manually elevated platforms)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.1 (3)"
+        },
+        {
+          "itemNo": "2.26",
+          "acceptanceCriteria": "Platform raise/lower controls return to \"off\" or \"neutral\" position when released (for power elevated platforms)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.1 (2)"
+        },
+        {
+          "itemNo": "2.27",
+          "acceptanceCriteria": "Platform controls accessible to the operator (for power elevated platforms)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.1 (4)"
+        },
+        {
+          "itemNo": "2.28",
+          "acceptanceCriteria": "Platform controls are protected against inadvertent operation (for power elevated platforms)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.1 (3)"
+        },
+        {
+          "itemNo": "2.29",
+          "acceptanceCriteria": "Emergency stop button is operable from both platform and ground controls",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.3 (3&4)"
+        },
+        {
+          "itemNo": "2.30",
+          "acceptanceCriteria": "Auxiliary/emergency lowering is operable from platform and ground controls",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.2.3 (3&4)"
+        },
+        {
+          "itemNo": "2.31",
+          "acceptanceCriteria": "Hydraulic/Pneumatic systems are leak-free with platform raised",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 8.3 (3)"
+        },
+        {
+          "itemNo": "2.32",
+          "acceptanceCriteria": "Raise/Lower limit switches are operable",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 8.3 (2)"
+        },
+        {
+          "itemNo": "2.33",
+          "acceptanceCriteria": "Placards, warnings, and control markings are checked",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 8.3 (7)"
+        },
+        {
+          "itemNo": "2.34",
+          "acceptanceCriteria": "Raise cut-out device is operable (dependent on machine manufacturer)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 8.3 (2)"
+        },
+        {
+          "itemNo": "2.35",
+          "acceptanceCriteria": "Slope sensor device is operable (dependent on machine manufacturer)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 8.3 (2)"
+        },
+        {
+          "itemNo": "2.36",
+          "acceptanceCriteria": "Steering is properly working when moving forward and in reverse directions",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.6 (1)"
+        },
+        {
+          "itemNo": "2.37",
+          "acceptanceCriteria": "Travel alarm is operable (if fitted)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.6 (4)"
+        },
+        {
+          "itemNo": "2.38",
+          "acceptanceCriteria": "Platform lowering alarm is operable (if fitted)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.6 (4)"
+        },
+        {
+          "itemNo": "2.39",
+          "acceptanceCriteria": "Forward/Reverse travel operation is accepted",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 6.6 (4)"
+        },
+        {
+          "itemNo": "2.40",
+          "acceptanceCriteria": "Brakes are in good working condition and can hold the machine on any slope (parking and moving)",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.13"
+        },
+        {
+          "itemNo": "2.41",
+          "acceptanceCriteria": "Motors and other motive power sources are in good operating condition",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 7.3.3 (1)"
+        },
+        {
+          "itemNo": "2.42",
+          "acceptanceCriteria": "The platform does not descend when in raised position and the power is off",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.11.1 (2)"
+        },
+        {
+          "itemNo": "2.43",
+          "acceptanceCriteria": "Tension Hoist system is protected by a safety device that will prevent free descent of the platform.",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.15.3"
+        },
+        {
+          "itemNo": "2.44",
+          "acceptanceCriteria": "Engine powered machines fuel lines are supported to minimize chafing",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.14.1"
+        },
+        {
+          "itemNo": "2.45",
+          "acceptanceCriteria": "Engine powered machines fuel lines are positioned to minimize exposure to engine and exhaust heat",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.14.1"
+        },
+        {
+          "itemNo": "2.46",
+          "acceptanceCriteria": "Engine powered machines exhaust system is provided with muffler REMARKS:This check list will be applied for Mast-Climbing work Platforms - ANSI/SAIA DOCUMENTS: 1- ANSI A92.3 - 2006 (R 2014) Issue: Manually Propelled Elevating Aerial Platforms 2- SAES-B067 - 2020 Issue: Safety Identification and Safety Colors 3- SA GI 7.025-2018 Issue: Heavy Equipment Operator and Rigger Testing and Certification 4- SA GI 7.030 - 2023 Issue: Inspection and Testing Requirements for Elevating/Lifting Load Tested By (If Applicable): Name, Signature, & Date: □ Inspected □ Witnessed by 3rd Party Certified Inspector: Name, Signature, Certificate & Company: User Representative: Name, Signature, & Date:",
+          "referenceStandard": "ANSI/SAIA A92.3 Sec: 4.14.1 A92.9. Equipment"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "saicNumber": "SAIC-U-7006",
+  "title": "Escalators",
+  "sections": [
+    {
+      "no": "1",
+      "title": "General",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment document is available",
+          "referenceStandard": "G.I.7.030 Para: 5.4.4"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "G.I.7.030 Para: 5.4.3"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Are previous inspection reports checked",
+          "referenceStandard": "G.I.7.030 Para: 5.5.2"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "External",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "General fire protection is in evidence (non-combustible materials, adequate ventilation of machinery spaces)",
+          "referenceStandard": "ASME A17.1 Sec: 8.10.4.1.1"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Width of escalator is not less than 560 mm nor more 1020 mm",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.5.2"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Geometry is checked/verified against design requirements",
+          "referenceStandard": "ASME A17.1 Sec: 8.11.4.1.1"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "The angle of inclination shall be designed not to exceed 30 deg from the horizontal, but due to field conditions at the site shall be permitted to exceed this maximum by 1 deg",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.1"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Handrails are 100mm (min ) horizontally and 25mm (min ) vertically away from adjacent surfaces",
+          "referenceStandard": "ASME A17.1 Sec: 6.2.3.2.3"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "Entrance and egress ends are in compliance with regard to combplates , floor surfaces , safety zones and steps",
+          "referenceStandard": "ASME A17.1 Sec: 8.6.8.14"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "Lighting intensity is not less than 50 lux (demarkation lights at both landings and lighting at exposed step treads)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.7.2"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "Caution signs are in place at both landings",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.9.1"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "Combplates are in order",
+          "referenceStandard": "ASME A17.1 Sec: 6.2.3.8.1"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "Deck barricades are in compliance with dimensional requirements",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.3.13"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "Minimum of two and maximum of 4 steps at each entrance and exit designed to carry a load of 135Kg on a 6 x 10\" plate (When step is forced upward more than 5 mm , escalator shall stop)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.5, 6.1.3.6.5, 6.1.3.9.4"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Operating devices such as starting and inspection control switches and emergency stop switches are provided",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.1, 6.1.6.2.1, 6.1.6.3.1"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "Skirt obstruction devices are operable and cause the escalator to stop when the skirt is obstructed",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.6"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "Handrail speed monitoring device activates an alarm and stops the escalator when the speed difference is 15% or more for between 2 and 6 seconds",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.4,"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "Egress restrictors (if fitted) cause the electric power to be removed from the machine when the exit restrictors begin to close",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.7"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "Rated speed is not to exceed 0.5m/sec (speed not to vary) (If an AC squirrel cage induction motor to drive is used a speed governor is not required)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.4.1, 6.1.6.3.2"
+        },
+        {
+          "itemNo": "2.17",
+          "acceptanceCriteria": "Balustrades are installed on both sides of the escalator",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.3"
+        },
+        {
+          "itemNo": "2.18",
+          "acceptanceCriteria": "Ceiling intersection guards are fitted where required and comply with various dimensional criteria",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.3.11"
+        },
+        {
+          "itemNo": "2.19",
+          "acceptanceCriteria": "Skirt/step clearance is at least 1\" (unloaded ) and a minimum of 0.2\" (loaded) (For escalators without dynamic skirt panels, verify the skirt/step performance index value)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.3.3.5, 6.1.3.3.6, 8.6.8.4"
+        },
+        {
+          "itemNo": "2.20",
+          "acceptanceCriteria": "Any outdoor protection allows normal operation of the escalator in all weathers (The landing plates shall be slip resistant when wet)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.8, 8.10.4.1.1q, 8.11.4.2.14"
+        }
+      ]
+    },
+    {
+      "no": "3",
+      "title": "Internal",
+      "items": [
+        {
+          "itemNo": "3.1",
+          "acceptanceCriteria": "Permanent electric lighting and at least one duplex receptacle rated at 15A/120V (min) is provided in each remote machine room (Lighting to be not less than 100 lux at floor level)",
+          "referenceStandard": "ASME A17.1 Sec: 6.2.7.1.1"
+        },
+        {
+          "itemNo": "3.2",
+          "acceptanceCriteria": "Stop switch in each machinery space (except space where mainline disconnect switch is located ) is of the manually opened/closed type, has a red handle/button and is permanently marked STOP",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.2, 6.1.6.3.5, 8.10.4.1.2b, 8.11.4.2.2"
+        },
+        {
+          "itemNo": "3.3",
+          "acceptanceCriteria": "Machine controllers are certified and labeled",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.7, 6.1.8.2, 8.10.4.1.2C, 8.11.4.2.3"
+        },
+        {
+          "itemNo": "3.4",
+          "acceptanceCriteria": "Drive machine brake stops the machine automatically if the power supply is interrupted and can hold any load up to the brake rated load (stopping rate is max. of 0.91m/sec/sec)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.5, 8.11.4.2.4"
+        },
+        {
+          "itemNo": "3.5",
+          "acceptanceCriteria": "Speed governor (where fitted) shuts down the driving machine motor at a predetermined value, not more than 40% above rated speed",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.2, 8.10.4.1.2e, 8.11.4.2.5"
+        },
+        {
+          "itemNo": "3.6",
+          "acceptanceCriteria": "Manually operate the trip mechanism to check the operation of the broken drive chain device on the drive chain",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.5.3.2, 6.1.6.3.4, 6.1.6.3.10, 8,11,4,2,6"
+        },
+        {
+          "itemNo": "3.7",
+          "acceptanceCriteria": "Reversal stop switch (which prevents reversal when operating in the ascending direction) is operating correctly by manually operating it",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.8, 8.11.4.2.7"
+        },
+        {
+          "itemNo": "3.8",
+          "acceptanceCriteria": "Broken step chain device shuts down power to the drive motor and brake if the step chain breaks or if excessive sag occurs in a step chain",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.3, 8.11.4.2.8"
+        },
+        {
+          "itemNo": "3.9",
+          "acceptanceCriteria": "Step up-thrust device detects a step forced upward ( in the lower transition curve) and cause the escalator to stop before the detected step reaches the combplate (maximum upward displacement is 5 mm at the lower landing)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.9, 8.11.4.2.9"
+        },
+        {
+          "itemNo": "3.10",
+          "acceptanceCriteria": "Verify the missing step device will detect a missing step and bring the escalator to a stop before the gap emerges from the comb",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.5, 8.11.4.2.10"
+        },
+        {
+          "itemNo": "3.11",
+          "acceptanceCriteria": "Operation of the step level devices (top and bottom of the escalator) when a minimum of 3mm downward displacement occurs in a riser (Power to the machine shall cut off before the step enters the combplate)",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.3.11, 8.10.4.1.2k, 8.11.4.2.11"
+        },
+        {
+          "itemNo": "3.12",
+          "acceptanceCriteria": "Steps, step chains and trusses comply with manufacturer specifications",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.2.1, 6.1.3.7, 6.1.3.8, 6.1.3.11, 6.1.7.3, 8.6.8, 8.10.4.1.2l"
+        },
+        {
+          "itemNo": "3.13",
+          "acceptanceCriteria": "A code date plate is available for the machine (states code and edition in effect at time of installation and any alteration)",
+          "referenceStandard": "ASME A17.1 Sec: 8.7.1.8, 8.9"
+        },
+        {
+          "itemNo": "3.14",
+          "acceptanceCriteria": "Response to a smoke detector alarm after at least 15 seconds, causes power interruption to the driving machine motor and brake",
+          "referenceStandard": "ASME A17.1 Sec: 6.1.6.8"
+        }
+      ]
+    }
+  ]
+}

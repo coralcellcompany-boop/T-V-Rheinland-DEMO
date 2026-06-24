@@ -1,0 +1,148 @@
+{
+  "saicNumber": "SAIC-U-7017",
+  "title": "Man Basket",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.2.1 (c-4)"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.2.1 (c-4)"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ASME B30.23 Sec: 23-2.3.1 (a-1)"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Equipment is operated by a qualified operator",
+          "referenceStandard": "ASME B30.23 Sec: 23-3.1.2 (a)"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Durable signs are installed at the operator’s station and on the outside of the crane warning that electrocution or serious bodily injury",
+          "referenceStandard": "ASME B30.23 Sec: 23-3.1.2 (a)"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Manufacturer name, address, serial number and model are clearly marked or tagged",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-7-a)"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Safe working load and number of persons are clearly marked on the work platform",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-7-b)"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "Minimum design factor is 5, based on the stated platform rating.",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (a-1)"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "INSPECTION POINTS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Platform rating is not less than 300 lb. (136 kg)",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-1)"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Platform top rail not less than 39 in. (990 mm) nor more than 45 in (1140 mm).",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-2)"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Anchorage points are suitable for attaching personnel fall protection device without failure",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-3)"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "Hand railings are provided around the entire platform with the exception of any access gates or doors and have clearance of not less than 1.5 in. (39 mm) between the railing and any other structure",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-4)"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Floor is slip-resistant surface and have provisions to facilitate free drainage of liquids and have no opening that will allow sphere more than 0.5 in. (13 mm)",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-5)"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "Access systems (if installed) is equipped with positive acting device to restrain the access system from accidental opening.",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-8)"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "Shackles (if used) in the suspension system shall be of a bolt type with cotter pin",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b-10-i)"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "Rope or chain hoisting systems have an anti-two-block device installed.",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.2.2 (b)"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "Hoisting equipment with a variable angle boom is having a boom angle indicator readily visible to the operator.",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.2.2 (c)"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "Hoisting equipment with telescoping booms is having a boom length indicator, readable from the operator’s station, unless the load rating is independent of the boom length",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.2.2 (d)"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "Hooks used for attachment of a personnel lifting platform shall be of a type that can be positively locked closed and will prevent the platform lifting bridle from being dislodged",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.2.2 (e)"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Safety harness anchorage is fitted in the platform",
+          "referenceStandard": "ASME B30.23 Sec: 23-3.2.1 (j- 3)"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "There are no loose nuts, bolts, missing, worn or damaged parts around the structure",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (b- 6)"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "The equipment is free of defective and/or corroded members/joints",
+          "referenceStandard": "ASME B30.23 Sec: 23-2.2.1 (a-3)"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "Working environment/condition is hazard free",
+          "referenceStandard": "ASME B30.23 Sec: 23-2.2.1 (a-3)"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "The suspension system is minimize tipping due to movement of personnel on the platform and not allow motion of more than 10 deg off the horizontal plane",
+          "referenceStandard": "ASME B30.23 Sec: 23-1.1.1 (9)"
+        }
+      ]
+    }
+  ]
+}

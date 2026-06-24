@@ -1,0 +1,353 @@
+{
+  "saicNumber": "SAIC-U-7016",
+  "title": "Powered Platform for Building Maintenance (Manned Suspended Skyclimber)",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ASME A 120.1, Sec: 3.1.5"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "GI 7.030 Para: 5.4.3"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "G.I. 7.030 Para: 3.5.2"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Warning notice, cautions or restrictions for safe operation and maintenance are clearly displayed and legible (Including wind speed)",
+          "referenceStandard": "ASME A 120.1, Sec: 3.1.9"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Two qualified/trained operators are operating the machine (one at each side)",
+          "referenceStandard": "ASME A120.1, Sec: 4.2.1"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030, Sec: 5.6.2"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Clearly marked with the following: (a) name of the manufacturer (b) serial number and year of manufacture (c) safe working load (maximum number of users)",
+          "referenceStandard": "ASME A 120.1, Sec: 4.2.2"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Safe working load and number of persons are clearly marked on the work platform",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "Self Weight of the platform is clearly marked",
+          "referenceStandard": "SAES- B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Each suspension jib is marked up with a unique ID number, safe working load and any fitted counterbalance load",
+          "referenceStandard": "ASME A120.1, Sec: 3.4 (a)"
+        },
+        {
+          "itemNo": "1.12",
+          "acceptanceCriteria": "All shackles are fully secured and fitted with lock pins where required (or wire-locked)",
+          "referenceStandard": "ASME A120.1, Sec: 3.10.8"
+        },
+        {
+          "itemNo": "1.13",
+          "acceptanceCriteria": "All hooks are fully secured",
+          "referenceStandard": "ASME A120.1, Sec: 3.4 (a)"
+        },
+        {
+          "itemNo": "1.14",
+          "acceptanceCriteria": "The specifications for the suspension wire ropes and connections recommended by the hoisting machine manufacturer are checked",
+          "referenceStandard": "ASME A120.1, Sec: 3.10"
+        },
+        {
+          "itemNo": "1.15",
+          "acceptanceCriteria": "Electric motors, used as the prime mover for a hoist, shall be protected with a current overload device or a circuit protected by a current overload device located on the hoist or on the carriage.",
+          "referenceStandard": "ASME A120.1, Sec. 3.6.1 (a)"
+        },
+        {
+          "itemNo": "1.16",
+          "acceptanceCriteria": "Each motor shall be provided with the manufacturer ’s nameplate listing all pertinent characteristics. Saudi Aramco: Company Saudi Aramco: Company General Use",
+          "referenceStandard": "ASME A120.1, Sec. 3.6.1 (a) General Use"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "INSPECTION POINTS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Platform surfaces are slip-resistant materials",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.2"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Platform dimensions are not less than 24\" (610mm) wide working area and a minimum of 12\" (305mm) wide passage way",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.2"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Platform guardrails are provided and secure",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.1"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "The guardrail system shall consist of a 42-in. (1.067-m) high enclosure on the ends and outboard side. The inboard side shall not be less than 36 in. (914 mm) high. The enclosures shall consist of a top guardrail, a midrail, and a 4-in. (102-mm) high toeboard.",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.1"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Welded members/joints are free of defects and corrosion",
+          "referenceStandard": "ASME A120.1, Sec: 3.1.4"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "The equipment installation utilizes angulated roping, a stabilizing force of at least 10 lb (4.5 kg) is maintained under all conditions of loading, and only where the rise of the suspended portion of the equipment does not exceed 130 ft (40 m).",
+          "referenceStandard": "ASME A120.1, Sec: 2.3.3.1 (b-2)"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "Each platform occupant has a ` or safety belt (with anchorage for a tail line or a lanyard)",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.11 (b)"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "A tail line or a lanyard has means to be secured to a trolley line or a separate lifeline",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.11 (b)"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "Each hoist machine/motor is capable of raising and lowering 125% of hoist rated load",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.1"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "Electric motors are protected with a current overload device",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.1(a)"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "Speed reducers are of positive/gear reduction type (friction type is not allowed)",
+          "referenceStandard": "ASME A120.1, Sec.3.6.2, 3.6.3"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Speed reducers are directly connected to the elevating mechanism of the hoisting machine",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.2(a)"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "All moving parts are guarded",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.5"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "Gear reduction speed reducers are in compliance with the standards of the American Gear Manufacturers Association",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.3"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "Minimum of two independent hoist brakes are provided",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "hoist brakes automatically engage whenever power is interrupted (Primary brakes)",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8(a-1)"
+        },
+        {
+          "itemNo": "2.17",
+          "acceptanceCriteria": "Primary brakes hold 125% of the hoist's rated load Saudi Aramco: Company Saudi Aramco: Company General Use",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8(a-2) General Use"
+        },
+        {
+          "itemNo": "2.18",
+          "acceptanceCriteria": "Primary brakes are directly connected to the hoist's drive train (belts, shear pins, clutches, roller chains, or friction devices are prohibited)",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8(a-3)"
+        },
+        {
+          "itemNo": "2.19",
+          "acceptanceCriteria": "Automatic secondary brakes hold 125% of the hoist's rated load within a vertical distance of 24\" (610mm)",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8(b-1)"
+        },
+        {
+          "itemNo": "2.20",
+          "acceptanceCriteria": "Secondary brakes act directly on the suspension wire rope (or on the drum or drum extension on a winding drum type hoist)",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8(b-2)"
+        },
+        {
+          "itemNo": "2.21",
+          "acceptanceCriteria": "The secondary brake arel not used to stop the hoist except under overspeed or abnormal conditions",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.8(b-3)"
+        },
+        {
+          "itemNo": "2.22",
+          "acceptanceCriteria": "Lubrication of the hoisting machine and moving parts is adequate",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.4"
+        },
+        {
+          "itemNo": "2.23",
+          "acceptanceCriteria": "Lubrication points are accessible",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.4"
+        },
+        {
+          "itemNo": "2.24",
+          "acceptanceCriteria": "Fillets are provided as points of change in the diameter of hoisting machinery shafts and sheave shafts to prevent excessive stress concentration in the shafts",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.6"
+        },
+        {
+          "itemNo": "2.25",
+          "acceptanceCriteria": "Fitted keys, splines, bolts, or machine screws are used in all connections subject to torque",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.6"
+        },
+        {
+          "itemNo": "2.26",
+          "acceptanceCriteria": "All threaded fasteners have an antiloosening device",
+          "referenceStandard": "ASME A120.1, Sec: 3.6.6"
+        },
+        {
+          "itemNo": "2.27",
+          "acceptanceCriteria": "Suitable runways, ladders, stairs, or platforms are provided for safe access to and egress from all manned scaffold platforms",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.9"
+        },
+        {
+          "itemNo": "2.28",
+          "acceptanceCriteria": "A two way radio or a two-way telephone system shall be provided for every manned platform.",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.4.6"
+        },
+        {
+          "itemNo": "2.29",
+          "acceptanceCriteria": "Wire rope classification is as per manufacturer specifications (check equipment manual)",
+          "referenceStandard": "ASME A120.1, Sec: 3.10"
+        },
+        {
+          "itemNo": "2.30",
+          "acceptanceCriteria": "Suspension rope diameter is not less than 5/16\" (8mm)",
+          "referenceStandard": "ASME A120.1, Sec: 3.10.1.5"
+        },
+        {
+          "itemNo": "2.31",
+          "acceptanceCriteria": "Rope cores are one of the following: fiber, independent wire rope, or wire strand, or coated electrical conductors (check manufacturer's recommendations)",
+          "referenceStandard": "ASME A120.1, Sec: 3.10.1.2"
+        },
+        {
+          "itemNo": "2.32",
+          "acceptanceCriteria": "Wire rope is adequately lubricated",
+          "referenceStandard": "ASME A120.1, Sec: 3.10.1.3"
+        },
+        {
+          "itemNo": "2.33",
+          "acceptanceCriteria": "Wire rope is free of kinks, crushes and birdcagings",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (b)"
+        },
+        {
+          "itemNo": "2.34",
+          "acceptanceCriteria": "Wire rope is not heat damaged",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (c)"
+        },
+        {
+          "itemNo": "2.35",
+          "acceptanceCriteria": "Wire rope is free of rust, corrosion or pettings Saudi Aramco: Company Saudi Aramco: Company General Use",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (e) General Use"
+        },
+        {
+          "itemNo": "2.36",
+          "acceptanceCriteria": "Wire rope does not have four randomly distributed broken wires in three lays",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (a)"
+        },
+        {
+          "itemNo": "2.37",
+          "acceptanceCriteria": "Wire rope does not have two broken wires in one strand in three lays",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (a)"
+        },
+        {
+          "itemNo": "2.38",
+          "acceptanceCriteria": "Wire rope does not have more than two broken wires in the vicinity of end attachments",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (e)"
+        },
+        {
+          "itemNo": "2.39",
+          "acceptanceCriteria": "Wire rope does not show evidence of core failure (a lengthening of rope lay and a reduction in rope diameter suggests core failure)",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (f)"
+        },
+        {
+          "itemNo": "2.40",
+          "acceptanceCriteria": "Wire rope does not have more than one valley break (broken wire)",
+          "referenceStandard": "ASME A120.1, Sec: 5.1.5 (g)"
+        },
+        {
+          "itemNo": "2.41",
+          "acceptanceCriteria": "Suspension wire rope fasteners are one of the following: 1) Individual tapered babbitted sockets 2) Zinced fastenings for wire rope 1Ú2\" (13mm) diameter and larger 3) Swaged fittings (U- Type wire rope clips are not allowed)",
+          "referenceStandard": "ASME A120.1, Sec: 3.10.5"
+        },
+        {
+          "itemNo": "2.42",
+          "acceptanceCriteria": "Platform is fitted with face rollers are its lower inner edge (to protect the surface of the supporting structure) Saudi Aramco: Company Saudi Aramco: Company General Use",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.3.1 General Use"
+        },
+        {
+          "itemNo": "2.43",
+          "acceptanceCriteria": "Upper anchorage brackets and jibs are fully secured to permanent and certified points on the structure",
+          "referenceStandard": "ASME A120.1, Sec: 3.4 (b)"
+        },
+        {
+          "itemNo": "2.44",
+          "acceptanceCriteria": "Each outrigger shall be tied back to a certified anchorage on the building with a minimum of 5Ú16 in. (8.0 mm) wire rope",
+          "referenceStandard": "ASME A120.1, Sec: 3.4(b)"
+        },
+        {
+          "itemNo": "2.45",
+          "acceptanceCriteria": "All exposed noncurrent-carrying metal parts are grounded",
+          "referenceStandard": "ASME A120.1, Sec: 3.11.1"
+        },
+        {
+          "itemNo": "2.46",
+          "acceptanceCriteria": "Electrical wirings and components are free of damages",
+          "referenceStandard": "ASME A120.1, Sec: 3.11.2.1"
+        },
+        {
+          "itemNo": "2.47",
+          "acceptanceCriteria": "The independent power supply to the equipment is provided with a disconnect switch",
+          "referenceStandard": "ASME A120.1, Sec: 3.11.2.2"
+        },
+        {
+          "itemNo": "2.48",
+          "acceptanceCriteria": "All electrical controls are housed in weatherproof enclosures",
+          "referenceStandard": "ASME A120.1, Sec: 3.11.2.7(a)"
+        },
+        {
+          "itemNo": "2.49",
+          "acceptanceCriteria": "Control systems are provided with electrical overloads protection devices",
+          "referenceStandard": "ASME A120.1, Sec: 3.11.2.7(b)"
+        },
+        {
+          "itemNo": "2.50",
+          "acceptanceCriteria": "Traveling cables/conductors are insulated",
+          "referenceStandard": "ASME A120.1, Sec: 3.11.2.6"
+        },
+        {
+          "itemNo": "2.51",
+          "acceptanceCriteria": "A fire extinguisher with B-C rating is provided and securely attached on the platform Saudi Aramco: Company Saudi Aramco: Company General Use",
+          "referenceStandard": "ASME A120.1, Sec: 3.7.5.7 General Use"
+        }
+      ]
+    }
+  ]
+}

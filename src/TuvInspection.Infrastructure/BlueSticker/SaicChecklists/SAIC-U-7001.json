@@ -1,0 +1,137 @@
+{
+  "saicNumber": "SAIC-U-7001",
+  "title": "Load Test Report",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Hazards don't exist around elevating/lifting equipment and it is safe to carry out inspection and load test",
+          "referenceStandard": "General"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Load test procedures for the specified equipment are reviewed",
+          "referenceStandard": "Applicable GI, ASME/ANSI"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "The elevating/lifting equipment is painted safety yellow",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "The elevating/lifting equipment is painted safety yellow-and-black stripes on offshore facilities",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Rated capacity of the elevating/lifting equipment is marked (Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Operator is certified and licensed",
+          "referenceStandard": "G.I. 7.025 Para: 7.1"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "Elevating/lifting equipment has been built to the applicable/related standard(s)",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Elevating/lifting equipment history records are checked",
+          "referenceStandard": "G.I 7.030 Para: 5.5.2"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "All safety devices are provided as per applicable standards and design",
+          "referenceStandard": "Applicable GI, ASME/ANSI"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "All locking devices are as per applicable standards and design",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "All limit devices are as per applicable standards and design",
+          "referenceStandard": "Applicable GI, ASME/ANSI"
+        },
+        {
+          "itemNo": "1.12",
+          "acceptanceCriteria": "Manufacturer's load test certificate for new/repaired equipment is provided",
+          "referenceStandard": "G.I.7.030 Para: 5.3.2"
+        },
+        {
+          "itemNo": "1.13",
+          "acceptanceCriteria": "Initial inspection is performed using applicable SAIC",
+          "referenceStandard": "SATIP-CIU-001"
+        },
+        {
+          "itemNo": "1.14",
+          "acceptanceCriteria": "Proof load test is verified (e.g. 125%, 200%, etc.)",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.15",
+          "acceptanceCriteria": "Rated loads are as per applicable standards and/or design",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.16",
+          "acceptanceCriteria": "Sling, shackles and below the hook lifting device condition are checked",
+          "referenceStandard": "G.I. 7.029 Para: 5.16"
+        },
+        {
+          "itemNo": "1.17",
+          "acceptanceCriteria": "Witness load test as per load test procedures",
+          "referenceStandard": "General"
+        },
+        {
+          "itemNo": "1.18",
+          "acceptanceCriteria": "Post load test inspection using applicable SAIC is performed",
+          "referenceStandard": "SATIP-CIU-001"
+        },
+        {
+          "itemNo": "1.19",
+          "acceptanceCriteria": "Elevating/lifting equipment design/modifications calculations are checked",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.20",
+          "acceptanceCriteria": "Allowable deflection limits are verified against design specs.",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.21",
+          "acceptanceCriteria": "Boom is fully retracted and extended to its maximum length of________ meters (feet)",
+          "referenceStandard": "Applicable Load testing procedure"
+        },
+        {
+          "itemNo": "1.22",
+          "acceptanceCriteria": "Operational test through all configurations are conducted (e.g. extend boom, telescoping, hoisting, etc.)",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.23",
+          "acceptanceCriteria": "Elevating/lifting equipment stability and integrity at extreme operating conditions are verified",
+          "referenceStandard": "Applicable ASME/ANSI"
+        },
+        {
+          "itemNo": "1.24",
+          "acceptanceCriteria": "The elevating/lifting equipment has the manufacturer test certification",
+          "referenceStandard": "G.I.7.030 Para: 5.4.5"
+        },
+        {
+          "itemNo": "1.25",
+          "acceptanceCriteria": "for repairs, modifications or alterations Repairs, modifications and/or alterations are carried out to manufacturer, applicable international standards and/or Saudi Aramco standards NOTE: Load Test shall not proceed until any Failed",
+          "referenceStandard": "G.I.7.030 & Applicable ASME/ANIS items are corrected."
+        }
+      ]
+    }
+  ]
+}

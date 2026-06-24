@@ -1,0 +1,123 @@
+{
+  "saicNumber": "SAIC-U-7004",
+  "title": "Articulating Boom Cranes",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment document is available",
+          "referenceStandard": "GI 7.030 ASME B30.22 Sec: 22-1.9"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "GI 7.030 ASME B30.22 Sec: 22-2.1.4"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.3.1"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Warning signs, cautions and safety labels are provided and in place",
+          "referenceStandard": "ASME B30.22 Sec: 22-3.1.3.1.1 (e)"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Crane manufacturer data label, name, address and serial number are marked or tagged",
+          "referenceStandard": "ASME B30.22 Sec: 22-3.1.3.1.1 (b)"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "Crane is painted safety yellow (if applicable)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Crane is painted safety yellow-and-black stripes on offshore facilities (if applicable)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Rated capacity of the crane is marked (Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4 ASME B30.22"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Load rating chart/range diagram are provided (contains all safe operating conditions as per manufacturer)",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.1.3 (b-6)"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "INSPECTION POINTS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "BOOM 2.1.1 Boom cylinder is properly working 2.1.2 Boom cylinder holding valve is in good working condition 2.1.3 Boom cylinder hoses are not leaking 2.1.4 Boom cylinder hoses are not deformed 2.1.5 Boom has no signs of wear, cracks or distorted parts",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.1 (a) ASME B30.22 Sec: 22-1.2.1 (b) ASME B30.22 Sec: 22-2.1.4 (l-1) ASME B30.22 Sec: 22-2.1.4 (l-2) ASME B30.22 Sec: 22-2.1.4 (a)"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "TELESCOPING BOOM 2.2.1 Boom telescope cylinder is working properly 2.2.2 Boom telescope cylinder holding valve is in good working condition 2.2.3 Boom telescope cylinder hoses are not leaking 2.2.4 Boom telescope cylinder hoses are not deformed 2.2.5 Boom telescope has no signs of wear, cracks or distorted parts",
+          "referenceStandard": "ASME B30.22 Sec: 1.2.2 ASME B30.22 Sec: 1.2.2 ASME B30.22"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "LOAD HOIST MECHANISM 2.3.1 Hoist brake is functioning well 2.3.2 Hoist rope size is as per manufacturer specification Minimum of two full rope wraps remains in the drum when the hook at its 2.3.3 extreme low position 2.3.4 Rope end is anchored to the drum as per crane or winch manufacturer (In Load Hoist Equipped Machines) The drum flange is extend a 2.3.5 minimum 1Ú2 in. (13 mm) over the top layer of rope at all times 2.3.6 Rope eye splices are made as per manufacturer recommendations Wire rope clips used in conjunction with wedge sockets are attached to 2.3.7 the unloaded dead end of the rope only 2.3.8 Anti two block provided and working properly",
+          "referenceStandard": "Sec: 1.2.2 ASME B30.22 Sec: 1.2.2 ASME B30.22 Sec: 22-1.2.2 ASME B30.22 Sec: 22-1.2.3 (b-1) ASME B30.22 Sec: 22-1.2.3 (b-2) ASME B30.22 Sec:22-1.2.3 (b-2-a) ASME B30.22 Sec:22-1.2.3 (b-2-b)"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "SWING MECHANISM Swing mechanism starts and stops with controlled acceleration and 2.4.1 deceleration 2.4.2 Swing brake and locking devices are in good working condition A positive locking device or boom support is provided to prevent the 2.4.3 boom from rotating when in stowed position for transit",
+          "referenceStandard": "ASME B30.22 Sec:22-1.2.3 (b-2-c) ASME B30.22 Sec: 22-1.5.3 (a) ASME B30.22 Sec: 22-1.5.3 (d) ASME B30.22 Sec: 22-1.2.3 (c) ASME B30.22 Sec: 22-1.3.1 ASME B30.22 Sec:22-1.3.2 (a) ASME B30.22 Sec:22-1.3.2 (b)"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "SHEAVES 2.5.1 Sheave grooves are free of surface defects 2.5.2 Sheave guards are provided and in good condition 2.5.3 Sheave bearings are provided with lubrication points. Load hoisting sheaves have pitch diameters not less than 18 times the 2.5.4 nominal diameter of the rope used Lower load block sheaves have pitch diameters of not less than 16 times 2.5.5 the nominal diameter of the rope used Boom extension system sheaves have a pitch diameter of not less than 2.5.6 15 times the nominal diameter of the rope",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.4 (a) ASME B30.22 Sec: 22-1.5.4 (b) ASME B30.22 Sec: 22-1.5.4 (d)"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "HOOK 2.6.1 Labeling and manufacturer data are available and legible 2.6.2 Hook weight is marked 2.6.3 Safe working load is clearly marked on the hook 2.6.4 Is there excessive pitting or corrosion 2.6.5 Hook is not bent or twisted Hook is not distorted in the throat opening 2.6.6 • Max. allowable throat opening is 5% not to exceed 1Ú4 in. (6 mm) or as recommended by the manufacturer. Maximum wear in the hook bowl is not exceeding 10% (compared to new 2.6.7 hook) or as per manufacturer recommendations 2.6.8 Hook is not cracked, gouged or shows nicks 2.6.9 Hook can lock (if it is a self-locking hook) Inoperative latch (if provided) — any damaged latch or malfunctioning 2.6.10 latch that does not close the hook’s throat",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.5 (a) ASME B30.22 Sec: 22-1.5.5 (b) ASME B30.22 Sec: 22-1.5.5 (c) ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec: 10-1.8 ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.10.5 (c) ASME B30.10 Sec: 10-1.10.5 (f) ASME B30.10 Sec: 10-1.10.5 (f) ASME B30.10 Sec: 10-1.10.5 (e) ASME B30.10 Sec : 10-1.10.5 (d) ASME B30.10 Sec : 10-1.10.5 (h) ASME B30.10 Sec : 10-1.10.5 (i)"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "CONTROLS 2.7.1 All controls are labeled and identified 2.7.2 All controls are functioning properly 2.7.3 All control levers return to neutral position when force is removed",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.6.1 (a) ASME B30.22"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "STABILIZERS 2.8.1 Stabilizer cylinder is not scored, nicked, or dented cylinder rods 2.8.2 Stabilizer cylinder hoses are not leaking 2.8.3 Stabilizer cylinder hoses are not deformed 2.8.4 Stabilizers do not have worn, cracked or distorted parts",
+          "referenceStandard": "Sec: 22-1.6.1 (a) ASME B30.22 Sec: 22-1.6.1 (b) ASME B30.22 Sec: 2.1.4 (o-4) ASME B30.22 Sec: 22-2.1.4 (l-1)"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "ROPE Rope is free of corrosion, kinking, crushing, bird caging, stranding, main 2.9.1 strand displacement or core protrusion 2.9.2 Rope end connections are free of corrosion, bends, cracks and wear In running ropes, no more than six randomly distributed broken wires in 2.9.3 one lay or three broken wires in one strand in one lay In rotation-resistant ropes, no more than two randomly distributed broken 2.9.4 wires in six rope diameters or four randomly distributed broken wires in 30-rope diameters 2.9.5 There are no reductions from nominal rope diameter of more than 5%",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (l-2) ASME B30.22 Sec: 22-2.1.4 (a) ASME B30.22 Sec: 22-2.4.2 (a-1-a) ASME B30.22 Sec: 22-2.4.2 (b-2-c) ASME B30.22 Sec: 22 - 2.4.4"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "GENERAL INSPECTION POINTS: 2.10.1 Hydraulic/pneumatic motors have no loose bolts or fasteners 2.10.2 Hydraulic/pneumatic motors have no leaks",
+          "referenceStandard": "(b-1-a) ASME B30.22 Sec: 22 - 2.4.4 (b-1-b) ASME B30.22 Sec: 22-2.4.3 (b-6) ASME B30.22 Sec: 22-2.1.4 (m-1) ASME B30.22 Sec: 22-2.1.4 (m-2)"
+        }
+      ]
+    }
+  ]
+}

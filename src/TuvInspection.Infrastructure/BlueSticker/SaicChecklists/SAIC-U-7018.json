@@ -1,0 +1,238 @@
+{
+  "saicNumber": "SAIC-U-7018",
+  "title": "Portal & Pedestal Cranes",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment document is available",
+          "referenceStandard": "G.I. 7.030 ASME B30.4 Sec: 4-1.4"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "G.I. 7.030 Para: 5.5.1"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "G.I. 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ASME B30.4 Sec: 4-2.4.1 (a)"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Crane manufacturer name, model and serial number are marked on Load Rating Chart",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.3.3 (a)"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Operator is certified and licensed",
+          "referenceStandard": "G.I. 7.025 Para: 7.1"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Crane is painted safety yellow",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Crane is painted safety yellow-and-black stripes on offshore facilities",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "Rated capacity of crane is marked (Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Erection and dismantling procedures are based on manufacturer recommendations",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.1.2 (b)"
+        },
+        {
+          "itemNo": "1.12",
+          "acceptanceCriteria": "A durable rating chart, which is legible, is visible to the operator at the controls",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.3.3"
+        },
+        {
+          "itemNo": "1.13",
+          "acceptanceCriteria": "Main structure components are free of defects (bolts, pins, mast sections for cracks, bent structural members, etc.)",
+          "referenceStandard": "ASME B30.4 Sec: 4-2.1.4 (b-1)"
+        },
+        {
+          "itemNo": "1.14",
+          "acceptanceCriteria": "Remote control operation is available",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.15.1 (c)"
+        },
+        {
+          "itemNo": "1.15",
+          "acceptanceCriteria": "Crane stops when remote control signal (for any crane motion) is lost",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.15.1 (c)"
+        },
+        {
+          "itemNo": "1.16",
+          "acceptanceCriteria": "Access ladders to cab are provided (platform surfaces to be skid resistant)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.17.2 (a)"
+        },
+        {
+          "itemNo": "1.17",
+          "acceptanceCriteria": "Foot walks and ladders are provided where appropriate (foot walks to be minimum of 18\" wide with slip resistant surface)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.18.1 (a)"
+        },
+        {
+          "itemNo": "1.18",
+          "acceptanceCriteria": "Controls used during the crane operating cycle are within reach of operator",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.15.1 (a)"
+        },
+        {
+          "itemNo": "1.19",
+          "acceptanceCriteria": "Cab door is restrained from moving during crane operation or travel",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.17.1 (d)"
+        },
+        {
+          "itemNo": "1.20",
+          "acceptanceCriteria": "Electrical equipment are protected from the environment and guarded",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.16.1 (c)"
+        },
+        {
+          "itemNo": "1.21",
+          "acceptanceCriteria": "Electrical equipment can be mains disconnected at ground level (in case of electrically operated cranes)",
+          "referenceStandard": "Sec: 4-1.16.1 (a)"
+        },
+        {
+          "itemNo": "1.22",
+          "acceptanceCriteria": "Load trolley can brake in travel mode (automatically in case of power loss and drive rope breakage)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.8.3 (b)"
+        },
+        {
+          "itemNo": "1.23",
+          "acceptanceCriteria": "Afire extinguisher is provided in the cab (minimum rating is 10 BC)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.17.4"
+        },
+        {
+          "itemNo": "1.24",
+          "acceptanceCriteria": "Exhaust piping is guarded or insulated (where personnel could contact it)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.18.4"
+        },
+        {
+          "itemNo": "1.25",
+          "acceptanceCriteria": "Fuel filler pipes are located or protected so as to avoid spillage",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.18.7"
+        },
+        {
+          "itemNo": "1.26",
+          "acceptanceCriteria": "guards are fitted to exposed moving parts and can support 90 kg without deformation",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.18.2"
+        },
+        {
+          "itemNo": "1.27",
+          "acceptanceCriteria": "Clutch is in good condition and protected against weather and oil contaminations",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.18.5 (a)"
+        },
+        {
+          "itemNo": "1.28",
+          "acceptanceCriteria": "Limiting devices are fully operational for trolley travel, boom luffing, upper hoist limit, crane travel, lifted load and radius",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.11 (b&c)"
+        },
+        {
+          "itemNo": "1.29",
+          "acceptanceCriteria": "The load moment indicator (LMI) is installed and properly working (if kg or more)",
+          "referenceStandard": "ASME B30.8 Sec : 8-1.4.3 (b)"
+        },
+        {
+          "itemNo": "1.30",
+          "acceptanceCriteria": "Slewing (swing) motion of the crane is smooth for both start and stop",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.7.1 (a)"
+        },
+        {
+          "itemNo": "1.31",
+          "acceptanceCriteria": "Slewing brakes are operational and can be set to hold the position without further operator action",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.7.2 (b)"
+        },
+        {
+          "itemNo": "1.32",
+          "acceptanceCriteria": "Counterweight is made in accordance with crane manufacturer’s specifications",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.14 (a)"
+        },
+        {
+          "itemNo": "1.33",
+          "acceptanceCriteria": "Counterweight is fixed in place and (for movable weights uncontrolled movement is not possible)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.14 (b)"
+        },
+        {
+          "itemNo": "1.34",
+          "acceptanceCriteria": "Welded members/Joints are free of defects (cracks, corrosion, etc.)",
+          "referenceStandard": "ASME B30.4 Sec: 4-2.1.4 (b-1)"
+        },
+        {
+          "itemNo": "1.35",
+          "acceptanceCriteria": "A metal receptacle is in place for storage of small hand tools and lubricating equipment (in cab or machinery housing)",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.17.3"
+        },
+        {
+          "itemNo": "1.36",
+          "acceptanceCriteria": "Brakes are protected from weather and other industrial liquids",
+          "referenceStandard": "ASME B30.4 Sec: 4-1.9 (c)"
+        },
+        {
+          "itemNo": "1.37",
+          "acceptanceCriteria": "Proper house keeping in the cab",
+          "referenceStandard": "General"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "INSPECTION ITEMS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "HOISTING UNIT Remaining rope on the drum (load hoist and/or boom hoist) in the 2.1.1 extreme low position is at least 2 full wraps The drum end of the rope is attached to the drum as per manufacturer 2.1.2 recommendations",
+          "referenceStandard": "ASME B30.30 Sec: 30-1.7.3 (g) ASME B30.30 Sec: 30-1.7.4 (a)"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "BOOM AND JIB 2.2.1 Standing ropes are not fiber core or rotation resistant ropes 2.2.2 Swaged or poured sockets (pendant ropes) are in good condition 2.2.3 Welded members/Joints are free of defects (cracks, corrosion, etc.) 2.2.4 Boom is free of damage/deformation (cracks, corrosion, dents, etc.) Boom stops are in good working condition (fixed, telescopic, shock 2.2.5 absorbing or hydraulic) 2.2.6 Luffing boom brake can provide 125% or more of the full load torque Wind velocity measuring device (Anemometer) is rotating freely and 2.2.7 sending a visible or audible alarm signal to the display in the cab",
+          "referenceStandard": "Sec: 4-1.5.3 (a) ASME B30.4 Sec: 4-2.1.4 (b-12) ASME B30.4 Sec: 4-1.4.6 (b) ASME B30.4 Sec: 4-2.4.5 (a) ASME B30.30 Table 30-1.8.2-1 ASME B30.4 Sec: 4-1.5.4 (a) ASME B30.4 Sec: 4-1.5.4 (b) ASME B30.4 Sec: 4-1.11 (b-1) ASME B30.30 Sec: 30-1.4.2 (c-3) ASME B30.30 Sec: 30-1.7.4 (b) ASME B30.4 Sec: 4-2.1.4 (b-1) ASME B30.4"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "MAST STRUCTURE 2.3.1 Travel rails are level and secure 2.3.2 Rails are grounded (for electrically powered cranes)",
+          "referenceStandard": "Sec: 4-2.1.4 (b-1) ASME B30.4 Sec: 4-2.1.4 (b-1) ASME B30.4 Sec: 4-1.5.3 (a) ASME B30.4 Sec: 4-1.18.6 ASME B30.4 Sec: 4-1.1.1 (b&c) ASME B30.4 Sec: 4-1.1.1 (f)"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "CABIN 2.4.1 Control levers and/or pedals functions are labeled 2.4.2 Operator cab has a safety glazing glass Cab lighting (artificial or natural) is sufficient to enable the operator to 2.4.3 observe the controls 2.4.4 Operator cab audible signal devices are operable and in good condition Emergency stop is effective (when there is a remote control device 2.4.5 malfunction) Simultaneous activation of controls is not possible when more than one 2.4.6 operator station (remote control) is provided",
+          "referenceStandard": "Sec:4-1.1.1 (g) ASME B30.4 Sec:4-2.1.4 (b-1) ASME B30.4 Sec:4-1.8.2 (c) ASME B30.4 Sec:4-1.8.2 (b) ASME B30.4 Sec:4-1.8.3 (a) ASME B30.4 Sec:4-1.17.2 (a) ASME B30.4 Sec:4-1.15.1 (a) ASME B30.4 Sec:4-1.17.1 (e) ASME B30.4 Sec:4-1.17.1 (g)"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "SLEWING COMPONENTS 2.5.1 Lubrication points are accessible",
+          "referenceStandard": "ASME B30.4 Sec:4-1.17.5 ASME B30.4 Sec:4-1.15.1 (f) ASME B30.4 Sec:4-1.15.1 (g) ASME B30.4"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "POWER PLANT AND ELECTRICALS 2.6.1 Engine speed control is working satisfactorily 2.6.2 Transmission selector can be operated satisfactorily 2.6.3 Engine emergency stop switch is working properly Pedal is slip resistance and a means is provided for holding the brakes in 2.6.4 the applied position Travel distance extremes of hand levers and pedals are acceptable 2.6.5 • 14”-24” for hand levers • 10” for pedals",
+          "referenceStandard": "Sec:4-1.18.3 ASME B30.4 Sec:4-1.15.2 (b-2) ASME B30.4 Sec:4-1.15.2 (b-4) ASME B30.4 Sec:4-1.15.2 (b-3) ASME B30.4 Sec:4-1.5.3 (f) ASME B30.4 Sec:4-1.15.3 (b)"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "HOOKS 2.7.1 Labeling and manufacturer data are available and legible 2.7.2 Safe working load is clearly marked on the hook 2.7.3 Hook is not bent or twisted Hook is not distorted in the throat opening 2.7.4 • Max. allowable throat opening is 5% not to exceed 1∕4 in. (6 mm) or as recommended by the manufacturer Maximum wear in the hook bowl is not exceeding 10% (compared to 2.7.5 new hook) or as per manufacturer recommendations 2.7.6 Hook is not cracked, gouged or shows nicks 2.7.7 Hook can lock (if it is a self-locking hook) Inoperative latch (if provided) — any damaged latch or malfunctioning 2.7.8 latch that does not close the hook’s throat",
+          "referenceStandard": "Sec:4-1.16.1 (a) ASME B30.4 Sec:4-1.16.1 (b) ASME B30.4 Sec:4-1.16.1 (c) ASME B30.4 Sec:4-1.16.1 (e) ASME B30.4 Sec:4-1.16.1 (g) ASME B30.4 Sec:4-1.16.1 (b) ASME B30.4 Sec:4-1.16.2 (b) ASME B30.4 Sec:4-1.16.2 (a) ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.10.5 (f) ASME B30.10 Sec : 10-1.10.5 (g) ASME B30.10 Sec : 10-1.10.5 (e) ASME B30.10 Sec : 10-1.10.5 (d) ASME B30.10 Sec : 10-1.10.5 (h) ASME B30.10 Sec : 10-1.10.5 (i)"
+        }
+      ]
+    }
+  ]
+}
