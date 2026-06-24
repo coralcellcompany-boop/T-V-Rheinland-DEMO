@@ -12,6 +12,10 @@
 
 **Rollout:** Tasks 1–6 deliver the SAIC-U-7007 (Mobile Crane) pilot end-to-end. Tasks 7–9 extend to all 18 checklists and fix the category-only display lookup.
 
+**Pilot hardening follow-ups (deferred from Task 5 code review — do during/after Task 7):**
+- After a SAIC checklist is saved, `saicChecklistJson` still holds the original seeded (all-`NotSet`) JSON while `c.checklistJson` holds the saved results; the editor's internal state stays correct so there's no visible bug, but make the source-of-truth unambiguous (e.g. `saicChecklistJson.set(json)` in the save handler, or clear it after seeding).
+- `onAramcoSelection` fires an uncancelled `resolve(...)` per selection; rapid equipment-type switching could let a stale response win. Harmless at pilot scale (single-digit-ms in-process lookup), but add `switchMap`/cancellation in the hardening pass.
+
 ---
 
 ## File Structure
