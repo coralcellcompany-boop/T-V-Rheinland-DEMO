@@ -24,10 +24,13 @@ public sealed class SaicChecklistCatalog
         var name = Asm.GetManifestResourceNames()
             .FirstOrDefault(n => n.EndsWith($"{saicNumber}.json", StringComparison.OrdinalIgnoreCase)
                 && n.Contains("SaicChecklists", StringComparison.OrdinalIgnoreCase));
+        // Not-found is a normal "unmapped / not embedded yet" outcome → null (controller maps to 204).
+        // A resource that IS present but won't parse is a build/extraction defect, not a normal miss,
+        // so let JsonSerializer throw rather than masking a corrupt catalog entry as an empty 204.
         if (name is null) return null;
-        using var stream = Asm.GetManifestResourceStream(name)!;
-        var raw = JsonSerializer.Deserialize<RawDoc>(stream, Json);
-        if (raw is null) return null;
+        using var stream = Asm.GetManifestResourceStream(name)!; // non-null: name came from GetManifestResourceNames()
+        var raw = JsonSerializer.Deserialize<RawDoc>(stream, Json)
+            ?? throw new InvalidOperationException($"Embedded SAIC checklist '{name}' deserialized to null.");
         var items = raw.Sections
             .SelectMany(s => s.Items.Select(i =>
                 new SaicChecklistItemDto(i.ItemNo, i.AcceptanceCriteria, i.ReferenceStandard, s.No, s.Title)))
