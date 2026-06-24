@@ -732,20 +732,33 @@ for n in "${!T[@]}"; do
 done
 ```
 
-- [ ] **Step 2: Snapshot item counts vs PDFs**
+- [ ] **Step 2: Structural sanity check per file**
+
+Do NOT use the `pdftotext -layout | grep '^N.M'` count as the source of truth — it UNDERcounts, because the whole reason the extractor uses bbox geometry is that item numbers printed mid-block don't start a line (verified on 7007: grep=92, true=116). Instead, verify each extracted file is internally well-formed:
 
 ```bash
-SRC="SOFTWARE IMPLEMENTATION/Blue Sticker Inspection Service/SIAC 7001-7018"
 OUT="src/TuvInspection.Infrastructure/BlueSticker/SaicChecklists"
-for f in "$SRC"/*.pdf; do
-  n=$(basename "$f" | grep -oE 'SAIC-U-[0-9]+')
-  pdf=$(pdftotext -layout "$f" - | grep -cE '^[[:space:]]*[0-9]+\.[0-9]+[[:space:]]')
-  json=$(python3 -c "import json;d=json.load(open('$OUT/$n.json'));print(sum(len(s['items']) for s in d['sections']))")
-  [ "$pdf" = "$json" ] && st=OK || st="MISMATCH"; printf "%s pdf=%s json=%s %s\n" "$n" "$pdf" "$json" "$st"
+for n in 7001 7002 7003 7004 7005 7006 7008 7009 7010 7011 7012 7013 7014 7015 7016 7017 7018; do
+  python3 - "$OUT/SAIC-U-$n.json" <<'PY'
+import json, sys, re
+d = json.load(open(sys.argv[1]))
+total = sum(len(s["items"]) for s in d["sections"])
+problems = []
+for s in d["sections"]:
+    nums = [it["itemNo"] for it in s["items"]]
+    # within a section, the minor numbers should be contiguous 1..N
+    minors = [int(x.split(".")[1]) for x in nums if re.match(r"^\d+\.\d+$", x)]
+    if minors and minors != list(range(1, len(minors) + 1)):
+        problems.append(f"section {s['no']} non-contiguous: {nums}")
+    for it in s["items"]:
+        if not it["acceptanceCriteria"].strip(): problems.append(f"{it['itemNo']} empty criteria")
+print(f"{d['saicNumber']}: {len(d['sections'])} sections, {total} items", "OK" if not problems else "PROBLEMS")
+for p in problems: print("   !", p)
+PY
 done
 ```
 
-Expected: every line `OK`. Investigate and fix the parser (or hand-correct the JSON) for any `MISMATCH` before continuing. Expected reference counts: 7001=16, 7002=18, 7003=29, 7004=18, 7005=15, 7006=26, 7007=92, 7008=34, 7009=73, 7010=51, 7011=52, 7012=43, 7013=52, 7014=49, 7015=40, 7016=31, 7017=23, 7018=38.
+Expected: each file reports `OK` with a plausible item total and ≥1 section. Any `PROBLEMS` (non-contiguous item numbers — the signature of the mis-banding bug fixed in 7007 — or empty criteria) must be fixed in the parser or the JSON before continuing.
 
 - [ ] **Step 3: Spot-check 3 random checklists**
 
