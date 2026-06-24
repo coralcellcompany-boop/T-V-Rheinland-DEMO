@@ -31,6 +31,7 @@ import { PhotoGallery } from '../components/photo-gallery.component';
 import { SignaturesPanel } from '../components/signatures-panel.component';
 import { AramcoFormComponent } from '../components/aramco-form.component';
 import { PublicStickerApi } from '../../../core/api/stickers.api';
+import { SaicChecklistsApi } from '../../../core/api/saic-checklists.api';
 import { environment } from '../../../../environments/environment';
 import {
   AvailableTransition,
@@ -167,7 +168,19 @@ import {
               [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
               [issuedByOptions]="issuedByOptions()"
               (save)="saveAramcoReport($event)"
+              (equipmentSelectionChange)="onAramcoSelection($event, c.checklistJson)"
               (downloadPdf)="downloadAramcoPdf($event)" />
+
+            <div class="saic-checklist" *ngIf="saicNumber()" style="margin-top: 1.25rem;">
+              <header class="block-header">
+                <h3><i class="pi pi-list-check"></i> Inspection checklist — {{ saicNumber() }}</h3>
+              </header>
+              <tuv-checklist-editor
+                [value]="saicChecklistJson() ?? c.checklistJson"
+                [equipmentTypeName]="c.equipmentTypeName"
+                [readonly]="!isMutable()"
+                (save)="saveChecklist($event)" />
+            </div>
           </section>
         } @else {
           <section class="aramco card tpi-note">
@@ -331,6 +344,7 @@ export class CertificateDetailPage implements OnInit {
   private api = inject(CertificatesApi);
   private usersApi = inject(UsersApi);
   private stickersApi = inject(PublicStickerApi);
+  private saicApi = inject(SaicChecklistsApi);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private notify = inject(NotifyService);
@@ -343,6 +357,11 @@ export class CertificateDetailPage implements OnInit {
   protected loading = signal(true);
   protected cert = signal<CertificateDetail | null>(null);
   protected previousCertId = signal<string | null>(null);
+
+  // SAIC inspection checklist for Blue Sticker (Aramco) certs, resolved from the
+  // Aramco form's category + equipment-type selection.
+  protected saicNumber = signal<string | null>(null);
+  protected saicChecklistJson = signal<string | null>(null);
 
   // Comment #5: TÜV inspectors/users populate the "Previous Sticker Issued By" dropdown.
   protected inspectors = signal<InspectorLookup[]>([]);
@@ -498,6 +517,33 @@ export class CertificateDetailPage implements OnInit {
 
   saveChecklist(json: string) {
     this.partialUpdate({ checklistJson: json }, 'Checklist saved.');
+  }
+
+  /** Resolve + load the SAIC checklist for the current Aramco selection into the editor. */
+  onAramcoSelection(sel: { category: string; equipmentType: string }, currentChecklistJson: string | null) {
+    this.saicApi.resolve(sel.category, sel.equipmentType).subscribe((res) => {
+      this.saicNumber.set(res?.saicNumber ?? null);
+      // Don't clobber an already-filled checklist; only seed items when it's empty.
+      if (res && !this.hasChecklistItems(currentChecklistJson)) {
+        this.saicChecklistJson.set(JSON.stringify({
+          items: res.items.map((i) => ({
+            itemNo: i.itemNo,
+            acceptanceCriteria: i.acceptanceCriteria,
+            referenceStandard: i.referenceStandard,
+            result: 'NotSet',
+            remark: '',
+          })),
+          generatedFromTemplateId: res.saicNumber,
+        }));
+      } else {
+        this.saicChecklistJson.set(currentChecklistJson);
+      }
+    });
+  }
+
+  private hasChecklistItems(json: string | null): boolean {
+    if (!json) return false;
+    try { return (JSON.parse(json)?.items?.length ?? 0) > 0; } catch { return false; }
   }
 
   savePhotos(json: string) {
