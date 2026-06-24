@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DashboardApi } from '../../core/api/certificates.api';
@@ -7,7 +7,7 @@ import { StickersApi } from '../../core/api/stickers.api';
 import { StickerStockSummary } from '../../core/models/sticker.models';
 import { AuthService } from '../../core/auth/auth.service';
 import { Roles } from '../../core/models/auth.models';
-import { DashboardKpis, RecentActivityItem } from '../../core/models/certificate.models';
+import { DashboardKpis, InspectorAnalysisRow, RecentActivityItem } from '../../core/models/certificate.models';
 import { KpiCard } from '../../shared/components/kpi-card.component';
 import { PageHeader } from '../../shared/components/page-header.component';
 import { NotifyService } from '../../shared/services/notify.service';
@@ -67,6 +67,58 @@ import { showHttpError } from '../../shared/services/api-error.handler';
         [value]="kpis()?.clients" [loading]="loading()"
         link="/clients" />
     </div>
+
+    @if (showAnalysis()) {
+      <h2 class="section-title">Inspector analysis (last 90 days)</h2>
+      <div class="analysis-grid">
+        <!-- Chart: equipment reviewed per inspector -->
+        <div class="card chart-card">
+          <h3 class="card-title">Equipment reviewed per inspector</h3>
+          @if (analysisLoading()) {
+            <div class="loader">Loading…</div>
+          } @else if (analysis().length === 0) {
+            <p class="muted">No inspection activity in this window yet.</p>
+          } @else {
+            <div class="bars">
+              @for (r of analysis(); track r.inspectorId) {
+                <div class="bar-row">
+                  <span class="bar-label" [title]="r.inspectorName">{{ r.inspectorName }}</span>
+                  <div class="bar-track">
+                    <div class="bar-fill" [style.width.%]="barPct(r.equipmentCount)"></div>
+                  </div>
+                  <span class="bar-value">{{ r.equipmentCount }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Table: per inspector & companies -->
+        <div class="card">
+          <h3 class="card-title">Inspector &amp; company breakdown</h3>
+          @if (!analysisLoading() && analysis().length > 0) {
+            <table class="analysis-table">
+              <thead>
+                <tr><th>Inspector</th><th>Equipment</th><th>Companies</th><th>Created</th><th>Approved</th></tr>
+              </thead>
+              <tbody>
+                @for (r of analysis(); track r.inspectorId) {
+                  <tr>
+                    <td>{{ r.inspectorName }}</td>
+                    <td class="num">{{ r.equipmentCount }}</td>
+                    <td class="num">{{ r.companiesCount }}</td>
+                    <td class="num">{{ r.certificatesCreated }}</td>
+                    <td class="num">{{ r.certificatesApproved }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else if (!analysisLoading()) {
+            <p class="muted">No data.</p>
+          }
+        </div>
+      </div>
+    }
 
     <h2 class="section-title">Recent activity</h2>
     <div class="activity card">
@@ -164,6 +216,26 @@ import { showHttpError } from '../../shared/services/api-error.handler';
         margin-left: 0.45rem; font-size: 0.7rem; color: #64748b; font-style: italic;
       }
       .feed .when { color: #94a3b8; font-size: 0.78rem; white-space: nowrap; }
+
+      .analysis-grid {
+        display: grid; gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      }
+      .card-title { margin: 0 0 0.9rem; font-size: 0.95rem; color: #334155; }
+      .bars { display: flex; flex-direction: column; gap: 0.6rem; }
+      .bar-row { display: grid; grid-template-columns: 130px 1fr 36px; align-items: center; gap: 0.6rem; }
+      .bar-label { font-size: 0.8rem; color: #334155; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .bar-track { background: #eef2f7; border-radius: 999px; height: 14px; overflow: hidden; }
+      .bar-fill {
+        height: 100%; border-radius: 999px;
+        background: linear-gradient(90deg, #0a64a4, #38bdf8); min-width: 3px;
+        transition: width 0.4s ease;
+      }
+      .bar-value { font-size: 0.8rem; font-weight: 600; color: #0f172a; text-align: right; }
+      .analysis-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+      .analysis-table th, .analysis-table td { padding: 0.45rem 0.55rem; text-align: left; border-bottom: 1px solid #f1f5f9; }
+      .analysis-table th { color: #64748b; font-weight: 600; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.03em; }
+      .analysis-table td.num, .analysis-table th:not(:first-child) { text-align: right; }
     `,
   ],
 })
@@ -179,6 +251,14 @@ export class DashboardPage {
   protected kpis = signal<DashboardKpis | null>(null);
   protected activity = signal<RecentActivityItem[]>([]);
   protected stickerSummary = signal<StickerStockSummary | null>(null);
+
+  protected analysisLoading = signal(true);
+  protected analysis = signal<InspectorAnalysisRow[]>([]);
+  private maxEquip = computed(() =>
+    Math.max(1, ...this.analysis().map(r => r.equipmentCount)));
+  protected barPct = (v: number) => Math.round((v / this.maxEquip()) * 100);
+  protected showAnalysis = () =>
+    this.auth.hasRole(Roles.Manager) || this.auth.hasRole(Roles.Coordinator);
 
   protected showLowStock = () => {
     const s = this.stickerSummary();
@@ -213,6 +293,12 @@ export class DashboardPage {
         next: (s) => this.stickerSummary.set(s),
         error: () => { /* keep dashboard usable even if low-stock probe fails */ },
       });
+      this.api.inspectorAnalysis(90).subscribe({
+        next: (rows) => { this.analysis.set(rows); this.analysisLoading.set(false); },
+        error: () => { this.analysisLoading.set(false); },
+      });
+    } else {
+      this.analysisLoading.set(false);
     }
   }
 

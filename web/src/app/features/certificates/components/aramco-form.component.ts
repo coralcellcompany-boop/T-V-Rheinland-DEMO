@@ -41,7 +41,6 @@ export interface AramcoFormDoc {
   inspectionTime: string | null;          // "HH:mm"
   previousStickerNo: string | null;
   previousStickerIssuedBy: string | null;
-  previousStickerId: string | null;       // optional FK to Sticker.Id (Guid)
   areaOfInspection: string | null;
   capacity: string | null;
   equipmentLocationOnSite: string | null;
@@ -64,7 +63,7 @@ export interface AramcoFormDoc {
 const EMPTY: AramcoFormDoc = {
   tuvJobOrderNo: null, aramcoCategoryNo: null, orgCode: null, rpoNo: null,
   crmNo: null, reportNo: null, departmentContractor: null, inspectionTime: null,
-  previousStickerNo: null, previousStickerIssuedBy: null, previousStickerId: null,
+  previousStickerNo: null, previousStickerIssuedBy: null,
   areaOfInspection: null, capacity: null, equipmentLocationOnSite: null,
   manufacturer: null, model: null, equipmentType: null, equipmentSerialNo: null, stickerExpirationDate: null,
   receiverName: null, receiverBadgeNo: null, receiverTelephone: null,
@@ -133,7 +132,9 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
     <div class="grid">
       <fieldset>
         <legend>Job order &amp; references</legend>
-        <label>TUV Job Order No.<input pInputText [(ngModel)]="form.tuvJobOrderNo" [disabled]="readonly" /></label>
+        <label>TUV Job Order No. <span class="auto">auto</span>
+          <input pInputText [(ngModel)]="form.tuvJobOrderNo" [disabled]="true"
+            placeholder="From linked job order" /></label>
         <label>Aramco Category No.
           <p-select [options]="aramcoCategoryOptions" [(ngModel)]="form.aramcoCategoryNo"
             optionLabel="label" optionValue="value" appendTo="body" [filter]="true"
@@ -143,7 +144,9 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
         <label>Org. Code<input pInputText [(ngModel)]="form.orgCode" [disabled]="readonly" /></label>
         <label>RPO No.<input pInputText [(ngModel)]="form.rpoNo" [disabled]="readonly" /></label>
         <label>CRM No.<input pInputText [(ngModel)]="form.crmNo" [disabled]="readonly" /></label>
-        <label>Report No.<input pInputText [(ngModel)]="form.reportNo" [disabled]="readonly" /></label>
+        <label>Report No. <span class="auto">auto</span>
+          <input pInputText [(ngModel)]="form.reportNo" [disabled]="true"
+            placeholder="IS-{empNo}-{year}-NNN" /></label>
       </fieldset>
 
       <fieldset>
@@ -151,10 +154,11 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
         <label>Department / Contractor<input pInputText [(ngModel)]="form.departmentContractor" [disabled]="readonly" /></label>
         <label>Inspection Time (HH:mm)<input pInputText [(ngModel)]="form.inspectionTime" placeholder="e.g. 09:30" [disabled]="readonly" /></label>
         <label>Previous Sticker No.<input pInputText [(ngModel)]="form.previousStickerNo" [disabled]="readonly" /></label>
-        <label>Previous Sticker Issued By<input pInputText [(ngModel)]="form.previousStickerIssuedBy" [disabled]="readonly" /></label>
-        <label>Previous Sticker ID (optional FK)
-          <input pInputText [(ngModel)]="form.previousStickerId" [disabled]="readonly"
-            placeholder="Sticker Guid if known" />
+        <label>Previous Sticker Issued By
+          <p-select [options]="issuedByOptions" [(ngModel)]="form.previousStickerIssuedBy"
+            optionLabel="label" optionValue="value" appendTo="body"
+            [disabled]="readonly" [filter]="true" [showClear]="true"
+            placeholder="Select issuer" />
         </label>
         <label>Area of Inspection<input pInputText [(ngModel)]="form.areaOfInspection" [disabled]="readonly" /></label>
         <label>Equipment Location on Site<input pInputText [(ngModel)]="form.equipmentLocationOnSite" [disabled]="readonly" /></label>
@@ -242,6 +246,11 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
       }
       fieldset.full { margin-top: 1rem; }
       legend { font-size: 0.78rem; font-weight: 600; color: #334155; padding: 0 0.4rem; }
+      .auto {
+        font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+        color: #0a64a4; background: #e0f2fe; padding: 0.05rem 0.35rem; border-radius: 999px;
+      }
+      :host ::ng-deep .p-select { width: 100%; }
       label {
         display: flex; flex-direction: column; gap: 0.25rem;
         font-size: 0.78rem; color: #475569;
@@ -302,6 +311,8 @@ export class AramcoFormComponent {
   @Input() readonly = false;
   @Input() canDownloadPdf = false;
   @Input() aramcoPdfUrl = '';
+  /** TÜV inspectors/users for the "Previous Sticker Issued By" dropdown (comment #5). */
+  @Input() issuedByOptions: { label: string; value: string }[] = [];
   @Output() save = new EventEmitter<string>();
   @Output() downloadPdf = new EventEmitter<string>();
 

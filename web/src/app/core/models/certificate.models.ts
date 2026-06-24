@@ -164,3 +164,12 @@ export interface RecentActivityItem {
   actorRole: string | null;
   atUtc: string;
 }
+
+export interface InspectorAnalysisRow {
+  inspectorId: string;
+  inspectorName: string;
+  equipmentCount: number;
+  companiesCount: number;
+  certificatesCreated: number;
+  certificatesApproved: number;
+}

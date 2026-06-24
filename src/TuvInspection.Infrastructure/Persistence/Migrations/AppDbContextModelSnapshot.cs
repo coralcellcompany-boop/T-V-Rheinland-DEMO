@@ -988,6 +988,11 @@ namespace TuvInspection.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("AssignedInspectorIds");
 
+                    b.Property<string>("_attachmentKeys")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("AttachmentKeys");
+
                     b.HasKey("Id");
 
                     b.HasIndex("JobOrderNo")

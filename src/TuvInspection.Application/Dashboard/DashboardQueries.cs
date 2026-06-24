@@ -7,6 +7,8 @@ public sealed record GetDashboardKpisQuery(Guid? ClientId) : IQuery<DashboardKpi
 
 public sealed record GetRecentActivityQuery(int Limit) : IQuery<IReadOnlyList<RecentActivityItemDto>>;
 
+public sealed record GetInspectorAnalysisQuery(int Days) : IQuery<IReadOnlyList<InspectorAnalysisRowDto>>;
+
 public sealed record RecentActivityItemDto(
     string EntityName,
     string EntityId,

@@ -28,6 +28,10 @@ public class JobOrder : AggregateRoot<Guid>, IAuditable, ITenantScoped
     private readonly List<string> _assignedInspectorIds = new();
     public IReadOnlyCollection<string> AssignedInspectorIds => _assignedInspectorIds.AsReadOnly();
 
+    /// <summary>Storage keys of uploaded attachments (PDF / images) — see <c>IDocumentStore</c>.</summary>
+    private readonly List<string> _attachmentKeys = new();
+    public IReadOnlyCollection<string> AttachmentKeys => _attachmentKeys.AsReadOnly();
+
     public DateTime CreatedAtUtc { get; set; }
     public string? CreatedById { get; set; }
     public DateTime? UpdatedAtUtc { get; set; }
@@ -62,6 +66,20 @@ public class JobOrder : AggregateRoot<Guid>, IAuditable, ITenantScoped
     }
 
     public void UnassignInspector(string userId) => _assignedInspectorIds.Remove(userId);
+
+    public void AddAttachment(string key)
+    {
+        if (!string.IsNullOrWhiteSpace(key) && !_attachmentKeys.Contains(key))
+            _attachmentKeys.Add(key.Trim());
+    }
+
+    public void RemoveAttachment(string key) => _attachmentKeys.Remove(key);
+
+    public void SetAttachments(IEnumerable<string> keys)
+    {
+        _attachmentKeys.Clear();
+        foreach (var k in keys) AddAttachment(k);
+    }
 
     public void UpdateLocation(string? location) => Location = location?.Trim();
     public void Begin() => Status = JobOrderStatus.InProgress;

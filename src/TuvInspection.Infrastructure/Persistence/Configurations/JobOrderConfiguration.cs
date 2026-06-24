@@ -43,6 +43,19 @@ public class JobOrderConfiguration : IEntityTypeConfiguration<JobOrder>
                 v => JsonSerializer.Deserialize<List<string>>(v, jsonOptions) ?? new List<string>());
         assignedInspectorIds.Metadata.SetValueComparer(inspectorListComparer);
         e.Ignore(x => x.AssignedInspectorIds);
+
+        // Attachment storage keys (PDF/images) stored as JSON column — small list read with the job.
+        // Same ValueComparer requirement as the inspector list above (mutable List<string>).
+        var attachmentKeys = e.Property<List<string>>("_attachmentKeys")
+            .HasField("_attachmentKeys")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("AttachmentKeys")
+            .HasColumnType("nvarchar(max)")
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, jsonOptions),
+                v => JsonSerializer.Deserialize<List<string>>(v, jsonOptions) ?? new List<string>());
+        attachmentKeys.Metadata.SetValueComparer(inspectorListComparer);
+        e.Ignore(x => x.AttachmentKeys);
         e.Ignore(x => x.DomainEvents);
     }
 }

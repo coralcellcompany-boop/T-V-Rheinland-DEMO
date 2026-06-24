@@ -47,3 +47,10 @@ web/src/app/shared/api/generated/
 
 # Docker volumes
 .data/
+
+# build output
+web/dist/
+web/node_modules/
+# project reference docs (kept locally, not in repo)
+SOFTWARE IMPLEMENTATION/
+ahmed-comments.docx
