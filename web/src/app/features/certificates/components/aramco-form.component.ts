@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -173,7 +173,8 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
           <p-select [options]="equipmentTypeOptions()" [(ngModel)]="form.equipmentType"
             appendTo="body" [filter]="true"
             placeholder="Select Aramco category first"
-            [disabled]="readonly || !form.aramcoCategoryNo" />
+            [disabled]="readonly || !form.aramcoCategoryNo"
+            (onChange)="emitSelection()" />
         </label>
         <label>Equipment Serial No.<input pInputText [(ngModel)]="form.equipmentSerialNo" [disabled]="readonly" /></label>
         <label>Sticker Expiration Date<input pInputText type="date" [(ngModel)]="form.stickerExpirationDate" [disabled]="readonly" /></label>
@@ -286,7 +287,7 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
     `,
   ],
 })
-export class AramcoFormComponent {
+export class AramcoFormComponent implements OnInit {
   @Input() set value(json: string | null | undefined) {
     if (!json) {
       this.form = { ...EMPTY, deficiencyItems: [] };
@@ -315,6 +316,8 @@ export class AramcoFormComponent {
   @Input() issuedByOptions: { label: string; value: string }[] = [];
   @Output() save = new EventEmitter<string>();
   @Output() downloadPdf = new EventEmitter<string>();
+  /** Fires when the equipment selection that drives the SAIC checklist changes. */
+  @Output() equipmentSelectionChange = new EventEmitter<{ category: string; equipmentType: string }>();
 
   protected form: AramcoFormDoc = { ...EMPTY, deficiencyItems: [] };
   protected saving = signal(false);
@@ -329,12 +332,27 @@ export class AramcoFormComponent {
       ? (CATEGORY_EQUIPMENT_TYPES[this.form.aramcoCategoryNo] ?? [])
       : [];
 
+  ngOnInit() {
+    // Emit the saved selection on load (after the value setter has populated this.form
+    // and the parent's output binding is established).
+    this.emitSelection();
+  }
+
   onCategoryChange() {
     if (
       this.form.equipmentType &&
       !this.equipmentTypeOptions().includes(this.form.equipmentType)
     ) {
       this.form.equipmentType = null;
+    }
+    this.emitSelection();
+  }
+
+  protected emitSelection() {
+    const category = this.form.aramcoCategoryNo;
+    const equipmentType = this.form.equipmentType;
+    if (category && equipmentType) {
+      this.equipmentSelectionChange.emit({ category, equipmentType });
     }
   }
 
