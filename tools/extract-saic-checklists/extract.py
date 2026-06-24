@@ -17,7 +17,7 @@ band, words left of REF_X are criteria, words at/right of REF_X are the referenc
 
 Usage: python3 extract.py "<SAIC-U-7007 - ...pdf>" SAIC-U-7007 "Mobile / Crawler Cranes" out.json
 """
-import html, json, re, subprocess, sys
+import bisect, html, json, re, subprocess, sys
 
 # Horizontal boundary (PDF points) between the Acceptance-Criteria column (left) and
 # the Reference column (right). Item numbers sit at xMin ~51-78; a full criteria line
@@ -26,6 +26,17 @@ REF_X = 305.0
 # Item numbers live in the far-left column; this guards against "7.030"-style tokens
 # (part of a "GI 7.030" reference) being mistaken for item numbers.
 ITEMNO_MAX_X = 150.0
+# The far-left item-number column proper. Item/section numbers print at xMin ~50.8;
+# criteria text (incl. bullets and standalone digits like "6 randomly broken wires")
+# is indented to xMin >= 72. Only a number-form token at/left of this boundary is the
+# row's item-number marker; a bare digit further right is criteria text, never a marker.
+NUMBER_COL_MAX_X = 70.0
+# Left-column lines that wrap within one item are spaced ~9pt apart; a new item's first
+# line opens a row gap of ~20pt or more. Any vertical gap larger than this between two
+# adjacent left-column text lines therefore marks an item boundary (used to find the
+# TOP of an item's text block when its number is printed mid-block, e.g. SAIC-U-7007
+# wire-rope item 2.52).
+LINE_GAP = 15.0
 
 # Every page repeats the same furniture: a form/header block at the top (ending with
 # the "ITEM | ACCEPTANCE CRITERIA | REFERENCE" column header at y~179-191) and a
@@ -119,6 +130,53 @@ def parse(pdf):
     #    anchor's y to the next anchor's y (same page) or page end / checklist end.
     anchors.sort(key=lambda a: (a[0], a[1]))
 
+    # Per-page sorted list of distinct left-column TEXT-line y-values (criteria words
+    # only, excluding the item-number markers themselves). Used to anchor each item by
+    # the TOP of its text block rather than by its number's y: a number can be printed
+    # several lines INSIDE its own multi-line criteria (SAIC-U-7007 item 2.52), so the
+    # raw number-y would steal the lead-in lines from the previous item and leave a
+    # fragment glued to the next. We instead grow each item's block upward over
+    # contiguous wrapped lines (gap <= LINE_GAP) and stop at the first row gap.
+    anchor_pos = {(pg, round(y, 1)) for pg, y, _k, _p in anchors}
+    text_lines = {}
+    for wpg, wy, wx, wt in ws:
+        if wx >= REF_X:
+            continue
+        if wt in NOISE_TOKENS:
+            continue
+        ry = round(wy, 1)
+        # A number-form token in the far-left column is the row marker, not body text;
+        # do not let it seed a text line (it shares the y of its own first criteria
+        # line anyway, so nothing is lost).
+        if wx <= NUMBER_COL_MAX_X and (ITEMNO.match(wt) or SECTIONNO.match(wt)):
+            continue
+        text_lines.setdefault(wpg, set()).add(ry)
+    for pg in text_lines:
+        text_lines[pg] = sorted(text_lines[pg])
+
+    def block_top(pg, y):
+        """Top y of the contiguous left-column text block containing anchor (pg, y).
+
+        Walk upward through adjacent text lines while each step is a within-item wrap
+        (gap <= LINE_GAP); stop at the first larger gap (a new row) or the page top.
+        """
+        lines = text_lines.get(pg, [])
+        if not lines:
+            return y
+        # Highest text line at or above the anchor's number y (the number's own line).
+        i = bisect.bisect_right(lines, y + 0.5) - 1
+        if i < 0:
+            # No text line at/above the number (e.g. number floats above its text);
+            # fall back to the number's own y.
+            return y
+        top = lines[i]
+        while i - 1 >= 0 and (lines[i] - lines[i - 1]) <= LINE_GAP:
+            i -= 1
+            top = lines[i]
+        return top
+
+    block_tops = [block_top(pg, y) for pg, y, _k, _p in anchors]
+
     sections = []
     cur = None
     item = None
@@ -141,23 +199,32 @@ def parse(pdf):
     n = len(anchors)
     for idx in range(n):
         pg, y, kind, payload = anchors[idx]
-        # An item number's baseline sits a few points BELOW the top of its own first
-        # criteria line, and the next item's criteria likewise floats above its number.
-        # So we split bands at the MIDPOINT between consecutive anchors' y-values rather
-        # than at the raw number y, which keeps each row's wrapped lines with the right
-        # item. Top = midpoint with previous anchor (same page); bottom = midpoint with
-        # next anchor (same page) or +inf (page end).
-        top = -float("inf")
-        if idx - 1 >= 0 and anchors[idx - 1][0] == pg:
-            top = (anchors[idx - 1][1] + y) / 2.0
-        bottom = float("inf")
+        # CRITERIA band: anchor by the TOP of this item's own text block (block_tops[idx])
+        # and run until the next anchor's text-block top on the same page. Using block
+        # tops (not the raw number y, nor the midpoint to it) keeps every wrapped line
+        # with its owning item even when a number is printed several lines inside its
+        # block (SAIC-U-7007 wire-rope item 2.52).
+        ctop = block_tops[idx] - 0.5
+        cbottom = float("inf")
         if idx + 1 < n and anchors[idx + 1][0] == pg:
-            bottom = (y + anchors[idx + 1][1]) / 2.0
-        # Clamp to the checklist-end heading (REMARKS / REFERENCE DOCUMENTS) on this page.
+            cbottom = block_tops[idx + 1] - 0.5
+        # REFERENCE band: the reference standard prints ~4-5pt ABOVE its row's number and
+        # always on the number's row (it never floats mid-block the way criteria can), so
+        # we keep the original robust midpoint-between-consecutive-number-y bands for the
+        # right column. This avoids block-top criteria boundaries (which sit just below a
+        # criteria line) from cutting a reference into the previous row.
+        rtop = -float("inf")
+        if idx - 1 >= 0 and anchors[idx - 1][0] == pg:
+            rtop = (anchors[idx - 1][1] + y) / 2.0
+        rbottom = float("inf")
+        if idx + 1 < n and anchors[idx + 1][0] == pg:
+            rbottom = (y + anchors[idx + 1][1]) / 2.0
+        # Clamp both bands to the checklist-end heading (REMARKS / REFERENCE DOCUMENTS).
         if pg in end_y:
             if y >= end_y[pg]:
                 continue
-            bottom = min(bottom, end_y[pg])
+            cbottom = min(cbottom, end_y[pg])
+            rbottom = min(rbottom, end_y[pg])
 
         if kind == "section":
             flush_item()
@@ -175,10 +242,20 @@ def parse(pdf):
         for wpg, wy, wx, wt in ws:
             if wpg != pg:
                 continue
-            if wy < top or wy >= bottom:
-                continue
-            # skip the item-number token itself
-            if wx <= ITEMNO_MAX_X and (ITEMNO.match(wt) or SECTIONNO.match(wt)):
+            # Right column uses the reference band; left column uses the criteria band.
+            if wx >= REF_X:
+                if wy < rtop or wy >= rbottom:
+                    continue
+            else:
+                if wy < ctop or wy >= cbottom:
+                    continue
+            # Skip ONLY a true item/section-number MARKER: a number-form token sitting
+            # in the far-left number column (xMin <= NUMBER_COL_MAX_X). A bare integer
+            # in criteria text (e.g. "6 randomly broken wires") is indented to x >= 72
+            # and must be preserved -- dropping it silently corrupts safety-critical
+            # acceptance numbers. We never treat a bare integer as a marker; only the
+            # full "N.M" item form or an "N"/"N.0" section form in the number column.
+            if wx <= NUMBER_COL_MAX_X and (ITEMNO.match(wt) or SECTIONNO.match(wt)):
                 continue
             if wt in NOISE_TOKENS:
                 continue
