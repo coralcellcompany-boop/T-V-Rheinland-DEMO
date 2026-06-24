@@ -199,48 +199,365 @@
       ]
     },
     {
-      "no": "2",
-      "title": "INSPECTION ITEMS",
+      "no": "2.1",
+      "title": "INSPECTION ITEMS / HOISTING UNIT",
       "items": [
         {
-          "itemNo": "2.1",
-          "acceptanceCriteria": "HOISTING UNIT Remaining rope on the drum (load hoist and/or boom hoist) in the 2.1.1 extreme low position is at least 3 full wraps",
+          "itemNo": "2.1.1",
+          "acceptanceCriteria": "Remaining rope on the drum (load hoist and/or boom hoist) in the extreme low position is at least 3 full wraps",
           "referenceStandard": "ASME B30.3 Sec: 3-1.10.2 (d)"
         },
         {
-          "itemNo": "2.2",
-          "acceptanceCriteria": "BOOM AND JIB For standing ropes, the minimum design factor shall be 3.0. Fiber core 2.2.1 ropes with swaged fittings and rotation-resistant ropes shall not be used for pendants, stay ropes, or guy ropes poured sockets or swaged sockets (pendant ropes) are in good 2.2.2 condition",
-          "referenceStandard": "ASME B30.3 Sec : 3-1.10.2 (a) ASME B30.3 Sec : 3-2.2.2 (c) ASME B30.3 Sec: 3-3-1.10.3 (a) ASME B30.3 Sec : 3-1.24.7 ASME B30.3 Sec : 3-1.24.8 ASME B30.3 Sec: 3-2.1.4 (a-9) ASME B30.3 Sec: 3-2.1.4 (a-9) ASME B30.3 Sec: 3-2.1.4 (a-9) ASME B30.3 Sec: 3-2.4.3 ASME B30.3 Sec: 3-2.4.3 (b) ASME B30.3 Sec : 3-1.10.4 (c) ASME B30.3 Sec : 3-1.10.4 (b & e) ASME B30.3 Sec: 3-1.10.4 (e) ASME B30.3 Sec : 3-2.2.2 (a) ASME B30.3 Sec : 3-2.1.3 (f) ASME B30.3 Sec : 3-1.18 (a) ASME B30.3 Sec : 3-1.18 (e)"
+          "itemNo": "2.1.2",
+          "acceptanceCriteria": "The drum end of the rope is attached to the drum as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.10.2 (a)"
         },
         {
-          "itemNo": "2.3",
-          "acceptanceCriteria": "MAST STRUCTURE No determined hazard on foundations and structural supports for 2.3.1 settlement, movement, deformations, accumulation of standing water or debris, or other signs of abnormal conditions. 2.3.2 Travel rails are level and secure 2.3.3 Rails are grounded (for electrically powered cranes) Stops or buffers are correctly adjusted for simultaneous contact with both 2.3.4 sides of the travel base (stops to be fitted not less that 1 meter inboard of last rail support) 2.3.5 Rail sweeps are in good condition Means to limit drop of a travel truck are in place and in good condition (in 2.3.6 case of axle or wheel failure) 2.3.7 Truck wheels are guarded 2.3.8 Travel brakes can lock the wheels 2.3.9 Stairs/access ladders are secure and in good condition",
-          "referenceStandard": "Sec : 3-2.1.4 (a-2) ASME B30.3 Sec : 3-2.1.3 (b) ASME B30.3 Sec: 3-1.10.1 (d-4) ASME B30.3 Sec : 3-1.10.1 (d-4) ASME B30.3 Sec : 3-1.10.3 ASME B30.3 Sec: 3-2.1.3 (j) ASME B30.3 Sec : 3-1.5 (j-1-c) ASME B30.3 Sec : 3-1.5 (j-1-e) ASME B30.3 Sec : 3-1.5 (j-1-f)"
+          "itemNo": "2.1.3",
+          "acceptanceCriteria": "Load limit device system operating properly",
+          "referenceStandard": "ASME B30.3 Sec : 3-2.2.2 (c)"
         },
         {
-          "itemNo": "2.4",
-          "acceptanceCriteria": "CABIN 2.4.1 Control levers and/or pedals functions are labeled Engine exhaust gases are piped and discharged away from the operator 2.4.2 cab 2.4.3 Operator cab has a safety glazing glass Cab lighting (artificial or natural) is sufficient to enable the operator to 2.4.4 observe the controls 2.4.5 Operator cab audible signal devices are operable and in good condition",
-          "referenceStandard": "ASME B30.3 Sec: 3-1.13.2 (a) ASME B30.3 Sec: 4-1.7.2 ASME B30.3 Sec: 4-1.7.2(a) ASME B30.3 Sec: 4-1.7.3 ASME B30.3 Sec: 3-1.23.2 (a) ASME B30.3 Sec : 3-1.21.3 ASME B30.3 Sec: 3-1.24.4 ASME B30.3 Sec: 3-1.23.1(e) ASME B30.3 Sec: 3-1.23.1(f) ASME B30.3 Sec: 3-1.23.5"
+          "itemNo": "2.1.4",
+          "acceptanceCriteria": "Hoist brakes are working and can provide 125% or more of the full load hoisting torque and can provide controlled lowering speeds",
+          "referenceStandard": "ASME B30.3 Sec: 3-3-1.10.3 (a)"
         },
         {
-          "itemNo": "2.5",
-          "acceptanceCriteria": "SLEWING COMPONENTS 2.5.1 Lubrication points are accessible",
-          "referenceStandard": "ASME B30.3 Sec: 3-1.21.1 (g) ASME B30.3 Sec: 3-1.21.1 (h) ASME B30.3 Sec: 3-3.4.4 ASME B30.3 Sec: 3-3.1.4.1.2 (n) ASME B30.3"
+          "itemNo": "2.1.5",
+          "acceptanceCriteria": "Wind velocity measuring device is mounted at or near the top of the crane.",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.24.7"
         },
         {
-          "itemNo": "2.6",
-          "acceptanceCriteria": "TROLLEY Trolley can not become detached from its guide rails (in case of axle or 2.6.1 wheel breakage)",
-          "referenceStandard": "Sec: 3-1.24.3 ASME B30.3"
+          "itemNo": "2.1.6",
+          "acceptanceCriteria": "Is velocity readout provided at the operator’s station in the cab, and a visible or audible alarm is triggered in the cab and at remote control stations",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.24.8"
         },
         {
-          "itemNo": "2.7",
-          "acceptanceCriteria": "POWER PLANT AND ELECTRICALS 2.7.1 Engine speed control is working satisfactorily 2.7.2 Transmission selector can be operated satisfactorily 2.7.3 Engine emergency stop switch is working properly 2.7.4 Pedals and hand levers are easily operated and well functioning Electrical crane has a main disconnect switch at or near the initial base 2.7.5 of the crane Electrical equipment is so located or guarded that live parts are not 2.7.6 exposed to inadvertent contact under normal operating conditions Electrical equipment is protected from dirt, grease, oil, moisture and 2.7.7 other weather conditions 2.7.8 An overload device is in place for each motor 2.7.9 Lighting protection is in place 2.7.10 Resistor units are supported to minimize vibrations 2.7.11 Resistor parts are not suffering from corrosion 2.7.12 An indication light is in place to magnet is energized (if magnet is used)",
-          "referenceStandard": "Sec: 3-1.15 (c) ASME B30.3 Sec : 3-1.21.2 (a-2) ASME B30.3 Sec : 3-1.21.2 (a-4) ASME B30.3 Sec : 3-1.21.2 (a-3) ASME B30.3 Sec : 3-1.21.3 ASME B30.3 Sec : 3-1.22.1 (a) ASME B30.3 Sec : 3-1.22.1 (b) ASME B30.3 Sec : 3-1.22.1 (c) ASME B30.3 Sec : 3-1.22.1 (g) ASME B30.3 Sec : 3-1.22.1 (h) ASME B30.3 Sec : 3-1.22.2 (a) ASME B30.3 Sec: 3-2.4.2 (a-2-b) ASME B30.3 Sec : 3-1.22.1 (b)"
+          "itemNo": "2.1.7",
+          "acceptanceCriteria": "Hydraulic and pneumatic pumps/motors are functioning well and don not have any damages",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.1.4 (a-9)"
         },
         {
-          "itemNo": "2.8",
-          "acceptanceCriteria": "HOOKS 2.8.1 Labeling and manufacturer data are available and legible 2.8.2 Safe working load is clearly marked on the hook 2.8.3 Hook is not bent or twisted Hook is not distorted in the throat opening 2.8.4 • Max. allowable throat opening is 5% not to exceed 1∕4 in. (6 mm) or as recommended by the manufacturer. Maximum wear in the hook bowl is not exceeding 10% (compared to 2.8.5 new hook) or as per manufacturer recommendations 2.8.6 Hook is not cracked, gouged or shows nicks 2.8.7 Hook can lock (if it is a self-locking hook) Inoperative latch (if provided) — any damaged latch or malfunctioning 2.8.8 latch that does not close the hook’s throat",
-          "referenceStandard": "ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.10.5 (f) ASME B30.10 Sec : 10-1.10.5 (g) ASME B30.10 Sec : 10-1.10.5 (e) ASME B30.10 Sec : 10-1.10.5 (d) ASME B30.10 Sec : 10-1.10.5 (h) ASME B30.10 Sec : 10-1.10.5 (i)"
+          "itemNo": "2.1.8",
+          "acceptanceCriteria": "Hydraulic and pneumatic pumps'/motors' hoses and fittings are not damaged, worn or leaking",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.1.4 (a-9)"
+        },
+        {
+          "itemNo": "2.1.9",
+          "acceptanceCriteria": "Relief valves in the hydraulic pneumatic circuits limit the circuit pressure for the correct rated load conditions",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.1.4 (a-9)"
+        },
+        {
+          "itemNo": "2.1.10",
+          "acceptanceCriteria": "Ropes are correctly lubricated",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.4.3"
+        },
+        {
+          "itemNo": "2.1.11",
+          "acceptanceCriteria": "Rope is free of damages • No more than 12 randomly broken wires in 1 lay • No more than 4 broken wires in 1 strand of 1 lay • No more than 1 broken wire protruding from the core (2 for rotation resistant ropes) • There are no reductions from nominal rope diameter of more than 5% • There is no kinking, crushing, birdcaging or other distortion",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.4.3 (b)"
+        },
+        {
+          "itemNo": "2.1.12",
+          "acceptanceCriteria": "Sheaves are smooth in their grooves and well lubricated",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.10.4 (c)"
+        },
+        {
+          "itemNo": "2.1.13",
+          "acceptanceCriteria": "Sheave are fitted with close fittings guards when liable to unload momentarily",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.10.4 (b & e)"
+        },
+        {
+          "itemNo": "2.1.14",
+          "acceptanceCriteria": "Lower load block sheaves have close fitting guards",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.10.4 (e)"
+        },
+        {
+          "itemNo": "2.1.15",
+          "acceptanceCriteria": "Over hoist limit (anti-2-Block) device is operational",
+          "referenceStandard": "ASME B30.3 Sec : 3-2.2.2 (a)"
+        },
+        {
+          "itemNo": "2.1.16",
+          "acceptanceCriteria": "Lower over travel limiting devices are fitted where hook is in areas not visible to the operator",
+          "referenceStandard": "ASME B30.3 Sec : 3-2.1.3 (f)"
+        }
+      ]
+    },
+    {
+      "no": "2.2",
+      "title": "INSPECTION ITEMS / BOOM AND JIB",
+      "items": [
+        {
+          "itemNo": "2.2.1",
+          "acceptanceCriteria": "For standing ropes, the minimum design factor shall be 3.0. Fiber core ropes with swaged fittings and rotation-resistant ropes shall not be used for pendants, stay ropes, or guy ropes",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.18 (a)"
+        },
+        {
+          "itemNo": "2.2.2",
+          "acceptanceCriteria": "poured sockets or swaged sockets (pendant ropes) are in good condition",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.18 (e)"
+        },
+        {
+          "itemNo": "2.2.3",
+          "acceptanceCriteria": "Welded members/Joints are free of defects (cracks, corrosion, etc.)",
+          "referenceStandard": "Sec : 3-2.1.4 (a-2)"
+        },
+        {
+          "itemNo": "2.2.4",
+          "acceptanceCriteria": "Boom is free of damage/deformation (cracks, corrosion, dents, etc.)",
+          "referenceStandard": "ASME B30.3 Sec : 3-2.1.3 (b)"
+        },
+        {
+          "itemNo": "2.2.5",
+          "acceptanceCriteria": "Boom stops are in good working condition (fixed, telescopic, shock absorbing or hydraulic)",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.10.1 (d-4)"
+        },
+        {
+          "itemNo": "2.2.6",
+          "acceptanceCriteria": "Luffing Boom stops are in good working condition (fixed, telescopic, shock absorbing or hydraulic)",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.10.1 (d-4)"
+        },
+        {
+          "itemNo": "2.2.7",
+          "acceptanceCriteria": "Luffing boom brake can provide 125% or more of the full load torque",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.10.3"
+        }
+      ]
+    },
+    {
+      "no": "2.3",
+      "title": "INSPECTION ITEMS / MAST STRUCTURE",
+      "items": [
+        {
+          "itemNo": "2.3.1",
+          "acceptanceCriteria": "No determined hazard on foundations and structural supports for settlement, movement, deformations, accumulation of standing water or debris, or other signs of abnormal conditions.",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.1.3 (j)"
+        },
+        {
+          "itemNo": "2.3.2",
+          "acceptanceCriteria": "Travel rails are level and secure",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.5 (j-1-c)"
+        },
+        {
+          "itemNo": "2.3.3",
+          "acceptanceCriteria": "Rails are grounded (for electrically powered cranes)",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.5 (j-1-e)"
+        },
+        {
+          "itemNo": "2.3.4",
+          "acceptanceCriteria": "Stops or buffers are correctly adjusted for simultaneous contact with both sides of the travel base (stops to be fitted not less that 1 meter inboard of last rail support)",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.5 (j-1-f)"
+        },
+        {
+          "itemNo": "2.3.5",
+          "acceptanceCriteria": "Rail sweeps are in good condition",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.13.2 (a)"
+        },
+        {
+          "itemNo": "2.3.6",
+          "acceptanceCriteria": "Means to limit drop of a travel truck are in place and in good condition (in case of axle or wheel failure)",
+          "referenceStandard": "ASME B30.3 Sec: 4-1.7.2"
+        },
+        {
+          "itemNo": "2.3.7",
+          "acceptanceCriteria": "Truck wheels are guarded",
+          "referenceStandard": "ASME B30.3 Sec: 4-1.7.2(a)"
+        },
+        {
+          "itemNo": "2.3.8",
+          "acceptanceCriteria": "Travel brakes can lock the wheels",
+          "referenceStandard": "ASME B30.3 Sec: 4-1.7.3"
+        },
+        {
+          "itemNo": "2.3.9",
+          "acceptanceCriteria": "Stairs/access ladders are secure and in good condition",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.23.2 (a)"
+        }
+      ]
+    },
+    {
+      "no": "2.4",
+      "title": "INSPECTION ITEMS / CABIN",
+      "items": [
+        {
+          "itemNo": "2.4.1",
+          "acceptanceCriteria": "Control levers and/or pedals functions are labeled",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.21.3"
+        },
+        {
+          "itemNo": "2.4.2",
+          "acceptanceCriteria": "Engine exhaust gases are piped and discharged away from the operator cab",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.24.4"
+        },
+        {
+          "itemNo": "2.4.3",
+          "acceptanceCriteria": "Operator cab has a safety glazing glass",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.23.1(e)"
+        },
+        {
+          "itemNo": "2.4.4",
+          "acceptanceCriteria": "Cab lighting (artificial or natural) is sufficient to enable the operator to observe the controls",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.23.1(f)"
+        },
+        {
+          "itemNo": "2.4.5",
+          "acceptanceCriteria": "Operator cab audible signal devices are operable and in good condition",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.23.5"
+        },
+        {
+          "itemNo": "2.4.6",
+          "acceptanceCriteria": "Emergency stop is effective (when there is a remote control device malfunction)",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.21.1 (g)"
+        },
+        {
+          "itemNo": "2.4.7",
+          "acceptanceCriteria": "Simultaneous activation of controls is not possible when more than one operator station (remote control) is provided",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.21.1 (h)"
+        },
+        {
+          "itemNo": "2.4.8",
+          "acceptanceCriteria": "Good house keeping in the cab",
+          "referenceStandard": "ASME B30.3 Sec: 3-3.4.4"
+        },
+        {
+          "itemNo": "2.4.9",
+          "acceptanceCriteria": "Pilot lights at boom tip, jib tip and topmost sheave are working and in good condition",
+          "referenceStandard": "ASME B30.3 Sec: 3-3.1.4.1.2 (n)"
+        }
+      ]
+    },
+    {
+      "no": "2.5",
+      "title": "INSPECTION ITEMS / SLEWING COMPONENTS",
+      "items": [
+        {
+          "itemNo": "2.5.1",
+          "acceptanceCriteria": "Lubrication points are accessible",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.24.3"
+        }
+      ]
+    },
+    {
+      "no": "2.6",
+      "title": "INSPECTION ITEMS / TROLLEY",
+      "items": [
+        {
+          "itemNo": "2.6.1",
+          "acceptanceCriteria": "Trolley can not become detached from its guide rails (in case of axle or wheel breakage)",
+          "referenceStandard": "ASME B30.3 Sec: 3-1.15 (c)"
+        }
+      ]
+    },
+    {
+      "no": "2.7",
+      "title": "INSPECTION ITEMS / POWER PLANT AND ELECTRICALS",
+      "items": [
+        {
+          "itemNo": "2.7.1",
+          "acceptanceCriteria": "Engine speed control is working satisfactorily",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.21.2 (a-2)"
+        },
+        {
+          "itemNo": "2.7.2",
+          "acceptanceCriteria": "Transmission selector can be operated satisfactorily",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.21.2 (a-4)"
+        },
+        {
+          "itemNo": "2.7.3",
+          "acceptanceCriteria": "Engine emergency stop switch is working properly",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.21.2 (a-3)"
+        },
+        {
+          "itemNo": "2.7.4",
+          "acceptanceCriteria": "Pedals and hand levers are easily operated and well functioning",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.21.3"
+        },
+        {
+          "itemNo": "2.7.5",
+          "acceptanceCriteria": "Electrical crane has a main disconnect switch at or near the initial base of the crane",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.1 (a)"
+        },
+        {
+          "itemNo": "2.7.6",
+          "acceptanceCriteria": "Electrical equipment is so located or guarded that live parts are not exposed to inadvertent contact under normal operating conditions",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.1 (b)"
+        },
+        {
+          "itemNo": "2.7.7",
+          "acceptanceCriteria": "Electrical equipment is protected from dirt, grease, oil, moisture and other weather conditions",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.1 (c)"
+        },
+        {
+          "itemNo": "2.7.8",
+          "acceptanceCriteria": "An overload device is in place for each motor",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.1 (g)"
+        },
+        {
+          "itemNo": "2.7.9",
+          "acceptanceCriteria": "Lighting protection is in place",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.1 (h)"
+        },
+        {
+          "itemNo": "2.7.10",
+          "acceptanceCriteria": "Resistor units are supported to minimize vibrations",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.2 (a)"
+        },
+        {
+          "itemNo": "2.7.11",
+          "acceptanceCriteria": "Resistor parts are not suffering from corrosion",
+          "referenceStandard": "ASME B30.3 Sec: 3-2.4.2 (a-2-b)"
+        },
+        {
+          "itemNo": "2.7.12",
+          "acceptanceCriteria": "An indication light is in place to magnet is energized (if magnet is used)",
+          "referenceStandard": "ASME B30.3 Sec : 3-1.22.1 (b)"
+        }
+      ]
+    },
+    {
+      "no": "2.8",
+      "title": "INSPECTION ITEMS / HOOKS",
+      "items": [
+        {
+          "itemNo": "2.8.1",
+          "acceptanceCriteria": "Labeling and manufacturer data are available and legible",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.8"
+        },
+        {
+          "itemNo": "2.8.2",
+          "acceptanceCriteria": "Safe working load is clearly marked on the hook",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.8"
+        },
+        {
+          "itemNo": "2.8.3",
+          "acceptanceCriteria": "Hook is not bent or twisted",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (f)"
+        },
+        {
+          "itemNo": "2.8.4",
+          "acceptanceCriteria": "Hook is not distorted in the throat opening • Max. allowable throat opening is 5% not to exceed 1∕4 in. (6 mm) or as recommended by the manufacturer.",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (g)"
+        },
+        {
+          "itemNo": "2.8.5",
+          "acceptanceCriteria": "Maximum wear in the hook bowl is not exceeding 10% (compared to new hook) or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (e)"
+        },
+        {
+          "itemNo": "2.8.6",
+          "acceptanceCriteria": "Hook is not cracked, gouged or shows nicks",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (d)"
+        },
+        {
+          "itemNo": "2.8.7",
+          "acceptanceCriteria": "Hook can lock (if it is a self-locking hook)",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (h)"
+        },
+        {
+          "itemNo": "2.8.8",
+          "acceptanceCriteria": "Inoperative latch (if provided) — any damaged latch or malfunctioning latch that does not close the hook’s throat",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (i)"
         }
       ]
     }

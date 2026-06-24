@@ -219,43 +219,394 @@
       ]
     },
     {
-      "no": "2",
-      "title": "INSPECTION ITEMS",
+      "no": "2.1",
+      "title": "INSPECTION ITEMS / HOISTING COMPONENTS",
       "items": [
         {
-          "itemNo": "2.1",
-          "acceptanceCriteria": "HOISTING COMPONENTS 2.1.1 Hoist rope is guarded from chafing where required 2.1.2 Hook(s) can rotate freely Sections in contact with saddles, equalizer sheaves, or other sheaves 2.1.3 where rope travel is limited are not rapid deterioration. 2.1.4 Surface condition of rope drum(s) show no defects and are smooth Sheave grooves shall be free from surface defects which could cause 2.1.5 rope damage Sheaves carrying ropes, which can be momentarily unloaded, are provided with close-fitting guards, or other devices, to guide the rope 2.1.6 back into the groove when the load is reapplied. 2.1.7 Rope construction is as per manufacturer recommendations 2.1.8 Lower hoist limit cut-out (if fitted) is properly working",
-          "referenceStandard": "ASME B30.2 Sec: 2-1.14.6 ASME B30.2 Sec:2-1.14.5 ASME B30.2 Sec: 2-2.2.3 (c-1) ASME B30.2 Sec: 2-1.14.2 ASME B30.2 Sec: 2-1.14.1 (a) ASME B30.2 Sec: 2-1.14.1 (b) ASME B30.2 Sec: 2-1.14.3(a) ASME B30.2 Sec: 2-1.13.6(b)"
+          "itemNo": "2.1.1",
+          "acceptanceCriteria": "Hoist rope is guarded from chafing where required",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.14.6"
         },
         {
-          "itemNo": "2.2",
-          "acceptanceCriteria": "TROLLEY COMPONENTS 2.2.1 Stops and bumpers are fitted to each end of the trolley(s) Trolley truck rail sweeps are provided in front of the leading wheels on 2.2.2 both ends of the trolley end truck Clearance between the top surface of the rail head and the bottom of 2.2.3 the sweep does not exceed 3Ú16\" (5 mm) The sweep extends below the top surface of the rail head, for a distance not less than 50% of the thickness of the rail head, on both sides of the 2.2.4 rail head Clearance between the side surface of the rail head and the side of the sweep which extends below the top surface of the rail head is equal to 2.2.5 crane float plus 3Ú16\" (5 mm) 2.2.6 Trolley(s) brakes are operable Trolley unit of the crane equipped with either a braking means or have 2.2.7 trolley drive frictional characteristics Trolley travel warnings (e.g. gong, beacon, bell or strope light) are 2.2.8 operable 2.2.9 Unusual sounds are not present during trolley travel 2.2.10 Trolley has no missing or loose parts 2.2.11 Trolley wheels have no sign of excessive wear 2.2.12 Chain drive and sprocket have no wear or stretch 2.2.13 All moving parts are correctly lubricated",
-          "referenceStandard": "ASME B30.2 Sec: 2-1.8.3(d-4) ASME B30.2 Sec: 2-1.9.1(a) ASME B30.2 Sec: 2-1.9.2(b-1) ASME B30.2 Sec: 2-1.9.2(b-2) ASME B30.2 Sec: 2-1.9.2(b-3) ASME B30.2 Sec: 2-1.12.3"
+          "itemNo": "2.1.2",
+          "acceptanceCriteria": "Hook(s) can rotate freely",
+          "referenceStandard": "ASME B30.2 Sec:2-1.14.5"
         },
         {
-          "itemNo": "2.3",
-          "acceptanceCriteria": "BRIDGE COMPONENTS Crane Bridge stops within stipulated 10% distance of rated load speed 2.3.1 under frictional forces (if no braking means provided) 2.3.2 Bridge brakes comply with crane design requirements 2.3.3 Trolley truck frame drop is limited to 25mm",
-          "referenceStandard": "ASME B30.2 Sec: 2-1.12.3 (a) ASME B30.2 Sec: 2-1.15.1(a) ASME B30.2 Sec: 2-2.1.4(c-1) ASME B30.2 Sec: 2-2.1.5(c-2) ASME B30.2 Sec: 2-2.1.5(c-4) ASME B30.2 Sec: 2-2.1.5(c-7) ASME B30.2 Sec:2-4.2.5 (a) ASME B30.2 Sec: 2-1.12.4 (a-1) ASME B30.2 Sec: 2-1.12.5(a) ASME B30.2 Sec:2-1.11"
+          "itemNo": "2.1.3",
+          "acceptanceCriteria": "Sections in contact with saddles, equalizer sheaves, or other sheaves where rope travel is limited are not rapid deterioration.",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.2.3 (c-1)"
         },
         {
-          "itemNo": "2.4",
-          "acceptanceCriteria": "CABIN 2.4.1 Safety labels are displayed and legible 2.4.2 Integral outside platform is in place and door opens outward or slides 2.4.3 Trapdoor has a clear opening of not less than 610mm",
-          "referenceStandard": "ASME B30.2 Sec: 2-1.8.2 (a) ASME B30.2 Sec: 2-1.9.1(b-1) ASME B30.2 Sec: 2-1.12.4 (a- 1) ASME B30.2 Sec: 2-1.3.1 (b) ASME B30.2 Sec: 2-1.3.1 (f) ASME B30.2 Sec: 2-1.3.2(a-3) ASME B30.2 Sec: 2-1.3.2(a-4) ASME B30.2 Sec:2-1.3.2(b-1) ASME B30.2 Sec:2-1.3.2 (b-3) ASME B30.2 Sec: 2-1.2.2 ASME B30.2 Sec: 2-1.10 (a) ASME B30.2 Sec: 2-1.15.1(a) ASME B30.2 Sec: 2-2.1.5 (c-1) ASME B30.2 Sec: 2-2.3.1(b-4) ASME B30.2 Sec: 2-1.1.5 (a) ASME B30.2 Sec: 2-1.5.2 (b) ASME B30.2 Sec: 2-1.5.2(e)"
+          "itemNo": "2.1.4",
+          "acceptanceCriteria": "Surface condition of rope drum(s) show no defects and are smooth",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.14.2"
         },
         {
-          "itemNo": "2.5",
-          "acceptanceCriteria": "BRIDGE STRUCTURE 2.5.1 Welded structures and members do not have cracks or corrosion Adequate clearances exists between two parallel crane bridges (if there 2.5.2 are no intervening walls or structures) 2.5.3 Minimum working space on service platforms is 1220mm (48\") 2.5.4 Minimum passageway on service platform is 457mm (18\") 2.5.5 Doors of electrical cabinets to open 90 degrees or be removable",
-          "referenceStandard": "ASME B30.2 Sec: 2-1.5.2(f) ASME B30.2 Sec: 2-1.5.2 (g) ASME B30.2 Sec: 2-1.5.4 ASME B30.2 Sec: 2-1.5.6 ASME B30.2 Sec: 2-1.7.3 ASME B30.2 Sec: 2-1.13.1(b) ASME B30.2 Sec: 2-1.4.1 ASME B30.2 Sec: 2-1.2.2 ASME B30.2"
+          "itemNo": "2.1.5",
+          "acceptanceCriteria": "Sheave grooves shall be free from surface defects which could cause rope damage",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.14.1 (a)"
         },
         {
-          "itemNo": "2.6",
-          "acceptanceCriteria": "ELECTRICALS",
-          "referenceStandard": "Sec: 2-1.7.1(a) ASME B30.2 Sec: 2-1.7.1(c) ASME B30.2 Sec: 2-1.7.1(e)"
+          "itemNo": "2.1.6",
+          "acceptanceCriteria": "Sheaves carrying ropes, which can be momentarily unloaded, are provided with close-fitting guards, or other devices, to guide the rope back into the groove when the load is reapplied.",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.14.1 (b)"
         },
         {
-          "itemNo": "2.7",
-          "acceptanceCriteria": "HOOKS 2.7.1 Labeling and manufacturer data are available and legible 2.7.2 Safe working load is clearly marked on the hook Hook is not bent or twisted 2.7.3 Hook is not distorted in the throat opening 2.7.4 • Max. allowable throat opening is 5% not to exceed 1Ú4 in. (6 mm) or as per manufacturer recommendations Maximum wear in the hook bowl is not exceeding 10% (compared to 2.7.5 new hook) or as per manufacturer recommendations 2.7.6 Hook is not cracked, gouged or shows nicks 2.7.7 Hook can lock (if it is a self-locking hook)",
-          "referenceStandard": "ASME B30.2 Sec: 2-1.13.3(a) ASME B30.2 Sec: 2-1.13.4(a) ASME B30.2 Sec: 2-1.13.7(a) ASME B30.2 Sec: 2-1.13.5(b) ASME B30.2 Sec: 2-1.13.9 ASME B30.2 Sec: 2-1.13.1(c) ASME B30.2 Sec:2-1.13.1(d) ASME B30.2 Sec: 2-1.13.1(e) ASME B30.2 Sec: 2-1.13.1(e) ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.8 ASME B30.10 Sec : 10-1.10.5 (f) ASME B30.10 Sec : 10-1.10.5 (g) ASME B30.10 Sec : 10-1.10.5 (e) ASME B30.10 Sec : 10-1.10.5 (d) ASME B30.10 Sec : 10-1.10.5 (h)"
+          "itemNo": "2.1.7",
+          "acceptanceCriteria": "Rope construction is as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.14.3(a)"
+        },
+        {
+          "itemNo": "2.1.8",
+          "acceptanceCriteria": "Lower hoist limit cut-out (if fitted) is properly working",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.6(b)"
+        }
+      ]
+    },
+    {
+      "no": "2.2",
+      "title": "INSPECTION ITEMS / TROLLEY COMPONENTS",
+      "items": [
+        {
+          "itemNo": "2.2.1",
+          "acceptanceCriteria": "Stops and bumpers are fitted to each end of the trolley(s)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.8.3(d-4)"
+        },
+        {
+          "itemNo": "2.2.2",
+          "acceptanceCriteria": "Trolley truck rail sweeps are provided in front of the leading wheels on both ends of the trolley end truck",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.9.1(a)"
+        },
+        {
+          "itemNo": "2.2.3",
+          "acceptanceCriteria": "Clearance between the top surface of the rail head and the bottom of the sweep does not exceed 3Ú16\" (5 mm)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.9.2(b-1)"
+        },
+        {
+          "itemNo": "2.2.4",
+          "acceptanceCriteria": "The sweep extends below the top surface of the rail head, for a distance not less than 50% of the thickness of the rail head, on both sides of the rail head",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.9.2(b-2)"
+        },
+        {
+          "itemNo": "2.2.5",
+          "acceptanceCriteria": "Clearance between the side surface of the rail head and the side of the sweep which extends below the top surface of the rail head is equal to crane float plus 3Ú16\" (5 mm)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.9.2(b-3)"
+        },
+        {
+          "itemNo": "2.2.6",
+          "acceptanceCriteria": "Trolley(s) brakes are operable",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.12.3"
+        },
+        {
+          "itemNo": "2.2.7",
+          "acceptanceCriteria": "Trolley unit of the crane equipped with either a braking means or have trolley drive frictional characteristics",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.12.3 (a)"
+        },
+        {
+          "itemNo": "2.2.8",
+          "acceptanceCriteria": "Trolley travel warnings (e.g. gong, beacon, bell or strope light) are operable",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.15.1(a)"
+        },
+        {
+          "itemNo": "2.2.9",
+          "acceptanceCriteria": "Unusual sounds are not present during trolley travel",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.1.4(c-1)"
+        },
+        {
+          "itemNo": "2.2.10",
+          "acceptanceCriteria": "Trolley has no missing or loose parts",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.1.5(c-2)"
+        },
+        {
+          "itemNo": "2.2.11",
+          "acceptanceCriteria": "Trolley wheels have no sign of excessive wear",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.1.5(c-4)"
+        },
+        {
+          "itemNo": "2.2.12",
+          "acceptanceCriteria": "Chain drive and sprocket have no wear or stretch",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.1.5(c-7)"
+        },
+        {
+          "itemNo": "2.2.13",
+          "acceptanceCriteria": "All moving parts are correctly lubricated",
+          "referenceStandard": "ASME B30.2 Sec:2-4.2.5 (a)"
+        }
+      ]
+    },
+    {
+      "no": "2.3",
+      "title": "INSPECTION ITEMS / BRIDGE COMPONENTS",
+      "items": [
+        {
+          "itemNo": "2.3.1",
+          "acceptanceCriteria": "Crane Bridge stops within stipulated 10% distance of rated load speed under frictional forces (if no braking means provided)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.12.4 (a-1)"
+        },
+        {
+          "itemNo": "2.3.2",
+          "acceptanceCriteria": "Bridge brakes comply with crane design requirements",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.12.5(a)"
+        },
+        {
+          "itemNo": "2.3.3",
+          "acceptanceCriteria": "Trolley truck frame drop is limited to 25mm",
+          "referenceStandard": "ASME B30.2 Sec:2-1.11"
+        },
+        {
+          "itemNo": "2.3.4",
+          "acceptanceCriteria": "Bridge is fitted with bumpers at each end",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.8.2 (a)"
+        },
+        {
+          "itemNo": "2.3.5",
+          "acceptanceCriteria": "Bridge rail sweep clearance is 5mm",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.9.1(b-1)"
+        },
+        {
+          "itemNo": "2.3.6",
+          "acceptanceCriteria": "Bridge brakes capable of stopping the crane within 10% distance of rated load speed",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.12.4 (a- 1)"
+        },
+        {
+          "itemNo": "2.3.7",
+          "acceptanceCriteria": "Outdoor crane is provided with secure fastenings.",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.3.1 (b)"
+        },
+        {
+          "itemNo": "2.3.8",
+          "acceptanceCriteria": "Rails used for anchorages are secured to withstand the resultant forces applied by the rail clamps.",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.3.1 (f)"
+        },
+        {
+          "itemNo": "2.3.9",
+          "acceptanceCriteria": "The runway structure is free from detrimental vibration under normal operating conditions",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.3.2(a-3)"
+        },
+        {
+          "itemNo": "2.3.10",
+          "acceptanceCriteria": "Rails are level, straight, joined, and spaced to the crane span within tolerances as per crane design",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.3.2(a-4)"
+        },
+        {
+          "itemNo": "2.3.11",
+          "acceptanceCriteria": "Runway stops are provided at the limits of travel of the bridge",
+          "referenceStandard": "ASME B30.2 Sec:2-1.3.2(b-1)"
+        },
+        {
+          "itemNo": "2.3.12",
+          "acceptanceCriteria": "Stops are designed to withstand the forces applied to the bumpers",
+          "referenceStandard": "ASME B30.2 Sec:2-1.3.2 (b-3)"
+        },
+        {
+          "itemNo": "2.3.13",
+          "acceptanceCriteria": "Crane is clear from obstruction throughout its travel (between building walls and other cranes)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.2.2"
+        },
+        {
+          "itemNo": "2.3.14",
+          "acceptanceCriteria": "All moving parts are guarded where potential hazard would exist otherwise",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.10 (a)"
+        },
+        {
+          "itemNo": "2.3.15",
+          "acceptanceCriteria": "Travel warnings are operational (gong, bell, siren, horn, beacon, or strope light)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.15.1(a)"
+        },
+        {
+          "itemNo": "2.3.16",
+          "acceptanceCriteria": "Crane structure shows no deformed, cracked or corroded members",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.1.5 (c-1)"
+        },
+        {
+          "itemNo": "2.3.17",
+          "acceptanceCriteria": "All travel limit devices are functioning",
+          "referenceStandard": "ASME B30.2 Sec: 2-2.3.1(b-4)"
+        }
+      ]
+    },
+    {
+      "no": "2.4",
+      "title": "INSPECTION ITEMS / CABIN",
+      "items": [
+        {
+          "itemNo": "2.4.1",
+          "acceptanceCriteria": "Safety labels are displayed and legible",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.1.5 (a)"
+        },
+        {
+          "itemNo": "2.4.2",
+          "acceptanceCriteria": "Integral outside platform is in place and door opens outward or slides",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.5.2 (b)"
+        },
+        {
+          "itemNo": "2.4.3",
+          "acceptanceCriteria": "Trapdoor has a clear opening of not less than 610mm",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.5.2(e)"
+        },
+        {
+          "itemNo": "2.4.4",
+          "acceptanceCriteria": "Guard railings and toe boards are in good condition",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.5.2(f)"
+        },
+        {
+          "itemNo": "2.4.5",
+          "acceptanceCriteria": "All cab glazing are safety glazing materials",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.5.2 (g)"
+        },
+        {
+          "itemNo": "2.4.6",
+          "acceptanceCriteria": "A tool box is in place for basic maintenance made of noncombustible material and is securely fastened in the cab or on the service platform.",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.5.4"
+        },
+        {
+          "itemNo": "2.4.7",
+          "acceptanceCriteria": "Lighting is adequate inside the cab and operator can clearly observe the controls",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.5.6"
+        },
+        {
+          "itemNo": "2.4.8",
+          "acceptanceCriteria": "Means of emergency exit are in place and effective",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.7.3"
+        },
+        {
+          "itemNo": "2.4.9",
+          "acceptanceCriteria": "Control circuit voltage does not exceed 600 volts (AC or DC)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.1(b)"
+        }
+      ]
+    },
+    {
+      "no": "2.5",
+      "title": "INSPECTION ITEMS / BRIDGE STRUCTURE",
+      "items": [
+        {
+          "itemNo": "2.5.1",
+          "acceptanceCriteria": "Welded structures and members do not have cracks or corrosion",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.4.1"
+        },
+        {
+          "itemNo": "2.5.2",
+          "acceptanceCriteria": "Adequate clearances exists between two parallel crane bridges (if there are no intervening walls or structures)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.2.2"
+        },
+        {
+          "itemNo": "2.5.3",
+          "acceptanceCriteria": "Minimum working space on service platforms is 1220mm (48\")",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.7.1(a)"
+        },
+        {
+          "itemNo": "2.5.4",
+          "acceptanceCriteria": "Minimum passageway on service platform is 457mm (18\")",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.7.1(c)"
+        },
+        {
+          "itemNo": "2.5.5",
+          "acceptanceCriteria": "Doors of electrical cabinets to open 90 degrees or be removable",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.7.1(e)"
+        }
+      ]
+    },
+    {
+      "no": "2.6",
+      "title": "INSPECTION ITEMS / ELECTRICALS",
+      "items": [
+        {
+          "itemNo": "2.6.1",
+          "acceptanceCriteria": "The crane controllers are equipped with spring return master switches",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.3(a)"
+        },
+        {
+          "itemNo": "2.6.2",
+          "acceptanceCriteria": "The resistors are supported and has minimum vibration effects",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.4(a)"
+        },
+        {
+          "itemNo": "2.6.3",
+          "acceptanceCriteria": "Runway conductors are guarded",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.7(a)"
+        },
+        {
+          "itemNo": "2.6.4",
+          "acceptanceCriteria": "A separate magnet circuit switch of enclosed type is provided (if a lifting magnet is used)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.5(b)"
+        },
+        {
+          "itemNo": "2.6.5",
+          "acceptanceCriteria": "Service receptacle in the cab or on the bridge is grounded type and does not exceed 300 volts (if provided)",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.9"
+        },
+        {
+          "itemNo": "2.6.6",
+          "acceptanceCriteria": "The control circuit voltage in pendant push buttons does not exceed 150V for AC or 300V for DC",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.1(c)"
+        },
+        {
+          "itemNo": "2.6.7",
+          "acceptanceCriteria": "A suspended push-button station is supported so that the electrical conductors are protected from strain (where multiple conductor cable is used)",
+          "referenceStandard": "ASME B30.2 Sec:2-1.13.1(d)"
+        },
+        {
+          "itemNo": "2.6.8",
+          "acceptanceCriteria": "Pendant control stations is constructed to prevent electrical shock",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.1(e)"
+        },
+        {
+          "itemNo": "2.6.9",
+          "acceptanceCriteria": "The push-button enclosure is at ground potential and marked for identification of functions",
+          "referenceStandard": "ASME B30.2 Sec: 2-1.13.1(e)"
+        }
+      ]
+    },
+    {
+      "no": "2.7",
+      "title": "INSPECTION ITEMS / HOOKS",
+      "items": [
+        {
+          "itemNo": "2.7.1",
+          "acceptanceCriteria": "Labeling and manufacturer data are available and legible",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.8"
+        },
+        {
+          "itemNo": "2.7.2",
+          "acceptanceCriteria": "Safe working load is clearly marked on the hook",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.8"
+        },
+        {
+          "itemNo": "2.7.3",
+          "acceptanceCriteria": "Hook is not bent or twisted",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (f)"
+        },
+        {
+          "itemNo": "2.7.4",
+          "acceptanceCriteria": "Hook is not distorted in the throat opening • Max. allowable throat opening is 5% not to exceed 1Ú4 in. (6 mm) or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (g)"
+        },
+        {
+          "itemNo": "2.7.5",
+          "acceptanceCriteria": "Maximum wear in the hook bowl is not exceeding 10% (compared to new hook) or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (e)"
+        },
+        {
+          "itemNo": "2.7.6",
+          "acceptanceCriteria": "Hook is not cracked, gouged or shows nicks",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (d)"
+        },
+        {
+          "itemNo": "2.7.7",
+          "acceptanceCriteria": "Hook can lock (if it is a self-locking hook)",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (h)"
+        },
+        {
+          "itemNo": "2.7.8",
+          "acceptanceCriteria": "Inoperative latch (if provided) — any damaged latch or malfunctioning latch that does not close the hook’s throat",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (i)"
+        },
+        {
+          "itemNo": "2.7.9",
+          "acceptanceCriteria": "Hook is free to rotate",
+          "referenceStandard": "ASME B30.10 Sec: 2-1.14.5"
         }
       ]
     }

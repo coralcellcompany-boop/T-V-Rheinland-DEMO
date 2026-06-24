@@ -68,10 +68,15 @@ BODYTOP_FROM_HDR = 7.94
 # shared across the (single-template) family and does not need per-file derivation.
 LINE_GAP = 15.0
 
-# Footer furniture ("Saudi Aramco: Company General Use") sits near the page bottom; the
-# body never reaches it. BODY_TOP is derived per PDF (see geometry()); only the bottom
-# clamp is a fixed page-relative constant.
+# Footer furniture ("Saudi Aramco: Company General Use") sits at y~757-760 on every
+# page. BODY_BOTTOM is the body clamp; the default 760 keeps the two-level files
+# byte-identical to their verified extraction (some of those, e.g. 7002/7016, already
+# carry a trailing footer fragment on their last item, and the mandate is to NOT touch
+# those files). For 3-level files we lower the clamp to BODY_BOTTOM_LEAF (=750) so the
+# footer can never bleed into the final per-page leaf's open-ended downward band; the
+# only words in 745-762 in every file are that footer line, so nothing real is clipped.
 BODY_BOTTOM = 760.0
+BODY_BOTTOM_LEAF = 750.0
 
 # Per-PDF derived geometry, filled by geometry() before parsing. Module-level so the
 # helper functions (which the parser closes over) can read them without threading args.
@@ -91,6 +96,16 @@ PAGE_RE = re.compile(r"<page ")
 # so restricting the minor to 1-2 digits keeps those references from being mistaken
 # for items (they would otherwise appear as phantom items with empty criteria).
 ITEMNO = re.compile(r"^\d+\.\d{1,2}$")
+# A 3-level leaf number "N.M.K" (e.g. "1.2.21", "2.3.17"). Six of the eighteen SAIC
+# checklists (7003/7004/7005/7008/7010/7018) nest every leaf inspection check one
+# level deeper: a top-level section "N", a group "N.M" (a sub-heading row with a
+# title and no reference), and the actual checks "N.M.K". The other twelve files are
+# strictly two-level. We auto-detect 3-level layout per file (see leaf3_present) by
+# the presence of N.M.K tokens IN THE NUMBER COLUMN -- the twelve two-level files do
+# contain N.M.K-shaped tokens, but only as wrapped reference citations far right in
+# the REFERENCE column (e.g. 7006 "6.1.6.3.1", 7013 "4.12.1"), never in the number
+# column, so the column guard keeps their behaviour byte-identical.
+LEAFNO = re.compile(r"^\d+\.\d{1,2}\.\d{1,3}$")
 SECTIONNO = re.compile(r"^(\d+)(?:\.0)?$")
 # All-caps section heading (e.g. "GENERAL REQUIREMENTS", "INSPECTION POINTS").
 UPPER_TITLE = re.compile(r"^[A-Z][A-Z0-9 &/().,'\-]{3,}$")
@@ -173,6 +188,31 @@ def raw_words(pdf):
     return out
 
 
+def _valley_ref_x(raw, acc_x, ref_x):
+    """Find the criteria|reference column boundary as the empty x-valley between them.
+
+    Build a 1px histogram of body word LEFT edges over [acc_x+30, ref_x+8] and slide a
+    5px window across it; the boundary is the lowest-density window that is immediately
+    followed (to its right) by a dense cluster (the reference column). Returns the window
+    centre x, or None if no clear right cluster is found (caller keeps header REF_X).
+    """
+    lo = acc_x + 30.0
+    hi = ref_x + 8.0
+    hist = {}
+    for _pg, y, x, _ymax, _t in raw:
+        if 260.0 < y < BODY_BOTTOM and lo <= x < hi:
+            hist[round(x)] = hist.get(round(x), 0) + 1
+    best = None  # (window_count, centre_x)
+    w = int(lo) + 2
+    while w < int(hi) - 2:
+        win = sum(hist.get(i, 0) for i in range(w - 2, w + 3))
+        right = sum(hist.get(i, 0) for i in range(w + 3, w + 13))
+        if right >= 20 and (best is None or win < best[0]):
+            best = (win, float(w))
+        w += 1
+    return best[1] if best else None
+
+
 def geometry(raw):
     """Derive REF_X / ITEMNO_MAX_X / NUMBER_COL_MAX_X / BODY_TOP from the column header.
 
@@ -181,7 +221,8 @@ def geometry(raw):
     track each template's horizontal shift / header height. Falls back to the
     7007-validated absolute defaults if the header cannot be located.
     """
-    global REF_X, ITEMNO_MAX_X, NUMBER_COL_MAX_X, BODY_TOP, PAGE_BODY_TOP
+    global REF_X, ITEMNO_MAX_X, NUMBER_COL_MAX_X, BODY_TOP, PAGE_BODY_TOP, BODY_BOTTOM
+    BODY_BOTTOM = 760.0  # reset per run (module global is mutated below for 3-level files)
     item_x = acc_x = ref_x = hdr_ymax = None
     for pg, y, x, ymax, t in raw:
         if y > 260:  # header always sits in the top band of page 1
@@ -200,6 +241,24 @@ def geometry(raw):
     NUMBER_COL_MAX_X = item_x + NUMBERCOL_FROM_ITEMHDR
     ITEMNO_MAX_X = acc_x + ITEMNOMAX_FROM_ACCHDR
     BODY_TOP = hdr_ymax + BODYTOP_FROM_HDR
+
+    # 3-level files only: the reference column on these templates wraps further LEFT than
+    # the header-relative REF_X (e.g. 7005 wraps standards to x~245 while the header sits
+    # at x~267, REF_X~253), so a header-derived boundary swallows the left edge of the
+    # reference into the criteria (and vice-versa). The criteria and reference clusters
+    # are separated by a near-empty vertical "valley" in the body word x-distribution; we
+    # set REF_X to that valley. This runs ONLY when N.M.K leaf tokens exist in the number
+    # column, so the twelve two-level files keep their header-derived REF_X byte-for-byte.
+    has_leaf = any(
+        LEAFNO.match(t) and x <= NUMBER_COL_MAX_X
+        for _pg, y, x, _ymax, t in raw
+        if y <= BODY_BOTTOM
+    )
+    if has_leaf:
+        BODY_BOTTOM = BODY_BOTTOM_LEAF
+        v = _valley_ref_x(raw, acc_x, ref_x)
+        if v is not None:
+            REF_X = v
 
     # Per-page BODY_TOP: the bottom (max yMax) of the lowest top-furniture word on each
     # page, plus the same margin. On pages that repeat the column header this reproduces
@@ -240,10 +299,29 @@ def norm(s):
     return re.sub(r"\s+", " ", s).strip()
 
 
+def is_marker(x, t):
+    """True if (x, t) is a number-column row marker: a section "N"/"N.0", an item
+    "N.M", or (3-level files) a leaf "N.M.K" token sitting in the far-left number
+    column. Markers must never be emitted as criteria/reference body text."""
+    return x <= NUMBER_COL_MAX_X and (
+        SECTIONNO.match(t) or ITEMNO.match(t) or LEAFNO.match(t)
+    )
+
+
 def parse(pdf):
     raw = raw_words(pdf)
     geometry(raw)
     ws = words(raw=raw)
+
+    # Auto-detect 3-level (N.M.K) layout: TRUE only when leaf tokens appear IN the
+    # number column. The twelve two-level files have no such tokens there (their
+    # N.M.K-shaped strings are wrapped reference citations far right), so they take
+    # the unchanged two-level path and stay byte-identical.
+    leaf_groups = set()  # group numbers "N.M" that own at least one "N.M.K" leaf
+    for pg, y, x, t in ws:
+        if LEAFNO.match(t) and x <= NUMBER_COL_MAX_X:
+            leaf_groups.add(".".join(t.split(".")[:2]))
+    leaf3 = bool(leaf_groups)
 
     def row_title(i, pg, y):
         """Collect the heading words on the same row as the section number.
@@ -261,7 +339,9 @@ def parse(pdf):
                 continue
             if x2 > REF_X:
                 continue
-            if x2 <= ITEMNO_MAX_X and (SECTIONNO.match(t2) or ITEMNO.match(t2)):
+            if x2 <= ITEMNO_MAX_X and (
+                SECTIONNO.match(t2) or ITEMNO.match(t2) or LEAFNO.match(t2)
+            ):
                 continue  # skip the number marker(s) themselves
             parts.append((x2, t2))
         parts.sort()
@@ -272,6 +352,13 @@ def parse(pdf):
     #    A number like "4.0" is ambiguous (looks like an item) so we test for a section
     #    title FIRST: a leading number/"N.0" followed on the same row by an UPPER-CASE
     #    title means a section header; otherwise an "N.M" number is a checklist item.
+    #
+    #    3-level files (leaf3): a group "N.M" that owns "N.M.K" leaves becomes a SECTION
+    #    (its title prefixed with the enclosing top-level section name for readability),
+    #    each leaf "N.M.K" becomes an ITEM under it, and a standalone "N.M" (no leaves)
+    #    stays a normal ITEM under its top-level section -- exactly the representation the
+    #    flattening C# loader expects. Two-level files are untouched.
+    top_title = {}  # top-level section number -> its label (for prefixing group titles)
     anchors = []
     for i, (pg, y, x, t) in enumerate(ws):
         if x > ITEMNO_MAX_X:
@@ -284,12 +371,29 @@ def parse(pdf):
         if ms and x <= NUMBER_COL_MAX_X:
             title = row_title(i, pg, y)
             if title and is_section_title(title):
-                anchors.append((pg, y, "section", (ms.group(1), title.rstrip(":").strip())))
+                sectitle = title.rstrip(":").strip()
+                if leaf3:
+                    top_title[ms.group(1)] = sectitle
+                anchors.append((pg, y, "section", (ms.group(1), sectitle)))
                 continue
+        # 3-level group row "N.M" with leaf children: emit as a SECTION whose title is the
+        # group label (e.g. "2 INSPECTION POINTS / BRIDGE COMPONENTS"). Its leaves follow.
+        if leaf3 and ITEMNO.match(t) and x <= NUMBER_COL_MAX_X and t in leaf_groups:
+            gtitle = row_title(i, pg, y)
+            top = top_title.get(t.split(".")[0], "")
+            label = f"{top.split('/')[0].strip()} / {gtitle}".strip(" /") if top else gtitle
+            anchors.append((pg, y, "section", (t, label or gtitle or t)))
+            continue
+        # 3-level leaf row "N.M.K": a checklist ITEM (anchored by its leaf number).
+        if leaf3 and LEAFNO.match(t) and x <= NUMBER_COL_MAX_X:
+            anchors.append((pg, y, "item", t))
+            continue
         # An item-number marker likewise lives in the far-left NUMBER column. A decimal
         # token indented into the criteria column is body text, not a marker (e.g.
         # SAIC-U-7017 item 2.5's criteria contains "0.5 in. (13 mm)" at x~91, which must
         # stay as criteria rather than spawning a phantom "0.5" item that steals the row).
+        # In 3-level files a leaf-bearing "N.M" was already consumed above as a section,
+        # so only standalone "N.M" (no leaves) reaches here -> a normal item.
         if ITEMNO.match(t) and x <= NUMBER_COL_MAX_X:
             anchors.append((pg, y, "item", t))
 
@@ -321,7 +425,7 @@ def parse(pdf):
         # A number-form token in the far-left column is the row marker, not body text;
         # do not let it seed a text line (it shares the y of its own first criteria
         # line anyway, so nothing is lost).
-        if wx <= NUMBER_COL_MAX_X and (ITEMNO.match(wt) or SECTIONNO.match(wt)):
+        if is_marker(wx, wt):
             continue
         text_lines.setdefault(wpg, set()).add(ry)
     for pg in text_lines:
@@ -440,8 +544,9 @@ def parse(pdf):
             # in criteria text (e.g. "6 randomly broken wires") is indented to x >= 72
             # and must be preserved -- dropping it silently corrupts safety-critical
             # acceptance numbers. We never treat a bare integer as a marker; only the
-            # full "N.M" item form or an "N"/"N.0" section form in the number column.
-            if wx <= NUMBER_COL_MAX_X and (ITEMNO.match(wt) or SECTIONNO.match(wt)):
+            # full "N.M" item form, an "N"/"N.0" section form, or (3-level files) an
+            # "N.M.K" leaf form in the number column.
+            if is_marker(wx, wt):
                 continue
             if wt in NOISE_TOKENS:
                 continue
