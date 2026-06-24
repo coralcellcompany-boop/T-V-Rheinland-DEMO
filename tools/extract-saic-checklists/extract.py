@@ -63,9 +63,15 @@ END_TITLES = ("REMARKS", "REFERENCE DOCUMENTS")
 
 def words(pdf):
     """Yield (page_index, yMin, xMin, text) for every word, in document order."""
-    xml = subprocess.run(
-        ["pdftotext", "-bbox-layout", pdf, "-"], capture_output=True, text=True, check=True
-    ).stdout
+    try:
+        proc = subprocess.run(
+            ["pdftotext", "-bbox-layout", pdf, "-"], capture_output=True, text=True, check=True
+        )
+    except FileNotFoundError:
+        sys.exit("pdftotext not found - install poppler (brew install poppler)")
+    except subprocess.CalledProcessError as e:
+        sys.exit(f"pdftotext failed (exit {e.returncode}):\n{e.stderr}")
+    xml = proc.stdout
     page = -1
     for ln in xml.splitlines():
         if PAGE_RE.search(ln):
@@ -266,6 +272,8 @@ def parse(pdf):
 
 
 def main():
+    if len(sys.argv) < 5:
+        sys.exit(__doc__)
     pdf, num, title, out = sys.argv[1:5]
     doc = {"saicNumber": num, "title": title, "sections": parse(pdf)}
     with open(out, "w") as f:
