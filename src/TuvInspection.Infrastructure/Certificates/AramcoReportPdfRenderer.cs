@@ -22,10 +22,9 @@ namespace TuvInspection.Infrastructure.Certificates;
 /// </summary>
 public sealed class AramcoReportPdfRenderer
 {
-    private static readonly JsonSerializerOptions JsonOpts = new(JsonSerializerDefaults.Web)
-    {
-        PropertyNameCaseInsensitive = true,
-    };
+    // Fault-tolerant options: a non-parseable date/time in the Annex-1 JSON degrades to
+    // null instead of throwing and blanking the entire report. See AramcoJson.
+    private static readonly JsonSerializerOptions JsonOpts = AramcoJson.Options;
 
     private const string TitleBlue = "#548DD4";
     private const string LabelGrey = "#D9D9D9";
