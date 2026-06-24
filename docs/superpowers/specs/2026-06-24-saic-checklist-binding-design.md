@@ -100,24 +100,42 @@ equipment type name)**. Full table:
 
 ### 3. Form wiring
 
-- On equipment-type selection, the report's resolved SAIC number is computed (backend, from the
-  mapping), exposed on the report DTO (`InspectionChecklistNumber`, already present).
-- The checklist editor gains a "Load SAIC-U-70## checklist" action that fetches the catalog
-  entry by number and populates the items (replacing the generic regex templates as the primary
-  path; generic templates kept only as fallback when no SAIC entry exists).
-- Filled checklist persists as today via `ChecklistJson`.
+**Current state (the real gap):** [certificate-detail.page.ts:129-179](../../../web/src/app/features/certificates/pages/certificate-detail.page.ts#L129-L179)
+has two mutually exclusive branches:
+- **Third Party Inspection cert** → shows `tuv-checklist-editor`, keyed by the `EquipmentType`
+  *entity* (`equipmentTypeId` / `equipmentTypeName`, the seed-table names), with generic templates.
+- **Blue Sticker (Aramco) cert** → shows `tuv-aramco-form` ONLY. **No checklist-fill step
+  exists.** The Aramco form has its own category-dependent equipment-type dropdown using the
+  **Excel** type names (`AramcoFormDoc.equipmentType`, free text).
+
+This is precisely what's missing: a Blue Sticker inspector picks an equipment type on the Annex 1
+form but has nowhere to fill the SAIC checklist.
+
+**Change:** Add a SAIC checklist section to the **Blue Sticker branch**, driven by the Aramco
+form's selection:
+- Mapping key = (`aramcoCategoryNo`, `equipmentType` Excel name) from `AramcoFormDoc` — these
+  names already match the Excel mapping table exactly (`CATEGORY_EQUIPMENT_TYPES` in
+  [aramco-form.component.ts:102](../../../web/src/app/features/certificates/components/aramco-form.component.ts#L102)).
+- On equipment-type change, resolve the SAIC number and fetch the catalog entry; load its items
+  into a checklist editor instance rendered inside the Blue Sticker section.
+- Filled checklist persists via the certificate's existing `ChecklistJson` (currently unused for
+  Blue Sticker certs — now it holds the SAIC checklist).
+- The existing **TPI** checklist editor and its generic templates are left unchanged.
 
 ## Data Flow
 
 ```
-pick equipment type
-  → backend resolves (category, typeName) → SAIC number  [mapping #2]
-  → report DTO.InspectionChecklistNumber
-  → editor fetches GET /saic-checklists/{number}          [catalog #1]
-  → items load into editor (result=NotSet)
+inspector picks equipment type on the Aramco Annex 1 form (Blue Sticker cert)
+  → frontend resolves (aramcoCategoryNo, equipmentType Excel name) → SAIC number  [mapping #2]
+  → fetch GET /saic-checklists/{number}                                            [catalog #1]
+  → items load into the Blue Sticker checklist editor (result=NotSet)
   → inspector fills Pass/Fail/NA + remark
-  → save → ChecklistJson on report
+  → save → certificate ChecklistJson
 ```
+
+Resolution is served by the backend (`GET /saic-checklists/resolve?category=&equipmentType=`)
+so the (category, type) → SAIC mapping has a single authoritative home, also reused to fix the
+category-only `BlueStickerMapper.ChecklistFor` display.
 
 ## Error Handling
 
