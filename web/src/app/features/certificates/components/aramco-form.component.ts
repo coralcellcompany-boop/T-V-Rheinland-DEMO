@@ -152,7 +152,7 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
       <fieldset>
         <legend>Site &amp; previous sticker</legend>
         <label>Department / Contractor<input pInputText [(ngModel)]="form.departmentContractor" [disabled]="readonly" /></label>
-        <label>Inspection Time (HH:mm)<input pInputText [(ngModel)]="form.inspectionTime" placeholder="e.g. 09:30" [disabled]="readonly" /></label>
+        <label>Inspection Time<input pInputText type="time" [(ngModel)]="form.inspectionTime" [disabled]="readonly" /></label>
         <label>Previous Sticker No.<input pInputText [(ngModel)]="form.previousStickerNo" [disabled]="readonly" /></label>
         <label>Previous Sticker Issued By
           <p-select [options]="issuedByOptions" [(ngModel)]="form.previousStickerIssuedBy"
