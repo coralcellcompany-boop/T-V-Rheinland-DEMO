@@ -1,0 +1,1114 @@
+{
+  "saicNumber": "SAIC-U-7005",
+  "title": "Elevators - Electric & Hydraulic",
+  "sections": [
+    {
+      "no": "1.1",
+      "title": "ELECTRIC ELEVATOR / GENERAL REQUIREMENT",
+      "items": [
+        {
+          "itemNo": "1.1.1",
+          "acceptanceCriteria": "Equipment document is available",
+          "referenceStandard": "G.I.7.030 Para: 5.4.4"
+        },
+        {
+          "itemNo": "1.1.2",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.1.3",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "G.I.7.030 Para: 5.4.3"
+        },
+        {
+          "itemNo": "1.1.4",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "G.I.7.030 Para: 5.5.2"
+        }
+      ]
+    },
+    {
+      "no": "1.2",
+      "title": "ELECTRIC ELEVATOR / INSIDE OF CAR",
+      "items": [
+        {
+          "itemNo": "1.2.1",
+          "acceptanceCriteria": "Door reopening device is operating correctly",
+          "referenceStandard": "ASME A17.1 Sec: 8.11.2.1.1a"
+        },
+        {
+          "itemNo": "1.2.2",
+          "acceptanceCriteria": "On passenger elevators a stop switch either key operated or behind a locked cover is provided in the car and located in or adjacent to the car operating panel.",
+          "referenceStandard": "ASME A17.1 Sec: 8.10.2.2.1(b)(2), 8.11.2.1.1(b)"
+        },
+        {
+          "itemNo": "1.2.3",
+          "acceptanceCriteria": "All operating control devices are of the enclosed electric type",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.1.1, 2.26.1.6, 8.11.2.1.1c"
+        },
+        {
+          "itemNo": "1.2.4",
+          "acceptanceCriteria": "Sills are of the correct type and are of sufficient strength and clearance with adjoining car platform or hoist way sill (min. clearance 13mm)",
+          "referenceStandard": "ASME A17.1 Sec: 2.5.1.4 , 2.11.10.3, 2.11.11.1, 2.11.13.1, 2.15.16, 8.11.2.1.1d"
+        },
+        {
+          "itemNo": "1.2.5",
+          "acceptanceCriteria": "Car has minimum of two lamps (min. of 50 lux for passenger and 25 lux for freight elevators) (Passenger elevators shall have auxiliary lighting which automatically turns on if normal power fails )",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.7, 8.11.2.1.1e ASME A17.3 (3.4.5, 3.4.6)"
+        },
+        {
+          "itemNo": "1.2.6",
+          "acceptanceCriteria": "Passenger elevators are equipped with auxiliary lighting which automatically turns on if normal power fails",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.7, 8.11.2.1.1e ASME A17.3 3.4.5, 3.4.6"
+        },
+        {
+          "itemNo": "1.2.7",
+          "acceptanceCriteria": "Car emergency communication signal to authorized and emergency personnel is available and working",
+          "referenceStandard": "ASME A17.1 Sec: 2.27.1, 8.11.2.1.1f ASME A17.3 (3.11.1)"
+        },
+        {
+          "itemNo": "1.2.8",
+          "acceptanceCriteria": "Car door or gate has electric contacts or interlocks (where required) to prevent operation of the driving machine when the door or gate is open",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.2.1, 2.14.4, 2.14.5, 2.14.6, 2.26.2.15, 8.11.2.1.1g"
+        },
+        {
+          "itemNo": "1.2.9",
+          "acceptanceCriteria": "The force necessary to prevent door closing does not exceed 30ft.lbf",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.4.2.3, 8.11.2.1.1h, 8.11.2.2.8)"
+        },
+        {
+          "itemNo": "1.2.10",
+          "acceptanceCriteria": "Power closing of doors or gates (vertically sliding) is preceded by a warning bell at least 5 seconds prior to door or gate movement and continues until substantial closure (Closure using a switch or button in the car omits the 5 second time interval)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4.6 (f) (g)"
+        },
+        {
+          "itemNo": "1.2.11",
+          "acceptanceCriteria": "Power opening of doors or gates only occurs when the car is at rest at the landing , or in the landing zone",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.9.3, 8.11.2.1.1j, 8.11.2.3.7, 8.11.2.3.8, 8.11.2.3.9)"
+        },
+        {
+          "itemNo": "1.2.12",
+          "acceptanceCriteria": "Car vision panel (if fitted) is 0.1sq.m. (max) and either wire-glass or laminated, and in the case of glass doors be laminated , safety glass or safety plastic , with not less than 60% of the total visible door panel surface area as glass.",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.2.5, 2.14.5.8, 8.11.2.1.1k"
+        },
+        {
+          "itemNo": "1.2.13",
+          "acceptanceCriteria": "Laminated glass vision panel is a safety glass or safety plastic, with not less than 60% of the total visible door panel surface area as glass",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.2.5, 2.14.5.8, 8.11.2.1.1k"
+        },
+        {
+          "itemNo": "1.2.14",
+          "acceptanceCriteria": "Car enclosure is in compliance with the required equipment (specification)",
+          "referenceStandard": "ASME A17.1 Sec: 2.14, 2.16.2.2, 2.16.4, 2.16.5, 2.29.1, 8.3.7, 8.7.2.14, 8.11.2.1.1m)"
+        },
+        {
+          "itemNo": "1.2.15",
+          "acceptanceCriteria": "Verify the emergency exit (and cover ) is provided in the top of the car (except cars in partially enclosed hoist ways)",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.1.5, 2.14.1.10 8.11.2.1.1m"
+        },
+        {
+          "itemNo": "1.2.16",
+          "acceptanceCriteria": "Ventilation (natural or forced ) complies with the various opening and size requirements as well as air change volume per minute (for forced ventilation)",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.2.3, 2.14.3.3, 8.11.2.1.1n)"
+        },
+        {
+          "itemNo": "1.2.17",
+          "acceptanceCriteria": "Signs and operating device symbols are installed and legible",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.12, 8.11.2.1.1o)"
+        },
+        {
+          "itemNo": "1.2.18",
+          "acceptanceCriteria": "Rated load (depending on net platform) is in compliance with load area (chart) and data plate information",
+          "referenceStandard": "ASME A17.1 Sec: 2.16, 8.11.2.1.1p"
+        },
+        {
+          "itemNo": "1.2.19",
+          "acceptanceCriteria": "Standby power is operable (at least one elevator at a time ) with rated load in the event of power supply failure (transfer from normal to standby supply is automatic)",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.18, 2.26.10, 2.27.2, 8.11.2.1.1q, 8.11.2.2.7, 8.11.2.3.5)"
+        },
+        {
+          "itemNo": "1.2.20",
+          "acceptanceCriteria": "Restricted opening of car or hoist way doors (4\" max) is possible outside the unlocking zone",
+          "referenceStandard": "ASME A17.1 Sec: 8.11.2.1.1r)"
+        },
+        {
+          "itemNo": "1.2.21",
+          "acceptanceCriteria": "Car ride is smooth in acceleration and deceleration throughout its travel",
+          "referenceStandard": "ASME A17.1 Sec: 2.15.2, 2.23, 8.11.2.1.1s"
+        }
+      ]
+    },
+    {
+      "no": "1.3",
+      "title": "ELECTRIC ELEVATOR / MACHINE ROOM",
+      "items": [
+        {
+          "itemNo": "1.3.1",
+          "acceptanceCriteria": "The access to the machine space is in conformance with the type of access, location , and combustibility allowed",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.1.1, 2.7.3.1, 2.7.3.2, 2.7.3.3, 2.7.3.4, 8.11.2.1.2a"
+        },
+        {
+          "itemNo": "1.3.2",
+          "acceptanceCriteria": "Minimum headroom clearance is either 84\" , 53\", 42\", or 35\" depending on type and location of machine room / hoist way",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.4, 8.11.2.1.2c"
+        },
+        {
+          "itemNo": "1.3.3",
+          "acceptanceCriteria": "Electric lighting in the machine room is not less than 200 lux at floor level and the control switch is at the lock - jamb side of the access door wherever practicable",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.5.1, 8.11.2.1.2c"
+        },
+        {
+          "itemNo": "1.3.4",
+          "acceptanceCriteria": "The strength and construction of the floor of the machine room, windows, skylights and fire resistance is in accordance with the relevant building code(s)",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.3.3, 2.1.3.4, 2.1.5, 2.7.1.1, 2.7.2.1, 2.7.8, 8.11.2.1.2d)"
+        },
+        {
+          "itemNo": "1.3.5",
+          "acceptanceCriteria": "Housekeeping is adequate",
+          "referenceStandard": "ASME A17.1 Sec: 8.6.4.8, 8.6.10.3, 8.11.2.1.2e"
+        },
+        {
+          "itemNo": "1.3.6",
+          "acceptanceCriteria": "Ventilation (natural or forced ) complies with the elevator equipment manufacturers requirements for ambient air temperature and humidity (as posted in machine room )",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.5.2, 2.8.4, 8.11.2.1.2g"
+        },
+        {
+          "itemNo": "1.3.7",
+          "acceptanceCriteria": "Fire extinguisher is available in the machine room (Class ABC)",
+          "referenceStandard": "ASME A17.1 Sec: 8.6.1.6.5, 8.11.2.1.2g"
+        },
+        {
+          "itemNo": "1.3.8",
+          "acceptanceCriteria": "Pipes, wiring and ducts conform to the relevant specification (Pipes - 15 psi steam or hot water only; wiring to NFPA70 or CSA-C22.1 standard)",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1, 2.8.2, 8.11.2.1.2h"
+        },
+        {
+          "itemNo": "1.3.9",
+          "acceptanceCriteria": "Guarding of exposed auxiliary equipment is in place and secure",
+          "referenceStandard": "ASME A17.1 (2.10.1, 8.11.2.1.2i)"
+        },
+        {
+          "itemNo": "1.3.10",
+          "acceptanceCriteria": "Verify numbering of elevators (min. 50mm height figures) on driving machine , disconnect switch, mg set, controller, selector, governor and the car crosshead or frame",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.4, 2.29.1, 8.11.2.1.2j"
+        },
+        {
+          "itemNo": "1.3.11",
+          "acceptanceCriteria": "Electrical disconnecting means (devices) and controls are working properly",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.4, 8.11.2.1.2k"
+        },
+        {
+          "itemNo": "1.3.12",
+          "acceptanceCriteria": "Controller wiring, fuses, grounding, etc. conform to NFPA 70 or CSA C22.1",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1, 2.26.4, 8.6.1.6.3, 8.11.2.1.2l"
+        },
+        {
+          "itemNo": "1.3.13",
+          "acceptanceCriteria": "Governor, overspeed switch and seal conform to requirements: namely, an overspeed switch on every car and counterweight governor, sealing of the means to regulate the governor rope pull-out force (carrier) once set, to not more than 60% of the pull through tension developed by the governor",
+          "referenceStandard": "ASME A17.1 Sec: 2.17.15, 2.18, 2.26.2, 2.26.2.10, 8.6.1.6.2, 8.10.2.1.2cc-1, 8.11.2.1.2bb, 8.11.2.3.1, 8.11.2.3.2"
+        },
+        {
+          "itemNo": "1.3.14",
+          "acceptanceCriteria": "Code date plate indicates the code and edition in effect at the time of installation (or alteration)",
+          "referenceStandard": "ASME A17.1 Sec: 8.7.1.8, 8.9"
+        },
+        {
+          "itemNo": "1.3.15",
+          "acceptanceCriteria": "Static control is available with each type of hoist motor/ DC source/ inverter arrangement",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.2, 2.26.9.5, 8.10.2.2.2m, 8.11.2.1.2m"
+        },
+        {
+          "itemNo": "1.3.16",
+          "acceptanceCriteria": "Overhead beams and fastenings are secure and suitable for the duty (beams shall be or reinforced concrete)",
+          "referenceStandard": "ASME A17.1 Sec: 2.9.1, 2.9.2, 2.9.3, 8.11.2.1.2n"
+        },
+        {
+          "itemNo": "1.3.17",
+          "acceptanceCriteria": "Drive machine brake (on its own) holds the car at rest with the rated load , and when empty",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.2.2, 2.16.8, 2.24.8.3, 2.26.8, 8.11.2.1.2o 8.11.2.3.4"
+        },
+        {
+          "itemNo": "1.3.18",
+          "acceptanceCriteria": "Drive machine brake stops a decelerating empty car in the upward direction from governor overspeed setting, not to exceed 9.8 m/sec/sec",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.2.2, 2.16.8, 2.24.8.3, 2.26.8, 8.11.2.1.2o, 8.11.2.3.4"
+        },
+        {
+          "itemNo": "1.3.19",
+          "acceptanceCriteria": "Gears, bearings and flexible couplings are lubricated (where required) as per manufacturers recommendations as to grade and type",
+          "referenceStandard": "ASME A17.1 Sec: 8.6.1.6.2, 8.11.2.1.2q"
+        },
+        {
+          "itemNo": "1.3.20",
+          "acceptanceCriteria": "Winding drum machine slack cable device is operational when the rope is slack",
+          "referenceStandard": "ASME A17.1 Sec:2.20.10, 2.24.10, 2.26.2, 8.6.4.10, 8.11.2.1.2r, 8.11.2.2.4"
+        },
+        {
+          "itemNo": "1.3.21",
+          "acceptanceCriteria": "Belt or chain drive machines include three belts or chains (or more) operating together in parallel as a set",
+          "referenceStandard": "ASME A17.1 Sec: 2.24.9, 8.11.2.1.2s"
+        },
+        {
+          "itemNo": "1.3.22",
+          "acceptanceCriteria": "Motor generator cannot supply sufficient current to the driving machine motor to move the car when the motor control switches are in the off position",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.9.7, 8.10.2.2.2t, 8.11.2.1.2t"
+        },
+        {
+          "itemNo": "1.3.23",
+          "acceptanceCriteria": "Absorption of regenerated power is available to prevent elevator from reaching governor trip speed or in excess of 125% rated speed",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.10, 8.10.2.2.2u, 8.11.2.1.2u"
+        },
+        {
+          "itemNo": "1.3.24",
+          "acceptanceCriteria": "AC drives from DC source use a static inverter and other devices as a means of control",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.2, 2.26.9.6, 8.11.2.1.2v, 8.10.2.2.2m-3"
+        },
+        {
+          "itemNo": "1.3.25",
+          "acceptanceCriteria": "Traction sheaves comply with requirements as to material (metal) and finished grooves. Diameter to be not less than 40 times rope diameter (suspension ropes), or not less than 32 times rope diameter (compensating ropes )",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.8, 2.20, 2.24.2, 8.6.1.6, 8.6.4.1, 8.7.2.21, 8.11.2.1.2w"
+        },
+        {
+          "itemNo": "1.3.26",
+          "acceptanceCriteria": "Secondary and deflector sheaves comply as 1.2.25 above",
+          "referenceStandard": "ASME A17.1 Sec: 2.24, 8.6.1.6.2, 8.11.2.1.2x"
+        },
+        {
+          "itemNo": "1.3.27",
+          "acceptanceCriteria": "Rope fastenings comply with type and material requirements",
+          "referenceStandard": "ASME A17.1 Sec: 2.9.3.3, 2.20, 8.11.2.1.2y"
+        },
+        {
+          "itemNo": "1.3.28",
+          "acceptanceCriteria": "Terminal stopping devices are provided and arranged to slow down and stop the car automatically at or near the top and bottom terminal landings (with up to rated load) and at a speed attained in normal operation",
+          "referenceStandard": "ASME A17.1 Sec: 2.25, 8.11.2.1.2Z, 8.11.2.3.6"
+        },
+        {
+          "itemNo": "1.3.29",
+          "acceptanceCriteria": "Car and counterweight safeties comply with number and type requirements, namely; one or more type A, B or C attached to the car frame, and one below the frame",
+          "referenceStandard": "ASME A17.1 Sec: 2.27, table 2.17.3, 8.2.6, 8.7.2.18, 8.10.2.2, 8.11.2.1.2cc, 8.11.2.2.2, 8.11.2.3.1"
+        }
+      ]
+    },
+    {
+      "no": "1.4",
+      "title": "ELECTRIC ELEVATOR / TOP OF CAR",
+      "items": [
+        {
+          "itemNo": "1.4.1",
+          "acceptanceCriteria": "Top of car stop switch is provided and operational",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.2.8, 8.11.2.1.3a"
+        },
+        {
+          "itemNo": "1.4.2",
+          "acceptanceCriteria": "Car of top light and outlet are provided and operational",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.7, 8.11.2.1.3b"
+        },
+        {
+          "itemNo": "1.4.3",
+          "acceptanceCriteria": "Top of car operating device is provided (for inspection purposes)",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.1.7, 2.26.1.4, 8.11.2.1.3c"
+        },
+        {
+          "itemNo": "1.4.4",
+          "acceptanceCriteria": "Top of car clearance and refuge space dimensions vary for the former, minimum 43\" for the latter",
+          "referenceStandard": "ASME A17.1 Sec:2.4, 8.2.4, 8.6.4.11"
+        },
+        {
+          "itemNo": "1.4.5",
+          "acceptanceCriteria": "Terminal stopping devices are provided and arranged to slow down and stop the car automatically at or near the top and bottom terminal landings (with up to rated load) and at a speed attained in normal operation",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.4, 2.25.2, 2.26.2, 8.10.2.2.2z, 8.10.2.3.2k, 8.11.2.1.3g, 8.11.2.2.5"
+        },
+        {
+          "itemNo": "1.4.6",
+          "acceptanceCriteria": "Final terminal stopping devices meet the general requirement that they be mechanically operated and cause power to the driving machine motor and brake to be removed automatically after the car has passed a terminal landing",
+          "referenceStandard": "ASME A17.1 Sec: 2.25.3, 8.10.2.3.2k, 8.11.2.1.3h, 8.11.2.2.5"
+        },
+        {
+          "itemNo": "1.4.7",
+          "acceptanceCriteria": "Car leveling and truck-zoning device, operate satisfactorily within the given landing zone (3\" above and below)",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.1.6, 8.11.2.1.3j"
+        },
+        {
+          "itemNo": "1.4.8",
+          "acceptanceCriteria": "Top emergency exit is at least 16\" square",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.1.5, 8.11.2.1.3l"
+        },
+        {
+          "itemNo": "1.4.9",
+          "acceptanceCriteria": "Verify floor level and emergency identification numbering of elevators (min. 50mm height)",
+          "referenceStandard": "ASME A17.1 Sec: 2.29.1, 2.29.2, 8.11.2.1.3o"
+        },
+        {
+          "itemNo": "1.4.10",
+          "acceptanceCriteria": "Hoist way construction complies with appropriate standards and building regulations (where applicable )",
+          "referenceStandard": "ASME A17.1 Sec: 2.1, 8.11.2.1.3p"
+        },
+        {
+          "itemNo": "1.4.11",
+          "acceptanceCriteria": "Hoist way smoke control arrangements are satisfactory enough to prevent the accumulation of smoke and hot gases",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.4, 8.11.2.1.3q"
+        },
+        {
+          "itemNo": "1.4.12",
+          "acceptanceCriteria": "Pipes, wiring and ducts conform to the relevant specification (Pipes - 15psi steam or hot water only; wiring to NFPA70 or CSA-C22.1 standard)",
+          "referenceStandard": "ASME A17.1 (2.8, 8.11.2.1.3r)"
+        },
+        {
+          "itemNo": "1.4.13",
+          "acceptanceCriteria": "Windows, projections, recesses and setbacks comply with the appropriate building codes and hoist way enclosures generally have flush surfaces on the hoist way side",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.5, 2.1.6, 2.11.10, 8.11.2.1.3s"
+        },
+        {
+          "itemNo": "1.4.14",
+          "acceptanceCriteria": "Various hoist way clearances are at least the same all the way around (20mm)",
+          "referenceStandard": "ASME A17.1 Sec: 2.4, 2.5, 8.11.2.1.3t"
+        },
+        {
+          "itemNo": "1.4.15",
+          "acceptanceCriteria": "Multiple hoist ways (and the number of elevators in a hoist way ) conforms with the appropriate building code",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.1.4, 8.11.2.1.3u"
+        },
+        {
+          "itemNo": "1.4.16",
+          "acceptanceCriteria": "Traveling cables and junction boxes conforms to NFPA70 or CSA -C22.1 whichever is applicable",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1, 8.11.2.1.3v"
+        },
+        {
+          "itemNo": "1.4.17",
+          "acceptanceCriteria": "Door and gate equipment operation is satisfactory and in accordance with manufacturers recommendations",
+          "referenceStandard": "ASME A17.1 Sec: 2.11, 2.12, 2.26.1.6, 8.11.2.1.3w"
+        },
+        {
+          "itemNo": "1.4.18",
+          "acceptanceCriteria": "Car frame and stiles are suitable for the purpose and show no defects",
+          "referenceStandard": "ASME A17.1 Sec: 2.15, 8.6.2,8.7.2.15.1, 8.8"
+        },
+        {
+          "itemNo": "1.4.19",
+          "acceptanceCriteria": "Guide rails fastening and equipment are suitable for the purpose, show no defects, and the guide rails are correctly lubricated (where required) as per the manufacturer specification",
+          "referenceStandard": "ASME A17.1 Sec: 2.17.16, 8.6.4.3, 8.11.2.1.3y"
+        },
+        {
+          "itemNo": "1.4.20",
+          "acceptanceCriteria": "The governor rope is in good condition and fitted with a tag describing all relevant rope data",
+          "referenceStandard": "ASME A17.1 Sec: 2.18.5, 8.6.4.2, 8.7.2.19, 8.11.2.1.3z"
+        },
+        {
+          "itemNo": "1.4.21",
+          "acceptanceCriteria": "The governor releasing carrier is in good condition and set to require a tension in the governor rope to pull the rope from the carrier of not more than 60% of the pull-through tension developed by the governor. The means to regulate this force is mechanical and sealed",
+          "referenceStandard": "ASME A17.1 Sec: 2.17.15, 8.11.2.1.3aa"
+        },
+        {
+          "itemNo": "1.4.22",
+          "acceptanceCriteria": "Rope fastening and hitch plate are secured using bolts or rivets",
+          "referenceStandard": "ASME A17.1 Sec: 2.9.3.3, 2.15.13, 2.20, 8.6.3, 8.6.4.10, 8.11.2.1.3bb"
+        },
+        {
+          "itemNo": "1.4.23",
+          "acceptanceCriteria": "Suspension rope is satisfactory and complies with the specifications as marked on the rope data tag",
+          "referenceStandard": "ASME A17.1 Sec: 2.18.7, 2.20, 8.6.2.5, 8.7.2.21, 8.11.2.1.3cc"
+        },
+        {
+          "itemNo": "1.4.24",
+          "acceptanceCriteria": "The top counterweight clearance shall be not less than the sum of the following: (a) the bottom car run by, if any (b) the stroke of the car buffer where a spring-type buffer is used (buffer not required for sidewalk elevators) (c) 150 mm (6 in.)",
+          "referenceStandard": "ASME A17.1 Sec: 2.4.9, 8.11.2.1.3e"
+        },
+        {
+          "itemNo": "1.4.25",
+          "acceptanceCriteria": "Traction sheaves comply with requirements as to material (metal) and finished grooves. Diameter to be not less than 40 times rope diameter (suspension ropes) or not less than 32 times rope diameter (compensating ropes)",
+          "referenceStandard": "ASME A17.1 Sec: 2.24"
+        },
+        {
+          "itemNo": "1.4.26",
+          "acceptanceCriteria": "Broken rope, chain or tape switch are working",
+          "referenceStandard": "ASME A17.1 Sec: 2.25.2.3.2, 2.26.2.6, 8.11.2.1.3i, 8.11.2.2.9"
+        },
+        {
+          "itemNo": "1.4.27",
+          "acceptanceCriteria": "Crosshead data plate states: the complete car weight, rated load and speed, wire rope data, name or trade mark of manufacturer, rail lubrication instructions",
+          "referenceStandard": "ASME A17.1 Sec: 2.16.3, 2.20.2, 8.7.2.21, 8.11.2.1.3k"
+        },
+        {
+          "itemNo": "1.4.28",
+          "acceptanceCriteria": "Counterweight and counterweight buffers are in compliance with design requirements",
+          "referenceStandard": "ASME A17.1 Sec: 2.21, 2.22, 8.11.2.1.3"
+        },
+        {
+          "itemNo": "1.4.29",
+          "acceptanceCriteria": "Counterweight safeties are fitted and working in accessible areas below the car or hoist way",
+          "referenceStandard": "ASME A17.1 Sec: 2.6, 2.17, 8.2.3, 8.10.2.2, 8.11.2.1.3n, 8.11.2.3.1"
+        },
+        {
+          "itemNo": "1.4.30",
+          "acceptanceCriteria": "Compensating ropes and chains are in place to tie the counterweight and car together",
+          "referenceStandard": "ASME A17.1 Sec: 2.21.4, 8.10.2.2.3w-3, 8.11.2.1.3dd"
+        }
+      ]
+    },
+    {
+      "no": "1.5",
+      "title": "ELECTRIC ELEVATOR / Outside Hoist way",
+      "items": [
+        {
+          "itemNo": "1.5.1",
+          "acceptanceCriteria": "Car platform guard plates comply with material specification (steel ) and thickness ( not less than 1.5 mm )",
+          "referenceStandard": "ASME A17.1 Sec: 2.15.9, 8.11.2.1.4a"
+        },
+        {
+          "itemNo": "1.5.2",
+          "acceptanceCriteria": "Hoist way doors operate correctly",
+          "referenceStandard": "ASME A17.1 Sec: 2.12.7, 2.26.2, 8.11.2.1.4b"
+        },
+        {
+          "itemNo": "1.5.3",
+          "acceptanceCriteria": "Car vision panel (if fitted) is 0.1sq.m. (max) and either wire-glass or laminated, and in the case of glass doors be laminated , safety glass or safety plastic , with not less than 60% of the total visible door panel surface area as glass.",
+          "referenceStandard": "ASME A17.1 Sec: 2.11.7, 8.11.2.1.4c"
+        },
+        {
+          "itemNo": "1.5.4",
+          "acceptanceCriteria": "Hoist way door locking devices are operational (interlocks)",
+          "referenceStandard": "ASME A17.1 Sec: 2.12, 8.11.2.1.4d"
+        },
+        {
+          "itemNo": "1.5.5",
+          "acceptanceCriteria": "Access to hoist way (at top or bottom landing) is by use of an access switch adjacent to the entrance.",
+          "referenceStandard": "ASME A17.1 Sec: 2.12.6, 2.12.7, 8.11.2.1.4e"
+        },
+        {
+          "itemNo": "1.5.6",
+          "acceptanceCriteria": "Hoist way doors are power closing",
+          "referenceStandard": "ASME A17.1 Sec: 2.13, 8.11.2.1.4f"
+        },
+        {
+          "itemNo": "1.5.7",
+          "acceptanceCriteria": "Sequence of operation of hoist way doors is correct",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.6, 8.11.2.1.4g"
+        },
+        {
+          "itemNo": "1.5.8",
+          "acceptanceCriteria": "Hoist way enclosure is fire resistance (or non-fire resistance, depending on building code)",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.1, 2.1.4, 2.1.5, 8.11.2.1.4h"
+        },
+        {
+          "itemNo": "1.5.9",
+          "acceptanceCriteria": "Elevator parking devices are operable",
+          "referenceStandard": "ASME A17.1 Sec: 8.11.2.1.4i"
+        },
+        {
+          "itemNo": "1.5.10",
+          "acceptanceCriteria": "Emergency doors in blind hoist way are on every third floor, not more than 11m from sill to sill with a clear opening of 700mm x 2030mm (at least)",
+          "referenceStandard": "ASME A17.1 Sec: 2.11.1.1, 2.11.1.2, 8.11.2.1.4j"
+        },
+        {
+          "itemNo": "1.5.11",
+          "acceptanceCriteria": "Doors are self closing and self-locking and marked \"Danger Elevator Hoist way\" in 50mm letters (an open or unlocked door removes power from the elevator motor)",
+          "referenceStandard": "ASME A17.1 Sec: 2.11.1.1, 2.11.1.2, 8.11.2.1.4j"
+        },
+        {
+          "itemNo": "1.5.12",
+          "acceptanceCriteria": "Separate counterweight hoist way complies with requirements such as closed at the top and non- combustible floors, strength of floor (all to meet appropriate building code standards)",
+          "referenceStandard": "ASME A17.1 Sec: 2.3.1, 2.3.3, 2.11.1.1, 2.11.1.2, 8.11.2.1.4k"
+        },
+        {
+          "itemNo": "1.5.13",
+          "acceptanceCriteria": "Standby power selection switch is marked \"Elevator Emergency Power\" and key operated under a locked cover",
+          "referenceStandard": "ASME A17.1 Sec: 2.27.2, 2.27.8, 8.11.2.1.4l, 8.11.2.2.7"
+        }
+      ]
+    },
+    {
+      "no": "1.6",
+      "title": "ELECTRIC ELEVATOR / Elevator Pit",
+      "items": [
+        {
+          "itemNo": "1.6.1",
+          "acceptanceCriteria": "The pit access, lighting and stop switch meet design requirements",
+          "referenceStandard": "ASME A17.1 Sec: 2.3.2, 2.8, 2.26.2.7, 8.6.4.7, 8.11.2.1.5a"
+        },
+        {
+          "itemNo": "1.6.2",
+          "acceptanceCriteria": "Bottom clearance, run by and minimum refuge space dimensions meet design requirements (min. 600mm) (min. 150mm for bottom run by)",
+          "referenceStandard": "ASME A17.1 Sec: 2.3.2, 2.4.1, 2.4.2, 2.22.4.8, 8.6.4.11, 8.11.2.1.5b"
+        },
+        {
+          "itemNo": "1.6.3",
+          "acceptanceCriteria": "Final and emergency terminal stopping devices operate correctly and remove power from driving machine",
+          "referenceStandard": "ASME A17.1 Sec: 2.25.3, 8.10.2.2.5c, 8.11.2.1.5d"
+        },
+        {
+          "itemNo": "1.6.4",
+          "acceptanceCriteria": "Normal terminal stopping devices operate correctly to slow down and operate the car correctly at or near top and bottom terminal landings (up to rated load and speed)",
+          "referenceStandard": "ASME A17.1 Sec:2.25, 8.11.2.2.5"
+        },
+        {
+          "itemNo": "1.6.5",
+          "acceptanceCriteria": "Travel cables are undamaged and serviceable",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1.2"
+        },
+        {
+          "itemNo": "1.6.6",
+          "acceptanceCriteria": "Governor rope tension devices are operating correctly",
+          "referenceStandard": "ASME A17.1 Sec: 2.18.7, 8.6.1.6.2, 8.11.2.1.5g"
+        },
+        {
+          "itemNo": "1.6.7",
+          "acceptanceCriteria": "Car frame and platform conforms to correct material and fixings requirements as permitted in relevant specifications",
+          "referenceStandard": "ASME A17.1 Sec: 2.15.6, 2.15.8, 2.16.2.2, 8.11.2.1.5"
+        },
+        {
+          "itemNo": "1.6.8",
+          "acceptanceCriteria": "Car safeties guiding members- including roped- hydraulic elevators installed under A17.1b-1989 and later editions - are lubricated and clean",
+          "referenceStandard": "ASME A17.1 Sec: 2.15, 2.17.11, 8.6.4.5, 8.7.2.15.1, 8.11.2.1.5j, 8.11.2.3.1"
+        },
+        {
+          "itemNo": "1.6.9",
+          "acceptanceCriteria": "Buffers and terminal speed devices are operating correctly",
+          "referenceStandard": "ASME A17.1 Sec: 2.6, 2.22, 2.26.2.22, 8.2.3, 8.6.1.6.3, 8.10.2.2.5c, 8.11.2.3.6"
+        },
+        {
+          "itemNo": "1.6.10",
+          "acceptanceCriteria": "Compensating ropes and chains are in place to tie the counterweight and car together",
+          "referenceStandard": "ASME A17.1 Sec: 2.17.17, 2.21.4, 2.26.2.3, 8.11.2.1.5h"
+        }
+      ]
+    },
+    {
+      "no": "1.7",
+      "title": "ELECTRIC ELEVATOR / Firefighters' Service",
+      "items": [
+        {
+          "itemNo": "1.7.1",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1b- 1973 through A17.1b- 1980)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        },
+        {
+          "itemNo": "1.7.2",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1- 1981 through A17.1b- 1983)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        },
+        {
+          "itemNo": "1.7.3",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1- 1984 through A17.1a- 1988 and A17.3)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        },
+        {
+          "itemNo": "1.7.4",
+          "acceptanceCriteria": "Verify Firefighters' service (A17.1b- 1989 and later edition)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        }
+      ]
+    },
+    {
+      "no": "2.1",
+      "title": "HYDRAULIC ELEVATOR / Inside of Car",
+      "items": [
+        {
+          "itemNo": "2.1.1",
+          "acceptanceCriteria": "Door reopening device is operating correctly",
+          "referenceStandard": "ASME A17.1 Sec: 2.13(3.13), 8.11.2.1.1a, 8.11.3.1.1a"
+        },
+        {
+          "itemNo": "2.1.2",
+          "acceptanceCriteria": "Emergency stop switches are not provided on passenger elevators but are provided on freight elevators, in the car and in or adjacent to each car operating panel",
+          "referenceStandard": "ASME A17.1 Sec: 3.26.4.2a, 3.26.4.2f, 8.11.3.1.1b"
+        },
+        {
+          "itemNo": "2.1.3",
+          "acceptanceCriteria": "All operating control devices are of the enclosed electric type",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.1.1(3.26.1), 3.26.3, 8.11.3.1.1c"
+        },
+        {
+          "itemNo": "2.1.4",
+          "acceptanceCriteria": "Sills are of the correct type and are of sufficient strength and clearance with adjoining car platform or hoist way sill (min. clearance 13mm)",
+          "referenceStandard": "ASME A17.1 Sec: 2.5.1(3.5), 2.11.10.3 (3.11), 2.11.11.1, 2.11.13.1, 2.15.16 (3.15), 8.11.3.1.1d"
+        },
+        {
+          "itemNo": "2.1.5",
+          "acceptanceCriteria": "Car has minimum of two lamps (min. of 50 lux for passenger and 25 lux for freight elevators) (Passenger elevators shall have auxiliary lighting which automatically turns on if normal power fails)",
+          "referenceStandard": "ASME A17.1 Sec: 3.14, 8.11.3.1.1e"
+        },
+        {
+          "itemNo": "2.1.6",
+          "acceptanceCriteria": "Car emergency communication signal to authorized and emergency personnel is available and working",
+          "referenceStandard": "ASME A17.1 Sec: 2.27.1 (3.27), 8.11.3.1.1f"
+        },
+        {
+          "itemNo": "2.1.7",
+          "acceptanceCriteria": "Each car door or gate has electric contacts or interlocks (where required) to prevent operation of the driving machine when the door or gate is open",
+          "referenceStandard": "ASME A17.1 Sec: 2.12.7.3 (3.12), 2.13.2.1 (3.13), 2.14.4, 2.14.6 (3.14), 2.26.2 (2.26.2.15"
+        },
+        {
+          "itemNo": "2.1.8",
+          "acceptanceCriteria": "Force required to prevent door closing does not exceed 30 ft.lb",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.4.2.3, 8.11.3.1.1h"
+        },
+        {
+          "itemNo": "2.1.9",
+          "acceptanceCriteria": "Power closing of doors or gates (vertically sliding) is preceded by a warning bell at least 5 seconds prior to door or gate movement and continues until substantial closure (Closure using a switch or button in the car omits the 5 second time interval)",
+          "referenceStandard": "ASME A17.1Sec: 2.13.3 (3.13), 8.11.3.1.1i)"
+        },
+        {
+          "itemNo": "2.1.10",
+          "acceptanceCriteria": "Power opening of doors or gates only occurs when the car is at rest at the landing, or in the landing zone",
+          "referenceStandard": "ASME A17.1 Sec: 2.12.5 (3.12), 2.26.1.6, 2.26.9 (2.26.9.3), 3.26.3, 8.11.3.1.1j"
+        },
+        {
+          "itemNo": "2.1.11",
+          "acceptanceCriteria": "Car vision panels and glass car doors meet specifications (not more than 0.1 sq.m. and no panel more than 150mm wide, glass to be laminated or safety glass or safety plastic)",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.2.5, 2.14.5.8 (3.14), 8.11.3.1.1k"
+        },
+        {
+          "itemNo": "2.1.12",
+          "acceptanceCriteria": "Car enclosure is in compliance with the required equipment (specification)",
+          "referenceStandard": "ASME A17.1Sec: (2.14 (3.14), 2.29.1 (3.27), 8.3.7, 8.7.2.14, 8.7.3.13, 8.11.3.1.1l"
+        },
+        {
+          "itemNo": "2.1.13",
+          "acceptanceCriteria": "Ventilation (natural or forced) complies with the various opening and size requirements as well as air change volume per minute (for forced ventilation)",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.2.3, 2.14.3.3 (3.14), 8.11.3.1.1n"
+        },
+        {
+          "itemNo": "2.1.14",
+          "acceptanceCriteria": "Signs and operating device symbols are installed and legible",
+          "referenceStandard": "ASME A17.1 Sec: 2.26.12, 8.11.3.1.1b"
+        },
+        {
+          "itemNo": "2.1.15",
+          "acceptanceCriteria": "Rated load, platform area and data plate are available and legible",
+          "referenceStandard": "ASME A17.1 Sec: 2.16 (3.16), 8.11.3.1.1p"
+        },
+        {
+          "itemNo": "2.1.16",
+          "acceptanceCriteria": "Standby power operation (at least one elevator at a time) with rated load in the event of power supply failure (transfer from normal to standby supply is automatic)",
+          "referenceStandard": "ASME A17.1 Sec: 2.27.2 (3.27), 8.11.2.2.7 (8.11.3.2.3f), 8.11.3.1.1q"
+        },
+        {
+          "itemNo": "2.1.17",
+          "acceptanceCriteria": "Restricted opening of car or hoist way doors (4\" max) is possible outside the unlocking zone",
+          "referenceStandard": "ASME A17.1 Sec: 2.12.5 (3.12), 8.11.3.1.1r"
+        },
+        {
+          "itemNo": "2.1.18",
+          "acceptanceCriteria": "Car ride is smooth in acceleration and deceleration throughout its travel",
+          "referenceStandard": "ASME A17.1 Sec: 3.15, 3.23.1, 8.6.1.6.2 (8.6.5), 8.11.3.1.1s"
+        }
+      ]
+    },
+    {
+      "no": "2.2",
+      "title": "HYDRAULIC ELEVATOR / Machine Room",
+      "items": [
+        {
+          "itemNo": "2.2.1",
+          "acceptanceCriteria": "Access to the machine space is in conformance with the type of access, location , and combustibility allowed",
+          "referenceStandard": "ASME A17.1 Sec: 3.1, 3.7, 8.11.3.1.2a"
+        },
+        {
+          "itemNo": "2.2.2",
+          "acceptanceCriteria": "Minimum headroom clearance is either 84\" , 53\", 42\", or 35\" depending on type and location of machine room / hoist way",
+          "referenceStandard": "ASME A17.1 Sec: 2.4.7 (3.7), 8.11.3.1.2b"
+        },
+        {
+          "itemNo": "2.2.3",
+          "acceptanceCriteria": "Electric lighting in the machine room is not less than 200 lux at floor level and the control switch is at the lock - jamb side of the access door wherever practicable",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.5.1 (3.7), 8.11.3.1.2c"
+        },
+        {
+          "itemNo": "2.2.4",
+          "acceptanceCriteria": "Strength and construction of the floor of the machine room, windows, skylights and fire resistance is in accordance with the relevant building code",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.1.1 (3.7), 2.9.2, 2.9.4 (3.9), 8.11.3.1.2d"
+        },
+        {
+          "itemNo": "2.2.5",
+          "acceptanceCriteria": "Housekeeping is adequate",
+          "referenceStandard": "ASME A17.1 Sec: 8.6.1.2, 8.6.4.8 (8.6.5), 8.6.10.3, 8.11.3.1.2e"
+        },
+        {
+          "itemNo": "2.2.6",
+          "acceptanceCriteria": "Ventilation (natural or forced) complies with the various opening and size requirements as well as air change volume per minute (for forced ventilation)",
+          "referenceStandard": "ASME A17.1 Sec: 2.7.5.2 (3.7), 2.8.4, 8.11.3.1.2f"
+        },
+        {
+          "itemNo": "2.2.7",
+          "acceptanceCriteria": "Fire extinguisher is available in the machine room (Class ABC)",
+          "referenceStandard": "ASME A17.1 Sec: 8.11.3.1.2g, (8.6.5)"
+        },
+        {
+          "itemNo": "2.2.8",
+          "acceptanceCriteria": "Pipes, wiring and ducts conform to the relevant specification (Pipes - 15psi steam or hot water only; wiring to NFPA70 or CSA-C22.1 standard)",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1, 2.8.2 (3.8), 8.11.3.1.2h"
+        },
+        {
+          "itemNo": "2.2.9",
+          "acceptanceCriteria": "Guarding of exposed auxiliary equipment is in place and secure",
+          "referenceStandard": "ASME A17.1 Sec: 2.10.1 (3.10), 8.11.3.1.2i"
+        },
+        {
+          "itemNo": "2.2.10",
+          "acceptanceCriteria": "Verify numbering of elevators (min. 50mm height figures) on driving machine , disconnect switch, mg set, controller, selector, governor and the car crosshead or frame",
+          "referenceStandard": "ASME A17.1 Sec: 2.10.4.2, 2.29.1 (3.27), 3.26"
+        },
+        {
+          "itemNo": "2.2.11",
+          "acceptanceCriteria": "Electrical disconnecting means (devices) and controls operate correctly",
+          "referenceStandard": "ASME A17.1 Sec: 3.26, 3.26.3.1(3.26.3.1. 4b), 8.11.3.1.2k"
+        },
+        {
+          "itemNo": "2.2.12",
+          "acceptanceCriteria": "Controller wiring, fuses, grounding, etc. conform to NFPA 70 or CSA C22.1",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1 (3.8), 3.26, 3,26.5, 8.6.1.6.3, 8.6.5, 8.11.3.1.2l"
+        },
+        {
+          "itemNo": "2.2.13",
+          "acceptanceCriteria": "Governor, overspeed switch and seal conform to requirements: namely, an overspeed switch on every car and counterweight governor, sealing of the means to regulate the governor rope pull-out force (carrier) once set, to not more than 60% of the pull through",
+          "referenceStandard": "ASME A17.1 Sec: 2.17, 2.18, 3.17.1, 8.6.1.2, 8.7.2.19, 8.11.2.2.2, 8.11.3.2.3, 8.11.3.4"
+        },
+        {
+          "itemNo": "2.2.14",
+          "acceptanceCriteria": "Code date plate states correct information and is legible",
+          "referenceStandard": "ASME A17.1 Sec: 8.7.1.8, 8.9"
+        },
+        {
+          "itemNo": "2.2.15",
+          "acceptanceCriteria": "Hydraulic power unit is operational, undamaged and does not leak",
+          "referenceStandard": "ASME A17.1 Sec: 3.24, 8.6.5, 8.11.3.1.2m"
+        },
+        {
+          "itemNo": "2.2.16",
+          "acceptanceCriteria": "Hydraulic relief valve(s) are fitted between the pump and check valve and are of sufficient capacity to pass the rated capacity of the pump without raising working pressure more than 50% above normal (valve should be sealed )",
+          "referenceStandard": "ASME A17.1 Sec: 3.19.1, 3.19.2, 3.19.4.2, 3.28, 8.10.3.2.2m, 8.11.3.2.1"
+        },
+        {
+          "itemNo": "2.2.17",
+          "acceptanceCriteria": "Hydraulic control valve(s) are marked with their rated pressure and electrical data",
+          "referenceStandard": "ASME A17.1 Sec: 3.19, 8.11.3.1.2o"
+        },
+        {
+          "itemNo": "2.2.18",
+          "acceptanceCriteria": "Oil tanks are of sufficient capacity to provide reserve liquid, prevent ingress of air and be clearly marked with minimum level.",
+          "referenceStandard": "ASME A17.1 Sec: 3.24, 8.6.5.1, 8.6.5.2, 8.6.5.5, 8.6.5.6, 8.7.3.29, 8.11.3.1.2p, 8.11.3.3.2"
+        },
+        {
+          "itemNo": "2.2.19",
+          "acceptanceCriteria": "Flexible hydraulic hoses and fitting assemblies are undamaged and leak-free.",
+          "referenceStandard": "ASME A17.1 Sec: 3.19.3.3, 8.11.3.1.2q, 8.11.3.2.4"
+        },
+        {
+          "itemNo": "2.2.20",
+          "acceptanceCriteria": "Supply line and shutoff line are leak-free, and the shut-off valve is located between pump and jack and outside the hoist way",
+          "referenceStandard": "ASME A17.1 Sec: 3.19, 8.11.3.1.2r"
+        },
+        {
+          "itemNo": "2.2.21",
+          "acceptanceCriteria": "Hydraulic cylinders are free from damage and are leak-free",
+          "referenceStandard": "ASME A17.1 Sec: 3.18.3, 8.11.3.1.2s, 8.11.3.2.2"
+        },
+        {
+          "itemNo": "2.2.22",
+          "acceptanceCriteria": "Pressure switch is fitted if the top of the cylinder is above the top of the storage tank in line between cylinder and valve, the latter activating on loss of positive pressure at the top of the cylinder",
+          "referenceStandard": "ASME A17.1 Sec: 3.26.8, 8.11.3.1.2t, 8.11.3.2.5"
+        },
+        {
+          "itemNo": "2.2.23",
+          "acceptanceCriteria": "Pressure switch prevents automatic door opening and the operation of the lowering valve(s) (Car doors can be opened when in the unlocking zone using the in-car button)",
+          "referenceStandard": "ASME A17.1 Sec: 3.26.8, 8.11.3.1.2t, 8.11.3.2.5"
+        }
+      ]
+    },
+    {
+      "no": "2.3",
+      "title": "HYDRAULIC ELEVATOR / Top of Car",
+      "items": [
+        {
+          "itemNo": "2.3.1",
+          "acceptanceCriteria": "Car top stop switch is provided and operational",
+          "referenceStandard": "ASME A17.1 Sec: 3.26.4, 8.11.3.1.3a"
+        },
+        {
+          "itemNo": "2.3.2",
+          "acceptanceCriteria": "Car top light and outlet is provided and operational",
+          "referenceStandard": "ASME A17.1 Sec: 2.14.7 (3.14), 8.11.3.1.3b"
+        },
+        {
+          "itemNo": "2.3.3",
+          "acceptanceCriteria": "Car top operating device is provided (for inspection purposes)",
+          "referenceStandard": "ASME A17.1 Sec: 3.26.2, 8.11.3.1.3c"
+        },
+        {
+          "itemNo": "2.3.4",
+          "acceptanceCriteria": "Car top clearance and refuge space dimensions: varies for the former: minimum 43\" for the latter",
+          "referenceStandard": "ASME A17.1 Sec: 3.4, 3.18.4, 8.10.3.2.2s, 8.10.3.2.3d, 8.11.3.1.3d"
+        },
+        {
+          "itemNo": "2.3.5",
+          "acceptanceCriteria": "Terminal stopping devices are provided and arranged to slow down and stop the car automatically at or near the top and bottom terminal landings (with up to rated load) and at a speed attained in normal operation",
+          "referenceStandard": "ASME A17.1 Sec: 3.25.1.1, 8.10.2.3.2k, 8.11.2.2.5 (8.11.3.2.3), 8.11.3.1.3e"
+        },
+        {
+          "itemNo": "2.3.6",
+          "acceptanceCriteria": "Final terminal stopping devices are electro- mechanically operated and cause power to the driving machine motor to be removed automatically after the car has passed a terminal landing",
+          "referenceStandard": "ASME A17.1 Sec: 3.25.2, 8.11.3.1.3f"
+        },
+        {
+          "itemNo": "2.3.7",
+          "acceptanceCriteria": "Anticreep device controls the car within 25mm of the landing irrespective of hoist way door position",
+          "referenceStandard": "ASME a17.1 Sec: 3.26.3, 3.26.4, 8.11.3.1.3g"
+        },
+        {
+          "itemNo": "2.3.8",
+          "acceptanceCriteria": "Top emergency exit is at least 16\" square",
+          "referenceStandard": "ASME A17.1 Sec:2.14.1.5 (3.14), 8.11.3.1.3i"
+        },
+        {
+          "itemNo": "2.3.9",
+          "acceptanceCriteria": "Verify floor level and emergency identification numbering of elevators (min. 50mm height)",
+          "referenceStandard": "ASME A17.1 Sec: 2.29.1 (3.27), 2.29.2 (3.1), 8.11.3.1.3j"
+        },
+        {
+          "itemNo": "2.3.10",
+          "acceptanceCriteria": "Hoist way construction complies with appropriate standards and building regulations (where applicable)",
+          "referenceStandard": "ASME A17.1 Sec: 3.1, 8.11.3.1.3k"
+        },
+        {
+          "itemNo": "2.3.11",
+          "acceptanceCriteria": "Hoist way smoke control arrangements are satisfactory enough to prevent the accumulation of smoke and hot gases",
+          "referenceStandard": "ASME A17.1 Sec:2.1.4 (3.1), 8.11.3.1.3l"
+        },
+        {
+          "itemNo": "2.3.12",
+          "acceptanceCriteria": "Pipes, wiring and ducts conform to the relevant specification (Pipes - 15psi steam or hot water only; wiring to NFPA70 or CSA-C22.1 standard)",
+          "referenceStandard": "ASME A17.1 (2.8 Sec:3.8), 8.11.3.1.3m"
+        },
+        {
+          "itemNo": "2.3.13",
+          "acceptanceCriteria": "Windows, projections, recesses and setbacks comply with the appropriate building codes and hoist way enclosures generally have flush surfaces on the hoist way side",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.5, 2.1.6 (3.1), 2.11.10 (3.11), 8.11.3.1.3n"
+        },
+        {
+          "itemNo": "2.3.14",
+          "acceptanceCriteria": "Various hoist way clearances are at least the same all the way around (20mm )",
+          "referenceStandard": "ASME A17.1 Sec: 2.5 (3.5), 2.11 (3.11), 8.11.3.1.3o"
+        },
+        {
+          "itemNo": "2.3.15",
+          "acceptanceCriteria": "Multiple hoist ways (and the number of elevators in a hoist way) conforms with the appropriate building code",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.1.4 (3.1), 8.11.3.1.3p"
+        },
+        {
+          "itemNo": "2.3.16",
+          "acceptanceCriteria": "Traveling cables and junction boxes conforms to NFPA70 or CSA -C22.1, whichever is applicable",
+          "referenceStandard": "ASME A17.1 Sec: 2.8.1 (3.8), 8.11.3.1.3q"
+        },
+        {
+          "itemNo": "2.3.17",
+          "acceptanceCriteria": "Door and gate equipment operation are satisfactory and in accordance with manufacturers recommendations",
+          "referenceStandard": "ASME A17.1 Sec: 2.11 (3.11), 2.12 (3.12), 2.26.1.6 (3.26.3), 8.11.3.1.3r"
+        },
+        {
+          "itemNo": "2.3.18",
+          "acceptanceCriteria": "Car frame and stiles are suitable for the purpose and show no defects",
+          "referenceStandard": "ASME A17.1 (3.15, 8.8 (3.18.5), 8.11.3.1.3s)"
+        },
+        {
+          "itemNo": "2.3.19",
+          "acceptanceCriteria": "Guide rails fastening and equipment are suitable for the purpose, show no defects, and the guide rails are correctly lubricated (where required) (manufacturer specification )",
+          "referenceStandard": "ASME A17.1 Sec: 2.23 (3.23.2), 3.15, 3.23, 3.38, 8.11.3.1.3t"
+        },
+        {
+          "itemNo": "2.3.20",
+          "acceptanceCriteria": "Governor rope condition and that it is fitted with a tag",
+          "referenceStandard": "ASME A17.1 Sec: 2.18.5, 3.17.1, 8.6.4.2, 8.7.2.19, 8.11.2.1.3, 8.11.3.1.3w"
+        },
+        {
+          "itemNo": "2.3.21",
+          "acceptanceCriteria": "Condition of governor releasing carrier and that it is set to require a tension in the governor rope to pull the rope from the carrier of not more than 60% of the pull-through tension developed by the governor. The means to regulate this force shall be mechanical and shall be sealed.",
+          "referenceStandard": "ASME A17.1 Sec: 2.17.15, 3.17.1, 8.11.3.1.3y, 8.11.3.4"
+        },
+        {
+          "itemNo": "2.3.22",
+          "acceptanceCriteria": "Wire rope fastening and hitch plate are secured using bolts or rivets.",
+          "referenceStandard": "ASME A17.1 Sec: 2.9.3.3, 2.15.13, 2.20, 3.18.1.2, 8.6.3, 8.11.3.1.3x"
+        },
+        {
+          "itemNo": "2.3.23",
+          "acceptanceCriteria": "Specification and suitability of the suspension rope and its fastenings is acceptable (in the case of a new rope the sheave material shall be assessed as suitable or not )",
+          "referenceStandard": "ASME A17.1 Sec: 2.20, 8.2.7, 8.6.2.5, 8.7.2.21, 8.7.3.25, 8.11.2.1.3cc, 8.11.3.1.3y"
+        },
+        {
+          "itemNo": "2.3.24",
+          "acceptanceCriteria": "Speed test in both directions is in accordance with manufacturers specifications",
+          "referenceStandard": "ASME A17.1 Sec: 2.17.16, 3.4, 8.10.3.2.3cc, 8.11.3.1.3h"
+        },
+        {
+          "itemNo": "2.3.25",
+          "acceptanceCriteria": "Slack rope device (roped-hydraulic elevators installed under A17.1b-1989 and later editions) does cause the electric power to be removed from the hydraulic machine pump motor and control valves should a rope become slack",
+          "referenceStandard": "ASME A17.1 Sec: 3.18.1.2, 3.26.4, 8.11.3.1.3z"
+        },
+        {
+          "itemNo": "2.3.26",
+          "acceptanceCriteria": "Travelling sheave (roped-hydraulic elevators installed under A17.1b-1989 and later editions) is attached using suitable fastenings (the loading being the resultant of the maximum tensions in the ropes leading from the sheave with the elevator at rest and with rated load in the car)",
+          "referenceStandard": "ASME A17.1 Sec: 2.20, 2.24.2, 2.24.3, 2.24,5. 3.18.1.2, 3.23.2, 8.7.3.25, 8.11.3.1.3aa"
+        },
+        {
+          "itemNo": "2.3.27",
+          "acceptanceCriteria": "Counterweight, counterweight buffers and safeties are in compliance with design requirements",
+          "referenceStandard": "ASME A17.1 Sec:3.4.6, 3.17.2, 3.22.2, 8.2.3"
+        }
+      ]
+    },
+    {
+      "no": "2.4",
+      "title": "HYDRAULIC ELEVATOR / Outside Hoist way",
+      "items": [
+        {
+          "itemNo": "2.4.1",
+          "acceptanceCriteria": "Car platform guard plates comply with material specification (steel ) and thickness (not less than 1.5 mm)",
+          "referenceStandard": "ASME A17.1 Sec: 3.15, 8.11.3.1.4a"
+        },
+        {
+          "itemNo": "2.4.2",
+          "acceptanceCriteria": "Hoist way doors operate correctly",
+          "referenceStandard": "ASME A17.1 Sec: 2.11 (3.11), 2.12.2.2, 2.12.3.2 (3.12), 3.26.4, 8.10.3.2.3r, 8.11.3.1.4b"
+        },
+        {
+          "itemNo": "2.4.3",
+          "acceptanceCriteria": "Car vision panel (if fitted) is 0.1sq.m. (max) and either wire-glass or laminated, and in the case of glass doors be laminated , safety glass or safety plastic , with not less than 60% of the total visible door panel surface area as glass.",
+          "referenceStandard": "ASME A17.1 Sec: 2.11.7 (3.11), 8.11.3.1.4c"
+        },
+        {
+          "itemNo": "2.4.4",
+          "acceptanceCriteria": "Hoist way door locking devices are operational (interlocks)",
+          "referenceStandard": "ASME A17.1 Sec: 2.12 (3.12), 8.11.3.1.4d"
+        },
+        {
+          "itemNo": "2.4.5",
+          "acceptanceCriteria": "Access to hoist way (at top or bottom landing) is by use of an access switch adjacent to the entrance",
+          "referenceStandard": "ASME A17.1 Sec: 2.12.6, 2.12.7 (3.12), 8.11.3.1.4e"
+        },
+        {
+          "itemNo": "2.4.6",
+          "acceptanceCriteria": "Hoist way doors are power closing",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3, 2.13.6 (3.13), 8.11.3.1.4f"
+        },
+        {
+          "itemNo": "2.4.7",
+          "acceptanceCriteria": "Sequence of operation of hoist way doors is correct",
+          "referenceStandard": "ASME A17.1 Sec:2.13.3.4 (3.13), 2.13.6, 8.11.3.1.4g"
+        },
+        {
+          "itemNo": "2.4.8",
+          "acceptanceCriteria": "Verify hoist way enclosure fire resistance (or non- fire resistance, depending on building code) (other general requirements such as floor strength and location depend on the code - check specification)",
+          "referenceStandard": "ASME A17.1 Sec: 2.1.1, 2.1.4, 2.1.5 (3.1), 8.11.3.1.4h"
+        },
+        {
+          "itemNo": "2.4.9",
+          "acceptanceCriteria": "Elevator parking devices are operable",
+          "referenceStandard": "ASME A17.1 Sec:8.11.3.1.4i"
+        },
+        {
+          "itemNo": "2.4.10",
+          "acceptanceCriteria": "Emergency doors in blind hoist way are on every third floor, not more than 11m from sill to sill with a clear opening of 700mm x 2030mm (at least) , and doors are self closing and self-locking and marked \"Danger Elevator Hoist way\" in 50mm letters (an open or unlocked door removes power from the elevator motor)",
+          "referenceStandard": "ASME A17.1 Sec: 2.11.1.1, 2.11.1.2"
+        },
+        {
+          "itemNo": "2.4.11",
+          "acceptanceCriteria": "Standby power selection switch is marked \"Elevator Emergency Power\" and key operated under a locked cover",
+          "referenceStandard": "ASME A17.1 Sec:2.16.8 (3.16), 2.27.2, 2.27.8 (3.27), 8.11.2.2.7, 8.11.3.1.4k, 8.11.3.2.3"
+        }
+      ]
+    },
+    {
+      "no": "2.5",
+      "title": "HYDRAULIC ELEVATOR / Elevator Pit",
+      "items": [
+        {
+          "itemNo": "2.5.1",
+          "acceptanceCriteria": "Pit access, lighting and stop switch meet design requirements",
+          "referenceStandard": "ASME A17.1 (2.8 Sec:3.8), 3.6, 3.26.4, 8.6.4.7, 8.11.3.1.5a"
+        },
+        {
+          "itemNo": "2.5.2",
+          "acceptanceCriteria": "Verify bottom clearance, In no case shall the available refuge space be less than either of the following (a) a horizontal area of 600 mm x 1 200 mm with a height of 600 mm (b) a horizontal area of 450 mm x 900 mm with a height of 1 070 mm.",
+          "referenceStandard": "ASME A17.1 Sec:3.4, 3.18.3.3, 8.10.3.2.5c, 8.11.3.1.5b"
+        },
+        {
+          "itemNo": "2.5.3",
+          "acceptanceCriteria": "Normal terminal stopping devices operate correctly to slow down and operate the car correctly at or near top and bottom terminal landings (up to rated load and speed)",
+          "referenceStandard": "ASME A17.1 Sec:3.25.1, 8.11.2.2.5 (8.11.3.2.3), 8.11.3.1.5e"
+        },
+        {
+          "itemNo": "2.5.4",
+          "acceptanceCriteria": "Travel cables are undamaged and serviceable",
+          "referenceStandard": "ASME A17.1 Sec:2.8.2 (3.8), 8.11.3.1.5f"
+        },
+        {
+          "itemNo": "2.5.5",
+          "acceptanceCriteria": "Governor-rope tension device is working satisfactorily",
+          "referenceStandard": "ASME A17.1 Sec:2.18.7, 3.17.1, 8.6.1.6.2, 8.11.3.1.5k"
+        },
+        {
+          "itemNo": "2.5.6",
+          "acceptanceCriteria": "Car frame and platform meet requirements as per manufacturers specification",
+          "referenceStandard": "ASME A17.1 Sec: 3.15, 2.18.2.3, 3.28, 8.11.3.1.5g"
+        },
+        {
+          "itemNo": "2.5.7",
+          "acceptanceCriteria": "Car safeties guarding members are in place and secure - including roped-hydraulic elevators installed under A17.1b-1989 and later editions (where applicable)",
+          "referenceStandard": "ASME A17.1 Sec:2.17, 3.17.1, 8.2.6, 8.11.3.1.5j"
+        },
+        {
+          "itemNo": "2.5.8",
+          "acceptanceCriteria": "Plunger and cylinder comply with design requirements (Plunger shall not strike the safety bulkhead of the cylinder when the car is resting on its fully compressed buffer",
+          "referenceStandard": "ASME A17.1 Sec: 3.18, 8.6.5.1, 8.6.5.2, 8.6.5.5, 8.6.5.6, 8.11.3.1.5c"
+        },
+        {
+          "itemNo": "2.5.9",
+          "acceptanceCriteria": "Plunger stops are provided to prevent the plunger from travelling beyond the limits of the cylinder in the up direction at maximum speed and full load pressure.",
+          "referenceStandard": "ASME A17.1 Sec: 3.18, 8.6.5.1, 8.6.5.2, 8.6.5.5, 8.6.5.6, 8.11.3.1.5c"
+        },
+        {
+          "itemNo": "2.5.10",
+          "acceptanceCriteria": "Car buffers are in place where required and undamaged",
+          "referenceStandard": "ASME A17.1 Sec: 3.22.1, 3.26.4, 8.2.3.2, 8.6.4.4, 8.11.3.1.5d"
+        },
+        {
+          "itemNo": "2.5.11",
+          "acceptanceCriteria": "Guiding members are in position, securely bracketed, and meet design requirements",
+          "referenceStandard": "ASME A17.1 Sec: 3.23, 3.28, 8.6.4.3, 8.11.3.1.5h"
+        },
+        {
+          "itemNo": "2.5.12",
+          "acceptanceCriteria": "Oil supply piping meets design requirements (as per manufacturer) and is leak-proof and secure",
+          "referenceStandard": "ASME A17.1 Sec: 2.24, 8.10.3.2.2r, 8.11.3.1.5i"
+        }
+      ]
+    },
+    {
+      "no": "2.6",
+      "title": "HYDRAULIC ELEVATOR / Firefighters' Service",
+      "items": [
+        {
+          "itemNo": "2.6.1",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1b- 1973 through A17.1b- 1980)",
+          "referenceStandard": "ASME A17.1 Sec:2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        },
+        {
+          "itemNo": "2.6.2",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1- 1981 through A17.1b- 1983)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        },
+        {
+          "itemNo": "2.6.3",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1- 1984 through A17.1a- 1988 and A17.3)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        },
+        {
+          "itemNo": "2.6.4",
+          "acceptanceCriteria": "Verify / check operation of elevators under fire and other emergency conditions (A17.1b- 1989 and later edition)",
+          "referenceStandard": "ASME A17.1 Sec: 2.13.3.4, 2.13.5, 8.6.10.1, 8.11.2.1.4l, 8.11.2.2.6"
+        }
+      ]
+    }
+  ]
+}

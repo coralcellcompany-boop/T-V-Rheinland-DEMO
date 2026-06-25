@@ -28,25 +28,3 @@ public class StickerConfiguration : IEntityTypeConfiguration<Sticker>
     }
 }
 
-public class StickerRequestConfiguration : IEntityTypeConfiguration<StickerRequest>
-{
-    public void Configure(EntityTypeBuilder<StickerRequest> e)
-    {
-        e.ToTable("StickerRequests");
-        e.HasKey(x => x.Id);
-        e.Property(x => x.Id).ValueGeneratedNever();
-        e.Property(x => x.RequestNo).IsRequired().HasMaxLength(30);
-        e.HasIndex(x => x.RequestNo).IsUnique();
-        e.Property(x => x.InspectorUserId).IsRequired().HasMaxLength(450);
-        e.Property(x => x.Color).HasConversion<int>();
-        e.Property(x => x.State).HasConversion<int>();
-        e.Property(x => x.Justification).HasMaxLength(1000);
-        e.Property(x => x.DecidedByUserId).HasMaxLength(450);
-        e.Property(x => x.DecisionComments).HasMaxLength(1000);
-        e.Property(x => x.CreatedById).HasMaxLength(450);
-        e.Property(x => x.UpdatedById).HasMaxLength(450);
-        e.HasIndex(x => x.InspectorUserId);
-        e.HasIndex(x => x.State);
-        e.Ignore(x => x.DomainEvents);
-    }
-}

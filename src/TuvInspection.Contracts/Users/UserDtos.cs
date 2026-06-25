@@ -11,7 +11,8 @@ public sealed record UserListItemDto(
     bool IsLockedOut,
     IReadOnlyList<string> Roles,
     IReadOnlyList<Guid> AssignedClientIds,
-    DateTime CreatedAtUtc);
+    DateTime CreatedAtUtc,
+    bool HasSignature);
 
 public sealed record CreateUserRequest(
     string Email,
@@ -20,7 +21,8 @@ public sealed record CreateUserRequest(
     string? CertNo,
     string Password,
     IReadOnlyList<string> Roles,
-    IReadOnlyList<Guid>? AssignedClientIds);
+    IReadOnlyList<Guid>? AssignedClientIds,
+    string? SignaturePng);
 
 public sealed record UpdateUserRequest(
     string FullName,
@@ -28,7 +30,21 @@ public sealed record UpdateUserRequest(
     string? CertNo,
     bool IsActive,
     IReadOnlyList<string> Roles,
-    IReadOnlyList<Guid> AssignedClientIds);
+    IReadOnlyList<Guid> AssignedClientIds,
+    string? SignaturePng);
+
+/// <summary>Self-service signature payload. PUT /api/profile/signature.</summary>
+public sealed record UpdateProfileSignatureRequest(string SignaturePng);
+
+/// <summary>Self-service profile shape — exposes the user's signature so the UI can preview it
+/// and warn when missing. <c>SignaturePng</c> is included in full only on this endpoint.</summary>
+public sealed record ProfileDto(
+    string Id,
+    string? Email,
+    string? FullName,
+    string? SapNo,
+    IReadOnlyList<string> Roles,
+    string? SignaturePng);
 
 public sealed record ResetPasswordRequest(string NewPassword);
 

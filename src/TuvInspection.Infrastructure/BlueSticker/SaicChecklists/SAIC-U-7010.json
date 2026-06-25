@@ -1,0 +1,801 @@
+{
+  "saicNumber": "SAIC-U-7010",
+  "title": "Side Boom Tractor-Cranes",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.1.5"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.1.5"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.3.1"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Operator is certified(for the inspected crane type/model) and licensed",
+          "referenceStandard": "G.I. 7.025 ASME B30.14 Sec: 14 - 3.1.1"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Load rating chart is applicable to the configured boom and is legible",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.1.4"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "An operating manual is available (English)",
+          "referenceStandard": "ASME B30.14 Sec: 14-0.3 (a-1)"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Sec: 5.6.2"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Crane is painted safety yellow",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "Crane is painted safety yellow-and-black stripes on offshore facilities",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Rated capacity of crane is marked(Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.12",
+          "acceptanceCriteria": "A fire extinguisher with minimum rating of 10 BC is installed in the cab or at the machinery housing",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 3.5.3"
+        },
+        {
+          "itemNo": "1.13",
+          "acceptanceCriteria": "Electrical apparatus is working correctly without excessive dirt, deterioration or moisture accumulation",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.1.2 (j)"
+        },
+        {
+          "itemNo": "1.14",
+          "acceptanceCriteria": "Control levers are all operable from the operator station",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.5.2"
+        },
+        {
+          "itemNo": "1.15",
+          "acceptanceCriteria": "Control pedals are functioning correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.5.2"
+        },
+        {
+          "itemNo": "1.16",
+          "acceptanceCriteria": "All controls are labeled as to their functions and within reach of operator",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 1.4.1 & 1.5.1"
+        },
+        {
+          "itemNo": "1.17",
+          "acceptanceCriteria": "Guards are fitted and secured to cover exposed moving parts",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.6 (a)"
+        },
+        {
+          "itemNo": "1.18",
+          "acceptanceCriteria": "Lubrication chart is available on the side boom",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.3.4 (a)"
+        },
+        {
+          "itemNo": "1.19",
+          "acceptanceCriteria": "All moving parts that require lubrication are lubricated and accessible",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.3.4 (b)"
+        },
+        {
+          "itemNo": "1.20",
+          "acceptanceCriteria": "Tires and wheels are in condition and as recommended inflation pressure",
+          "referenceStandard": "ASME B30.14 Sec: 14- 2.1.2 (k)"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "OPERATOR AIDS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Boom angle indicator is functioning correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 ( e )"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Boom hoist shut off is functioning correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Load indicator is functioning correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.2.1 (b)"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "Capacity indicator is functioning correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.2.1"
+        }
+      ]
+    },
+    {
+      "no": "3",
+      "title": "ENGINE",
+      "items": [
+        {
+          "itemNo": "3.1",
+          "acceptanceCriteria": "Gasoline, diesel, electric, or other power plants to be checked for improper performance or noncompliance with other applicable standards",
+          "referenceStandard": "ASME B30.14 Sec:14-2.1.3 (g)"
+        },
+        {
+          "itemNo": "3.2",
+          "acceptanceCriteria": "Emergency shut down is operating satisfactorily",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.2 (c)"
+        },
+        {
+          "itemNo": "3.3",
+          "acceptanceCriteria": "Engine throttle is functioning satisfactorily",
+          "referenceStandard": "ASME B30.14 Sec:14-2.1.3 (g)"
+        },
+        {
+          "itemNo": "3.4",
+          "acceptanceCriteria": "Battery is secure and ventilated",
+          "referenceStandard": "ASME B30.14 Sec:14-2.1.3 (g)"
+        },
+        {
+          "itemNo": "3.5",
+          "acceptanceCriteria": "Engine and Fuel level gauges are functioning correctly",
+          "referenceStandard": "GI 7.028 (Saudi Aramco 9466 sec 2.0)"
+        },
+        {
+          "itemNo": "3.6",
+          "acceptanceCriteria": "Exhaust system is not corroded, and is guarded or insulated where necessary to prevent personal contact with hot surfaces",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.3"
+        },
+        {
+          "itemNo": "3.7",
+          "acceptanceCriteria": "Engine oil level is adequate.",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (e)"
+        },
+        {
+          "itemNo": "3.8",
+          "acceptanceCriteria": "Hydraulic/Pneumatic systems are not leaking",
+          "referenceStandard": "ASME B30.14 Sec:14-2.1.2(c)"
+        },
+        {
+          "itemNo": "3.9",
+          "acceptanceCriteria": "Oil and fuel tanks leaks are checked",
+          "referenceStandard": "GI 7.028 (Saudi Aramco 9466 sec 1.0)"
+        },
+        {
+          "itemNo": "3.10",
+          "acceptanceCriteria": "Hydraulic/Pneumatic systems are not leaking (pumps, valves, lines, etc.).",
+          "referenceStandard": "ASME B30.14 Sec:14-1.8.10"
+        }
+      ]
+    },
+    {
+      "no": "4",
+      "title": "LOAD HOOK",
+      "items": [
+        {
+          "itemNo": "4.1",
+          "acceptanceCriteria": "Hook assembly labeling and manufacturer data is clearly marked",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (a)"
+        },
+        {
+          "itemNo": "4.2",
+          "acceptanceCriteria": "Hook's weight is clearly marked/printed on the hook",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (b)"
+        },
+        {
+          "itemNo": "4.3",
+          "acceptanceCriteria": "Safe working load of hook is clearly marked on the item",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (b)"
+        },
+        {
+          "itemNo": "4.4",
+          "acceptanceCriteria": "Hook does not show defects such as nicks, cracks and gouges",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.3.3 (1)"
+        },
+        {
+          "itemNo": "4.5",
+          "acceptanceCriteria": "Hook is not bent or twisted",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (f)"
+        },
+        {
+          "itemNo": "4.6",
+          "acceptanceCriteria": "Hook is not distorted in the throat opening",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (g)"
+        },
+        {
+          "itemNo": "4.7",
+          "acceptanceCriteria": "• Max. allowable throat opening is 5% not to exceed 1/4 in. (6 mm) , or as per manufacturer recommendations Maximum wear in the hook bowl is not exceeding 10%(compared to new hook) or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (e)"
+        },
+        {
+          "itemNo": "4.8",
+          "acceptanceCriteria": "Hook is not cracked, gouged or shows nicks",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 ( c ) (d)"
+        },
+        {
+          "itemNo": "4.9",
+          "acceptanceCriteria": "Hook can lock(if it is a self-locking hook)",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (h)"
+        },
+        {
+          "itemNo": "4.10",
+          "acceptanceCriteria": "Hook latch is operative",
+          "referenceStandard": "ASME B30.10 Sec: 10 - 1.10.5 (i)"
+        }
+      ]
+    },
+    {
+      "no": "5",
+      "title": "STRUCTURAL",
+      "items": [
+        {
+          "itemNo": "5.1",
+          "acceptanceCriteria": "All critical parts are not cracked, broken, bent, corroded welds or excessively worn.",
+          "referenceStandard": "ASME B30.14 Sec 14-2.3.3 (c)"
+        },
+        {
+          "itemNo": "5.2",
+          "acceptanceCriteria": "worn, cracked, or distorted parts such as pins, bearings, shafts, gears, rollers, and locking and clamping devices are checked",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.1.3 (a & d)"
+        },
+        {
+          "itemNo": "5.3",
+          "acceptanceCriteria": "Boom bushings and pins are not worn and are secure",
+          "referenceStandard": "ASME B30.14 Sec: 14 - 2.1.3 (d)"
+        },
+        {
+          "itemNo": "5.4",
+          "acceptanceCriteria": "Machinery shall be stationary while lubricants are being applied and protection provided",
+          "referenceStandard": "ASME B30.14 Sec 14-2.3.4 (c)"
+        },
+        {
+          "itemNo": "5.5",
+          "acceptanceCriteria": "When using boom hoist reeving or hydraulic cylinder system with maximum load capacity suspended, the boom hoist mechanism shall be capable of raising or lowering the boom, stopping boom motion, and holding",
+          "referenceStandard": "ASME B30.14 Sec 14-1.3.1"
+        },
+        {
+          "itemNo": "5.6",
+          "acceptanceCriteria": "Sheave grooves are free from surface defects and lubricated",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.6.4 (a)"
+        },
+        {
+          "itemNo": "5.7",
+          "acceptanceCriteria": "Rope Carrying sheaves have close-fittings guards or other suitable devices",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.6.4 (b)"
+        },
+        {
+          "itemNo": "5.8",
+          "acceptanceCriteria": "Lower block sheaves have close-fittings guards",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.6.4 (b)"
+        },
+        {
+          "itemNo": "5.9",
+          "acceptanceCriteria": "All moving parts of the side boom tractor for which lubrication is specified, including rope and chain, should be regularly lubricated",
+          "referenceStandard": "ASME B30.14 Sec:14-2.3.4"
+        },
+        {
+          "itemNo": "5.10",
+          "acceptanceCriteria": "Bearings and bushings are checked and lubricated",
+          "referenceStandard": "ASME B30.14 Sec:14-2.3.4"
+        },
+        {
+          "itemNo": "5.11",
+          "acceptanceCriteria": "Boom stops are fitted and undamaged",
+          "referenceStandard": "ASME B30.14 Sec. 14-2.2.1 (a 3)"
+        },
+        {
+          "itemNo": "5.12",
+          "acceptanceCriteria": "Bearings and bushings are undamaged, secure and lubricated",
+          "referenceStandard": "ASME B30.14 Sec. 14-2.1.3 (d)"
+        }
+      ]
+    },
+    {
+      "no": "6.1",
+      "title": "MECHANICAL / DRUM LOAD HOIST MECHANISM",
+      "items": [
+        {
+          "itemNo": "6.1.1",
+          "acceptanceCriteria": "Load hoist brake function is satisfactory",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (b)"
+        },
+        {
+          "itemNo": "6.1.2",
+          "acceptanceCriteria": "Load lifting and lowering operations are satisfactory",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a 1)"
+        },
+        {
+          "itemNo": "6.1.3",
+          "acceptanceCriteria": "Two full wraps, at least, of rope remain on the drum when the hook is in its extreme low working position",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a2a)"
+        },
+        {
+          "itemNo": "6.1.4",
+          "acceptanceCriteria": "Rope ends are anchored to the drum by clamps or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a2b)"
+        },
+        {
+          "itemNo": "6.1.5",
+          "acceptanceCriteria": "Drums are provided with a guidance or other means to prevent rope from jumping off the drum",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a2c)"
+        },
+        {
+          "itemNo": "6.1.6",
+          "acceptanceCriteria": "Power controlled lowering is operational and meets the speed and load criteria as per manufacturers specifications",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a1)"
+        },
+        {
+          "itemNo": "6.1.7",
+          "acceptanceCriteria": "Positive braking means is available, controllable by the operator, to prevent drum rotation in the lowering direction",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a4)"
+        },
+        {
+          "itemNo": "6.1.8",
+          "acceptanceCriteria": "Broken wires— in running ropes, six randomly",
+          "referenceStandard": "ASME B30.14 Sec. 2.4.2 (b1)"
+        },
+        {
+          "itemNo": "6.1.9",
+          "acceptanceCriteria": "distributed broken wires in six rope diameters or three broken wires in one strand in six rope diameters. Broken wires— in Standing ropes (guys), including end connections, six randomly distributed broken wires in six rope diameters or three broken wires in one strand in six rope diameters.",
+          "referenceStandard": "ASME B30.14 sec:14-2.4.2(1)"
+        },
+        {
+          "itemNo": "6.1.10",
+          "acceptanceCriteria": "Removal criteria for rope replacement , Reduction from nominal diameter of more than 5%.",
+          "referenceStandard": "ASME B30.14 Sec. 2.4.2 (b7)"
+        },
+        {
+          "itemNo": "6.1.11",
+          "acceptanceCriteria": "The rope does not have kinking, crushing, birdcaging, evidence of heat damage, ubstranding, core corrosion, main strand displacement or any other damages",
+          "referenceStandard": "ASME B30.14 Sec. 2.4.2 (b4)"
+        }
+      ]
+    },
+    {
+      "no": "6.2",
+      "title": "MECHANICAL / DRUM BOOM HOIST MECHANISM",
+      "items": [
+        {
+          "itemNo": "6.2.1",
+          "acceptanceCriteria": "Boom hoist mechanism (raising and lowering) is properly operating",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1"
+        },
+        {
+          "itemNo": "6.2.2",
+          "acceptanceCriteria": "Boom hoist brake and clutch are correctly operating",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1 (a)"
+        },
+        {
+          "itemNo": "6.2.3",
+          "acceptanceCriteria": "Boom hoist brake and clutch have adjustments to compensate for wear",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1 (b)"
+        },
+        {
+          "itemNo": "6.2.4",
+          "acceptanceCriteria": "Locking pawl and ratchet is in good working condition to prevent inadvertent lowering of the boom",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1 (c)"
+        },
+        {
+          "itemNo": "6.2.5",
+          "acceptanceCriteria": "Two full wraps, at least, of rope remain on the drum when the hook is in its extreme low working position",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a2a)"
+        },
+        {
+          "itemNo": "6.2.6",
+          "acceptanceCriteria": "Rope ends are anchored to the drum by clamps or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a2b)"
+        },
+        {
+          "itemNo": "6.2.7",
+          "acceptanceCriteria": "Drums are provided with a guidance or other means to prevent rope from jumping off the drum",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.2 (a2c)"
+        },
+        {
+          "itemNo": "6.2.8",
+          "acceptanceCriteria": "Broken wires— in running ropes, six randomly distributed broken wires in six rope diameters or three broken wires in one strand in six rope",
+          "referenceStandard": "ASME B30.14 Sec. 2.4.2 (b1)"
+        },
+        {
+          "itemNo": "6.2.9",
+          "acceptanceCriteria": "diameters Broken wires—(guys), including end connections, six randomly distributed broken wires in six rope diameters or three broken wires in one strand in six rope diameters",
+          "referenceStandard": "ASME B30.14 Sec 14-2.4.2 (b 1)"
+        },
+        {
+          "itemNo": "6.2.10",
+          "acceptanceCriteria": "Removal criteria for rope replacement, Reduction from nominal diameter of more than 5%",
+          "referenceStandard": "ASME B30.14 Sec. 2.4.2 (b7)"
+        },
+        {
+          "itemNo": "6.2.11",
+          "acceptanceCriteria": "The rope does not have kinking, crushing, birdcaging, evidence of heat",
+          "referenceStandard": "ASME B30.14 Sec. 2.4.2 (b4)"
+        },
+        {
+          "itemNo": "6.2.12",
+          "acceptanceCriteria": "damage, ubstranding, core corrosion, main strand displacement or any other damages Boom hoist cylinder and associated hydraulic system is operating correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1"
+        },
+        {
+          "itemNo": "6.2.13",
+          "acceptanceCriteria": "Boom hoist cylinder seals are not leaking",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2"
+        }
+      ]
+    },
+    {
+      "no": "7.1",
+      "title": "CRAWLER MACHINES / HAND TRACK",
+      "items": [
+        {
+          "itemNo": "7.1.1",
+          "acceptanceCriteria": "There is no worn, cracked, or distorted parts such as pins, bearings, shafts, gears, rollers, and locking and clamping devices",
+          "referenceStandard": "ASME B30.14 Sec. 2.1.3 (d)"
+        },
+        {
+          "itemNo": "7.1.2",
+          "acceptanceCriteria": "Track rollers and followers are turning and not loose, worn or seized",
+          "referenceStandard": "ASME B30.14 Sec. 2.1.3 (d)"
+        },
+        {
+          "itemNo": "7.1.3",
+          "acceptanceCriteria": "Sheaves and drums are not cracked or worn",
+          "referenceStandard": "ASME B30.14 Sec. 2.1.3 (c)"
+        },
+        {
+          "itemNo": "7.1.4",
+          "acceptanceCriteria": "The slope (level) indicator is functional to indicate the extent that the side boom tractor chassis is",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.2.1 (d)"
+        },
+        {
+          "itemNo": "7.1.5",
+          "acceptanceCriteria": "out-of-level and accuracy of slope indication is within deg of actual slope. When lifting on slopes or unusual ground conditions or where external restraints are utilized for stability, the appropriate rated load capacity has been determined and verified",
+          "referenceStandard": "ASME B30.14 Sec. 1.1.1 (e)"
+        },
+        {
+          "itemNo": "7.1.6",
+          "acceptanceCriteria": "Drive chain is not stretched excessively",
+          "referenceStandard": "ASME B30.14 Sec. 2.1.3 (h)"
+        },
+        {
+          "itemNo": "7.1.7",
+          "acceptanceCriteria": "Drive gearbox operates without excessive noise or leakage",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (d)"
+        },
+        {
+          "itemNo": "7.1.8",
+          "acceptanceCriteria": "Chain drive sprockets are not worn",
+          "referenceStandard": "ASME B30.14 Sec. 2.1.3 (h)"
+        },
+        {
+          "itemNo": "7.1.9",
+          "acceptanceCriteria": "Loose bolts or rivets are checked and secure",
+          "referenceStandard": "ASME B30.14 Sec. 2.1.3 (b)"
+        },
+        {
+          "itemNo": "7.1.10",
+          "acceptanceCriteria": "Means for fastening stabilizer floats to stabilizers when in use are provided.",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.4 (d)"
+        }
+      ]
+    },
+    {
+      "no": "7.2",
+      "title": "CRAWLER MACHINES / FUNCTIONS",
+      "items": [
+        {
+          "itemNo": "7.2.1",
+          "acceptanceCriteria": "Propelling forward is accepted",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.2.1 (a-4)"
+        },
+        {
+          "itemNo": "7.2.2",
+          "acceptanceCriteria": "Propelling backward is accepted",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.2.1 (a-4)"
+        },
+        {
+          "itemNo": "7.2.3",
+          "acceptanceCriteria": "Transmission gearbox functioning well and gears are operational",
+          "referenceStandard": "ASME B30.14 sec: 1.5.3 (d)"
+        },
+        {
+          "itemNo": "7.2.4",
+          "acceptanceCriteria": "Steering to the right is operational",
+          "referenceStandard": "ASME B30.14 sec:2.1.3 (i)"
+        },
+        {
+          "itemNo": "7.2.5",
+          "acceptanceCriteria": "Steering to the left is operational",
+          "referenceStandard": "ASME B30.14 sec:2.1.3 (i)"
+        },
+        {
+          "itemNo": "7.2.6",
+          "acceptanceCriteria": "Travel locks are operational and remain in engagement",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.4.2"
+        },
+        {
+          "itemNo": "7.2.7",
+          "acceptanceCriteria": "All safety limit devices are operational",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.2.1 (a-3)"
+        }
+      ]
+    },
+    {
+      "no": "8.1",
+      "title": "DRIVERS CAB",
+      "items": [
+        {
+          "itemNo": "8.1.1",
+          "acceptanceCriteria": "Cab glass is made of safety glazing material",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.7.1 (c)"
+        },
+        {
+          "itemNo": "8.1.2",
+          "acceptanceCriteria": "Visibility on the boom side of the cab such that the uppermost point of the boom is visible at all times.",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.7.1 (d)"
+        },
+        {
+          "itemNo": "8.1.3",
+          "acceptanceCriteria": "Road mirrors are fitted and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1"
+        },
+        {
+          "itemNo": "8.1.4",
+          "acceptanceCriteria": "Fire extinguisher is available in the cab (minimum rating is 10BC)",
+          "referenceStandard": "ASME B30.14 Sec: 14-3.5.3"
+        },
+        {
+          "itemNo": "8.1.5",
+          "acceptanceCriteria": "Gauges and instrumentations are in good working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2( c )"
+        },
+        {
+          "itemNo": "8.1.6",
+          "acceptanceCriteria": "Brakes are in working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (f)"
+        },
+        {
+          "itemNo": "8.1.7",
+          "acceptanceCriteria": "Parking brake is in working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (f)"
+        },
+        {
+          "itemNo": "8.1.8",
+          "acceptanceCriteria": "Clutch is in good working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (g)"
+        },
+        {
+          "itemNo": "8.1.9",
+          "acceptanceCriteria": "Gear selector is properly working",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (d)"
+        },
+        {
+          "itemNo": "8.1.10",
+          "acceptanceCriteria": "Headlights are working",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3"
+        },
+        {
+          "itemNo": "8.1.11",
+          "acceptanceCriteria": "Brake lights are working",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.3.3 (b-4)"
+        },
+        {
+          "itemNo": "8.1.12",
+          "acceptanceCriteria": "Turn signals are working",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3"
+        }
+      ]
+    },
+    {
+      "no": "8.2",
+      "title": "RUBBER TIRED MACHINE / ENGINE/DRIVE TRAIN",
+      "items": [
+        {
+          "itemNo": "8.2.1",
+          "acceptanceCriteria": "Ignition system is operating correctly",
+          "referenceStandard": "ASME B30.14 Sec: 4-1.15.2"
+        },
+        {
+          "itemNo": "8.2.2",
+          "acceptanceCriteria": "Throttle is operating correctly",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        },
+        {
+          "itemNo": "8.2.3",
+          "acceptanceCriteria": "Battery is secure and ventilated",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        },
+        {
+          "itemNo": "8.2.4",
+          "acceptanceCriteria": "Gauges are in good working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        },
+        {
+          "itemNo": "8.2.5",
+          "acceptanceCriteria": "Engine exhaust system is guarded or insulated where necessary to prevent personal contact with hot surfaces",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.3"
+        },
+        {
+          "itemNo": "8.2.6",
+          "acceptanceCriteria": "Engine exhaust gases are piped to the outside of the cab and discharged in a direction away from the operator",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.3"
+        },
+        {
+          "itemNo": "8.2.7",
+          "acceptanceCriteria": "Oil level is sufficient",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        },
+        {
+          "itemNo": "8.2.8",
+          "acceptanceCriteria": "Torque converter is in good working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        },
+        {
+          "itemNo": "8.2.9",
+          "acceptanceCriteria": "Main transmission is in good working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        },
+        {
+          "itemNo": "8.2.10",
+          "acceptanceCriteria": "Auxiliary transmission is in good working condition",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (a)"
+        }
+      ]
+    },
+    {
+      "no": "9.1",
+      "title": "CARRIER / FRONT",
+      "items": [
+        {
+          "itemNo": "9.1.1",
+          "acceptanceCriteria": "Tires and rims are undamaged and serviceable",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (k)"
+        },
+        {
+          "itemNo": "9.1.2",
+          "acceptanceCriteria": "Means to hold all stabilizers in the retracted position while traveling and in the extended position is provided.",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.4 (a)"
+        },
+        {
+          "itemNo": "9.1.3",
+          "acceptanceCriteria": "Outrigger pads are securely fitted and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.4 (d)"
+        },
+        {
+          "itemNo": "9.1.4",
+          "acceptanceCriteria": "Pad pins are locked and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3"
+        },
+        {
+          "itemNo": "9.1.5",
+          "acceptanceCriteria": "Extension cylinders are working correctly and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3"
+        },
+        {
+          "itemNo": "9.1.6",
+          "acceptanceCriteria": "Vertical cylinders are working correctly and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3"
+        }
+      ]
+    },
+    {
+      "no": "9.2",
+      "title": "CARRIER / REAR",
+      "items": [
+        {
+          "itemNo": "9.2.1",
+          "acceptanceCriteria": "Tires and rims are undamaged and serviceable",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (k)"
+        },
+        {
+          "itemNo": "9.2.2",
+          "acceptanceCriteria": "Means to hold all stabilizers in the retracted position while traveling and in the extended position is provided.",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.4 (a)"
+        },
+        {
+          "itemNo": "9.2.3",
+          "acceptanceCriteria": "Outrigger pads are securely fitted and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.4 (d)"
+        },
+        {
+          "itemNo": "9.2.4",
+          "acceptanceCriteria": "Pad pins are locked and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (d)"
+        },
+        {
+          "itemNo": "9.2.5",
+          "acceptanceCriteria": "Extension cylinders are working correctly and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1"
+        },
+        {
+          "itemNo": "9.2.6",
+          "acceptanceCriteria": "Vertical cylinders are working correctly and undamaged",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1"
+        }
+      ]
+    },
+    {
+      "no": "10.1",
+      "title": "BOOM / TIP SECTION",
+      "items": [
+        {
+          "itemNo": "10.1.1",
+          "acceptanceCriteria": "Boom tip section is undamaged, has no cracks or distortion",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.3 (c)"
+        },
+        {
+          "itemNo": "10.1.2",
+          "acceptanceCriteria": "boom extension cylinder is properly working with no signs of leaks",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.1.2 (e)"
+        },
+        {
+          "itemNo": "10.1.3",
+          "acceptanceCriteria": "Guide sheaves are not worn and are well lubricated",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.6.4 (b)"
+        },
+        {
+          "itemNo": "10.1.4",
+          "acceptanceCriteria": "Sheave grooves are free from surface defects",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.6.4 (a)"
+        },
+        {
+          "itemNo": "10.1.5",
+          "acceptanceCriteria": "Bushings/bearings are not worn and are well lubricated",
+          "referenceStandard": "ASME B30.14 Sec: 14-2.3.4"
+        },
+        {
+          "itemNo": "10.1.6",
+          "acceptanceCriteria": "Guards are fitted and secured to cover exposed moving parts",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.8.6 (a)"
+        },
+        {
+          "itemNo": "10.1.7",
+          "acceptanceCriteria": "Rope end is anchored and rope clamp is tightened in accordance with the manufacturers recommendations",
+          "referenceStandard": "ASME B30.14 Sec: 14-1.3.1 (a-2)"
+        }
+      ]
+    },
+    {
+      "no": "10.2",
+      "title": "BOOM / COUNTER WEIGHT",
+      "items": [
+        {
+          "itemNo": "10.2.1",
+          "acceptanceCriteria": "Counterweights is used in accordance with the manufacturer’s specifications",
+          "referenceStandard": "ASME B30.14 sec:14-3.5.1"
+        },
+        {
+          "itemNo": "10.2.2",
+          "acceptanceCriteria": "Hydraulic hoses have no leaks",
+          "referenceStandard": "ASME B30.14 sec:14-2.1.2 (d)"
+        },
+        {
+          "itemNo": "10.2.3",
+          "acceptanceCriteria": "Complete counterweight and arm assembly shows no cracks or deformation",
+          "referenceStandard": "ASME B30.14 sec:14-3.5.1"
+        }
+      ]
+    }
+  ]
+}

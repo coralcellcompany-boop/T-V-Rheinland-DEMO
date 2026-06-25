@@ -9,6 +9,7 @@ using TuvInspection.Domain.Identity;
 using TuvInspection.Domain.JobOrders;
 using TuvInspection.Domain.JobRequests;
 using TuvInspection.Domain.Outbox;
+using TuvInspection.Domain.BlueSticker;
 using TuvInspection.Domain.Stickers;
 using TuvInspection.Domain.Surveys;
 using TuvInspection.Domain.Timesheets;
@@ -43,7 +44,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
     public DbSet<Sticker> Stickers => Set<Sticker>();
-    public DbSet<StickerRequest> StickerRequests => Set<StickerRequest>();
+    public DbSet<BlueStickerReport> BlueStickerReports => Set<BlueStickerReport>();
+    public DbSet<BlueStickerReportStateTransition> BlueStickerReportTransitions => Set<BlueStickerReportStateTransition>();
     public DbSet<Candidate> Candidates => Set<Candidate>();
     public DbSet<Assessment> Assessments => Set<Assessment>();
     public DbSet<AssessmentTransition> AssessmentTransitions => Set<AssessmentTransition>();
@@ -75,6 +77,8 @@ public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, 
             _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(d.ClientId));
         builder.Entity<Survey>().HasQueryFilter(s =>
             _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(s.ClientId));
+        builder.Entity<BlueStickerReport>().HasQueryFilter(b =>
+            _tenant.IsAnonymous || _tenant.AssignedClientIds.Contains(b.ClientId));
     }
 
     public Task<int> SaveChanges(CancellationToken ct) => SaveChangesAsync(ct);

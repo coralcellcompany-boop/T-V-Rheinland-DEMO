@@ -14,6 +14,7 @@ import { PageHeader } from '../../../shared/components/page-header.component';
 import { StatusPill } from '../../../shared/components/status-pill.component';
 import { EmptyState } from '../../../shared/components/empty-state.component';
 import { JobOrdersApi } from '../../../core/api/job-management.api';
+import { BlueStickerApi } from '../../../core/api/blue-sticker.api';
 import { FilesApi } from '../../../core/api/files.api';
 import { ClientsApi } from '../../../core/api/clients.api';
 import { InspectorLookup, UsersApi } from '../../../core/api/users.api';
@@ -115,6 +116,12 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
           <div><label>To</label><input pInputText type="date" [(ngModel)]="newTo" /></div>
         </div>
         <label>Location</label><input pInputText [(ngModel)]="newLocation" />
+        <ng-container *ngIf="isBlueSticker()">
+          <label>Org Code</label><input pInputText [(ngModel)]="newOrgCode" />
+          <label>RPO No.</label><input pInputText [(ngModel)]="newRpoNo" />
+          <label>CRM No.</label><input pInputText [(ngModel)]="newCrmNo" />
+          <label>Department / Contractor</label><input pInputText [(ngModel)]="newDepartment" />
+        </ng-container>
 
         <label>How many job orders?</label>
         <input pInputText type="number" min="1" max="50" [(ngModel)]="newQuantity" />
@@ -202,6 +209,7 @@ import { showHttpError } from '../../../shared/services/api-error.handler';
 })
 export class JobOrdersPage {
   private api = inject(JobOrdersApi);
+  private bsApi = inject(BlueStickerApi);
   private filesApi = inject(FilesApi);
   private clientsApi = inject(ClientsApi);
   protected auth = inject(AuthService);
@@ -225,10 +233,16 @@ export class JobOrdersPage {
   protected newDialog = false;
   protected creating = signal(false);
   protected newClientId: string | null = null;
-  protected newService = ServiceType.ThirdPartyInspection;
+  protected newService: number = ServiceType.ThirdPartyInspection;
   protected newFrom = new Date().toISOString().substring(0, 10);
   protected newTo = new Date(Date.now() + 86400000 * 5).toISOString().substring(0, 10);
   protected newLocation = '';
+  protected newOrgCode = '';
+  protected newRpoNo = '';
+  protected newCrmNo = '';
+  protected newDepartment = '';
+  protected isBlueSticker = () =>
+    this.newService === ServiceType.BlueSticker || this.newService === ServiceType.All;
   protected newQuantity = 1;
   protected newAttachments = signal<{ key: string; fileName: string }[]>([]);
   protected uploading = signal(false);
@@ -322,7 +336,19 @@ export class JobOrdersPage {
     }).subscribe({
       next: (jo) => {
         this.creating.set(false);
-        this.notify.success(qty > 1 ? `Created ${qty} job orders` : `Created ${jo.jobOrderNo}`);
+        if (this.isBlueSticker()) {
+          this.bsApi.create({
+            jobOrderId: jo.id, orgCode: this.newOrgCode || null,
+            rpoNo: this.newRpoNo || null, crmNo: this.newCrmNo || null,
+            departmentContractor: this.newDepartment || null,
+          }).subscribe({
+            next: (reports) => this.notify.success(
+              `Created ${jo.jobOrderNo} + ${reports.length} Blue Sticker report(s)`),
+            error: (err) => showHttpError(this.notify, err),
+          });
+        } else {
+          this.notify.success(qty > 1 ? `Created ${qty} job orders` : `Created ${jo.jobOrderNo}`);
+        }
         this.closeNew();
         this.refresh();
       },
@@ -335,6 +361,10 @@ export class JobOrdersPage {
     this.newLocation = '';
     this.newQuantity = 1;
     this.newAttachments.set([]);
+    this.newOrgCode = '';
+    this.newRpoNo = '';
+    this.newCrmNo = '';
+    this.newDepartment = '';
   }
 
   onPickAttachments(e: Event) {

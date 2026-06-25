@@ -1,0 +1,388 @@
+{
+  "saicNumber": "SAIC-U-7012",
+  "title": "Storage/Retrieval (SR) Machines",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.11"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.5"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "G.I.7.030 Para: 5.5.2"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Rated load is clearly marked and visible to the operator (Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "S/R machine is painted safety yellow",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "Warning and cautionary labels are affixed at aisle entrance points or access positions and are durable and legible",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.1.2"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Clearances and tolerances within the system are as determined by the manufacturer or user (specifications)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.2.1"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "A fire extinguisher with minimum 10BC rating is available (in the cab)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.3"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "Inspection Points",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Welded members and joints are free of defects, cracks and corrosion",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.3 (a)"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Structures and supports of S/R machine are not cracked , corroded or deformed",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.3 (a)"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Structures and supports of S/R machine are free of unusual vibrations",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.3.2.1 (a-2)"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "S/R machine rails are straight, leveled and properly joined",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.3.2.1 (a-3)"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Stops are provided at the limits of travel of the S/R machine and aisle transfer car",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.3.2.1 (b-1)"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "Structure and S/R machine shows no loose bolts or rivets.",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.3 (b)"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "All devices/controls required for operation are within convenient reach of operator",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.1 (a)"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "The cab interior is free of knobs, edges or corners",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.2 (a)"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "The cab door, if fitted, opens inward or slides and is self-closing with a positive latch",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.2 (c)"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "Emergency exits to the floor are available for all positions of a carriage mounted cab",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.2 (d)"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "All cab glazing is safety glazing material",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.2 (f)"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Cab lighting to be adequate (either natural or artificial ) to enable the operator observe the controls",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.4.4"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "All ladders and platforms are secure and not corroded or damaged",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.3 (a)"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "Ladder access opening to platforms is 24\" x 27\" with hinged cover (610mm x 685mm)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.6.2 (d)"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "Platforms have non-slip walking surfaces",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.6.2 (b)"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "Bumpers provide required stop of an S/R machine or aisle transfer car travelling at 100% rated load and speed from causing structural damage to the equipment",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.7.2 (a)"
+        },
+        {
+          "itemNo": "2.17",
+          "acceptanceCriteria": "Runway interlocks are provided to prevent travel between the aisle and aisle transfer car unless the tracks are aligned",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.7.3 (a)"
+        },
+        {
+          "itemNo": "2.18",
+          "acceptanceCriteria": "Sweeps are fitted in front of the runway wheels",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.7.4"
+        },
+        {
+          "itemNo": "2.19",
+          "acceptanceCriteria": "Guards for hoisting ropes or chains are fitted where appropriate to prevent chafing",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.7.5"
+        },
+        {
+          "itemNo": "2.20",
+          "acceptanceCriteria": "Guards are fitted over moving parts such as gears ,sprockets ,chains and ropes where these constitute a hazard",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.7.6 (a)"
+        },
+        {
+          "itemNo": "2.21",
+          "acceptanceCriteria": "Holding brake exists (at least one) for each independent hoisting unit of the S/R machine (125% full load hoisting torque for non-mechanical brake and 100% for a mechanical one - holding brake shall be applied automatically when power to the brake is removed)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.8.2 (a)"
+        },
+        {
+          "itemNo": "2.22",
+          "acceptanceCriteria": "Holding brake is applied automatically when power to the brake is removed",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.8.2 (c)"
+        },
+        {
+          "itemNo": "2.23",
+          "acceptanceCriteria": "Control braking is capable of maintaining controlled travel or lowering speeds",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.8.2(b)"
+        },
+        {
+          "itemNo": "2.24",
+          "acceptanceCriteria": "Wearing surfaces of brake wheels, disks and drums are free of defects that could interfere with their operation",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.8.4(d)"
+        },
+        {
+          "itemNo": "2.25",
+          "acceptanceCriteria": "The electrical cables outside of control enclosures are fully protected and insulated (S/R machine or transfer car)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.1 (c-1)"
+        },
+        {
+          "itemNo": "2.26",
+          "acceptanceCriteria": "Traveling cables are suspended at the carriage and S/R machine frame end as to reduce the strain on the individual conductors",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.1 (e-1)"
+        },
+        {
+          "itemNo": "2.27",
+          "acceptanceCriteria": "Supporting fillers are used for unsuspended travelling cable lengths exceeding 100ft (30m)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.1 (e-1)"
+        },
+        {
+          "itemNo": "2.28",
+          "acceptanceCriteria": "The entire S/R machine is electrically grounded",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.1 (g)"
+        },
+        {
+          "itemNo": "2.29",
+          "acceptanceCriteria": "Any pendant control station is electrically grounded",
+          "referenceStandard": "ASME B30.13 Sec:13-1.9.1 (g-1)"
+        },
+        {
+          "itemNo": "2.30",
+          "acceptanceCriteria": "Live parts of electrical equipment are protected from direct exposure to grease, oil, dirt and moisture",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.2 (b)"
+        },
+        {
+          "itemNo": "2.31",
+          "acceptanceCriteria": "Any guards fitted over live parts are not deformed",
+          "referenceStandard": "ASME B30.13 Sec:13-1.9.2 (c)"
+        },
+        {
+          "itemNo": "2.32",
+          "acceptanceCriteria": "Power disconnect between the power supply and the aisle contact conductor or travelling cable is provided (motor circuit switch or breaker)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.3 (a)"
+        },
+        {
+          "itemNo": "2.33",
+          "acceptanceCriteria": "Operation of limit sensors, which shut down any drive whose motion passes the extremity of designed travel, is satisfactory",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.4 (a)"
+        },
+        {
+          "itemNo": "2.34",
+          "acceptanceCriteria": "Operation of limit sensors where used to reduce speed prior to the machine reaching the extreme travel limit is satisfactory",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.4 (b)"
+        },
+        {
+          "itemNo": "2.35",
+          "acceptanceCriteria": "Hoist motion overspeed device operate independently from all other power, drive and electrical systems (carriage mounted cab only)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.8 (b)"
+        },
+        {
+          "itemNo": "2.36",
+          "acceptanceCriteria": "The overspeed device shall operate whenever the lowering rate exceeds a maximum of 150% of the rated lowering speed.",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.8 (d)"
+        },
+        {
+          "itemNo": "2.37",
+          "acceptanceCriteria": "Overspeed switch operation to stop descent of the carriage",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.8 (c)"
+        },
+        {
+          "itemNo": "2.38",
+          "acceptanceCriteria": "Actual overspeed figure at which the device is set to operate is clearly marked on the device in letters and figures not less than 1Ú4 in. (6 mm)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.8 (f)"
+        },
+        {
+          "itemNo": "2.39",
+          "acceptanceCriteria": "Overspeed device is sealed to prevent readjustment of the trip speed",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.8 (g)"
+        },
+        {
+          "itemNo": "2.40",
+          "acceptanceCriteria": "Control voltages do not exceed 150V AC or 300V DC",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.5"
+        },
+        {
+          "itemNo": "2.41",
+          "acceptanceCriteria": "Controls at operator's cab are within reach of the operator (for arms and legs)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.6"
+        },
+        {
+          "itemNo": "2.42",
+          "acceptanceCriteria": "Sequence of operation for the controls is verified (automatic control operating sequence)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.6"
+        },
+        {
+          "itemNo": "2.43",
+          "acceptanceCriteria": "Audio and visual warning devices are operable",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.7 (a)"
+        },
+        {
+          "itemNo": "2.44",
+          "acceptanceCriteria": "Emergency stop switch(es) are in good working condition",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.8 (a-3) & (b-2)"
+        },
+        {
+          "itemNo": "2.45",
+          "acceptanceCriteria": "Electrical overload or power failure sensors are fitted",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.8 (a-4) & (b-3)"
+        },
+        {
+          "itemNo": "2.46",
+          "acceptanceCriteria": "Emergency stop actuator(s) in the aisle(s) are operable",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.8 (e)"
+        },
+        {
+          "itemNo": "2.47",
+          "acceptanceCriteria": "Correct sequence of operation under automatic and remote control of S/R machine and aisle transfer car is verified (In auto mode all motion is discontinued if the sequence is interrupted, or the last command is permissible if power is available. In remote mode if the signal is interrupted the machine stops)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.9.6"
+        },
+        {
+          "itemNo": "2.48",
+          "acceptanceCriteria": "Sheave grooves are smooth with no surface defects",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.1 (a)"
+        },
+        {
+          "itemNo": "2.49",
+          "acceptanceCriteria": "Close fitting rope guides or guards are fitted where required to prevent momentary unloading of the rope",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.1 (b)"
+        },
+        {
+          "itemNo": "2.50",
+          "acceptanceCriteria": "Sheaves have means of lubrication or are permanently lubricated",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.1 (d)"
+        },
+        {
+          "itemNo": "2.51",
+          "acceptanceCriteria": "Sheave pitch diameter is not less than 20 times the rope diameter",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.1 (e)"
+        },
+        {
+          "itemNo": "2.52",
+          "acceptanceCriteria": "Rope drums are free from surface defects that could cause rope damage",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.2"
+        },
+        {
+          "itemNo": "2.53",
+          "acceptanceCriteria": "Two wraps of rope remains on the drum (as a minimum) when the carriage is in the extreme low position",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.3 (c-1)"
+        },
+        {
+          "itemNo": "2.54",
+          "acceptanceCriteria": "Rope is correctly clamped to the drum (or with a socket arrangement) as per the rope or S/R machine manufacturers recommendations",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.3 (c-2)"
+        },
+        {
+          "itemNo": "2.55",
+          "acceptanceCriteria": "Removal criteria for rope replacement • In running ropes, 12 randomly distributed broken wires in one lay or 4 broken wires in one strand in one lay” • Wear of one-third the original diameter of outside individual wires • kinking, crushing, birdcaging, or any other damage resulting in the distortion of the rope structure • Evidence of heat damage from any cause • Reductions from the nominal diameter greater than 5%.",
+          "referenceStandard": "ASME B30.13 Sec:13-2.4.2 (b)"
+        },
+        {
+          "itemNo": "2.56",
+          "acceptanceCriteria": "Sprocket wheels and chain pockets are free from surface defects",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.4 (a)"
+        },
+        {
+          "itemNo": "2.57",
+          "acceptanceCriteria": "Sprockets, pocket wheels or running chains are adequately lubricated.",
+          "referenceStandard": "ASME B30.13 Sec:13-1.10.4 (c)"
+        },
+        {
+          "itemNo": "2.58",
+          "acceptanceCriteria": "All lines, tanks, valves, pumps, motors and other parts of fluid systems are not leaking",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.2 (a-3,b-3)"
+        },
+        {
+          "itemNo": "2.59",
+          "acceptanceCriteria": "Bearings, shafts, gears and rollers are not worn, cracked or distorted",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.1.3 (d)"
+        },
+        {
+          "itemNo": "2.60",
+          "acceptanceCriteria": "Carriage free fall stops are in place (can be activated mechanically by simulating a slack rope or chain condition)",
+          "referenceStandard": "ASME B30.13 Sec: 13-1.10.7 (a)"
+        },
+        {
+          "itemNo": "2.61",
+          "acceptanceCriteria": "Lifting and lowering function of the cab and carriage is satisfactory",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.2.1 (a-1)"
+        },
+        {
+          "itemNo": "2.62",
+          "acceptanceCriteria": "Horizontal travel function of the machine is satisfactory",
+          "referenceStandard": "ASME B30.13 Sec:13-2.2.1 (a-2)"
+        },
+        {
+          "itemNo": "2.63",
+          "acceptanceCriteria": "Shuttle function of the machine is satisfactory",
+          "referenceStandard": "ASME B30.13 Sec:13-2.2.1 (a-3)"
+        },
+        {
+          "itemNo": "2.64",
+          "acceptanceCriteria": "All moving parts of the S/R machine or aisle transfer car for which lubrication is specified, including rope and chain, are lubricated",
+          "referenceStandard": "ASME B30.13 Sec: 13-2.3.4 (a)"
+        }
+      ]
+    }
+  ]
+}

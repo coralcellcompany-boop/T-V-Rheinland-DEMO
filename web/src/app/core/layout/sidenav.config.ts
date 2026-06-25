@@ -40,14 +40,9 @@ export const PRIMARY_SECTIONS: NavSection[] = [
   {
     label: 'nav.section.blueSticker',
     items: [
-      { label: 'nav.blueStickerCertificates', icon: 'pi-file-check', route: '/certificates',
-        queryParams: { service: 'blue-sticker' } },
+      { label: 'nav.blueStickerInspections', icon: 'pi-clipboard', route: '/blue-sticker' },
       { label: 'nav.stickers',         icon: 'pi-qrcode', route: '/stickers',
         roles: [Roles.Manager, Roles.Coordinator] },
-      { label: 'nav.myStickers',       icon: 'pi-tag',    route: '/my-stickers',
-        roles: [Roles.Inspector] },
-      { label: 'nav.stickerRequests',  icon: 'pi-inbox',  route: '/sticker-requests',
-        roles: [Roles.Manager, Roles.Coordinator, Roles.Inspector] },
     ],
   },
   {

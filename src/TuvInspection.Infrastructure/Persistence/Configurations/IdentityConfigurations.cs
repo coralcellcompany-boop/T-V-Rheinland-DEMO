@@ -16,6 +16,8 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
         e.Property(x => x.LicenseNumber).HasMaxLength(80);
         e.Property(x => x.LicenseAuthority).HasMaxLength(150);
         e.Property(x => x.LicenseScope).HasMaxLength(300);
+        // Signature PNG data URI — base64-encoded; allow up to ~96 KB to fit detailed signatures.
+        e.Property(x => x.SignaturePng).HasMaxLength(131072);
     }
 }
 

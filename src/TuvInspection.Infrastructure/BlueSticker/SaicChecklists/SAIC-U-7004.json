@@ -1,0 +1,437 @@
+{
+  "saicNumber": "SAIC-U-7004",
+  "title": "Articulating Boom Cranes",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment document is available",
+          "referenceStandard": "GI 7.030 ASME B30.22 Sec: 22-1.9"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "GI 7.030 ASME B30.22 Sec: 22-2.1.4"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.3.1"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Warning signs, cautions and safety labels are provided and in place",
+          "referenceStandard": "ASME B30.22 Sec: 22-3.1.3.1.1 (e)"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Crane manufacturer data label, name, address and serial number are marked or tagged",
+          "referenceStandard": "ASME B30.22 Sec: 22-3.1.3.1.1 (b)"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "Crane is painted safety yellow (if applicable)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Crane is painted safety yellow-and-black stripes on offshore facilities (if applicable)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Rated capacity of the crane is marked (Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4 ASME B30.22"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Load rating chart/range diagram are provided (contains all safe operating conditions as per manufacturer)",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.1.3 (b-6)"
+        }
+      ]
+    },
+    {
+      "no": "2.1",
+      "title": "INSPECTION POINTS / BOOM",
+      "items": [
+        {
+          "itemNo": "2.1.1",
+          "acceptanceCriteria": "Boom cylinder is properly working",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.1 (a)"
+        },
+        {
+          "itemNo": "2.1.2",
+          "acceptanceCriteria": "Boom cylinder holding valve is in good working condition",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.1 (b)"
+        },
+        {
+          "itemNo": "2.1.3",
+          "acceptanceCriteria": "Boom cylinder hoses are not leaking",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (l-1)"
+        },
+        {
+          "itemNo": "2.1.4",
+          "acceptanceCriteria": "Boom cylinder hoses are not deformed",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (l-2)"
+        },
+        {
+          "itemNo": "2.1.5",
+          "acceptanceCriteria": "Boom has no signs of wear, cracks or distorted parts",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (a)"
+        }
+      ]
+    },
+    {
+      "no": "2.2",
+      "title": "INSPECTION POINTS / TELESCOPING BOOM",
+      "items": [
+        {
+          "itemNo": "2.2.1",
+          "acceptanceCriteria": "Boom telescope cylinder is working properly",
+          "referenceStandard": "ASME B30.22 Sec: 1.2.2"
+        },
+        {
+          "itemNo": "2.2.2",
+          "acceptanceCriteria": "Boom telescope cylinder holding valve is in good working condition",
+          "referenceStandard": "ASME B30.22 Sec: 1.2.2"
+        },
+        {
+          "itemNo": "2.2.3",
+          "acceptanceCriteria": "Boom telescope cylinder hoses are not leaking",
+          "referenceStandard": "ASME B30.22 Sec: 1.2.2"
+        },
+        {
+          "itemNo": "2.2.4",
+          "acceptanceCriteria": "Boom telescope cylinder hoses are not deformed",
+          "referenceStandard": "ASME B30.22 Sec: 1.2.2"
+        },
+        {
+          "itemNo": "2.2.5",
+          "acceptanceCriteria": "Boom telescope has no signs of wear, cracks or distorted parts",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.2"
+        }
+      ]
+    },
+    {
+      "no": "2.3",
+      "title": "INSPECTION POINTS / LOAD HOIST MECHANISM",
+      "items": [
+        {
+          "itemNo": "2.3.1",
+          "acceptanceCriteria": "Hoist brake is functioning well",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.3 (b-1)"
+        },
+        {
+          "itemNo": "2.3.2",
+          "acceptanceCriteria": "Hoist rope size is as per manufacturer specification",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.3 (b-2)"
+        },
+        {
+          "itemNo": "2.3.3",
+          "acceptanceCriteria": "Minimum of two full rope wraps remains in the drum when the hook at its extreme low position",
+          "referenceStandard": "ASME B30.22 Sec:22-1.2.3 (b-2-a)"
+        },
+        {
+          "itemNo": "2.3.4",
+          "acceptanceCriteria": "Rope end is anchored to the drum as per crane or winch manufacturer",
+          "referenceStandard": "ASME B30.22 Sec:22-1.2.3 (b-2-b)"
+        },
+        {
+          "itemNo": "2.3.5",
+          "acceptanceCriteria": "(In Load Hoist Equipped Machines) The drum flange is extend a minimum 1Ú2 in. (13 mm) over the top layer of rope at all times",
+          "referenceStandard": "ASME B30.22 Sec:22-1.2.3 (b-2-c)"
+        },
+        {
+          "itemNo": "2.3.6",
+          "acceptanceCriteria": "Rope eye splices are made as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.3 (a)"
+        },
+        {
+          "itemNo": "2.3.7",
+          "acceptanceCriteria": "Wire rope clips used in conjunction with wedge sockets are attached to the unloaded dead end of the rope only",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.3 (d)"
+        },
+        {
+          "itemNo": "2.3.8",
+          "acceptanceCriteria": "Anti two block provided and working properly",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.2.3 (c)"
+        }
+      ]
+    },
+    {
+      "no": "2.4",
+      "title": "INSPECTION POINTS / SWING MECHANISM",
+      "items": [
+        {
+          "itemNo": "2.4.1",
+          "acceptanceCriteria": "Swing mechanism starts and stops with controlled acceleration and deceleration",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.3.1"
+        },
+        {
+          "itemNo": "2.4.2",
+          "acceptanceCriteria": "Swing brake and locking devices are in good working condition",
+          "referenceStandard": "ASME B30.22 Sec:22-1.3.2 (a)"
+        },
+        {
+          "itemNo": "2.4.3",
+          "acceptanceCriteria": "A positive locking device or boom support is provided to prevent the boom from rotating when in stowed position for transit",
+          "referenceStandard": "ASME B30.22 Sec:22-1.3.2 (b)"
+        }
+      ]
+    },
+    {
+      "no": "2.5",
+      "title": "INSPECTION POINTS / SHEAVES",
+      "items": [
+        {
+          "itemNo": "2.5.1",
+          "acceptanceCriteria": "Sheave grooves are free of surface defects",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.4 (a)"
+        },
+        {
+          "itemNo": "2.5.2",
+          "acceptanceCriteria": "Sheave guards are provided and in good condition",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.4 (b)"
+        },
+        {
+          "itemNo": "2.5.3",
+          "acceptanceCriteria": "Sheave bearings are provided with lubrication points.",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.4 (d)"
+        },
+        {
+          "itemNo": "2.5.4",
+          "acceptanceCriteria": "Load hoisting sheaves have pitch diameters not less than 18 times the nominal diameter of the rope used",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.5 (a)"
+        },
+        {
+          "itemNo": "2.5.5",
+          "acceptanceCriteria": "Lower load block sheaves have pitch diameters of not less than 16 times the nominal diameter of the rope used",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.5 (b)"
+        },
+        {
+          "itemNo": "2.5.6",
+          "acceptanceCriteria": "Boom extension system sheaves have a pitch diameter of not less than 15 times the nominal diameter of the rope",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.5.5 (c)"
+        }
+      ]
+    },
+    {
+      "no": "2.6",
+      "title": "INSPECTION POINTS / HOOK",
+      "items": [
+        {
+          "itemNo": "2.6.1",
+          "acceptanceCriteria": "Labeling and manufacturer data are available and legible",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.8"
+        },
+        {
+          "itemNo": "2.6.2",
+          "acceptanceCriteria": "Hook weight is marked",
+          "referenceStandard": "ASME B30.10 Sec: 10-1.8"
+        },
+        {
+          "itemNo": "2.6.3",
+          "acceptanceCriteria": "Safe working load is clearly marked on the hook",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.8"
+        },
+        {
+          "itemNo": "2.6.4",
+          "acceptanceCriteria": "Is there excessive pitting or corrosion",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (c)"
+        },
+        {
+          "itemNo": "2.6.5",
+          "acceptanceCriteria": "Hook is not bent or twisted",
+          "referenceStandard": "ASME B30.10 Sec: 10-1.10.5 (f)"
+        },
+        {
+          "itemNo": "2.6.6",
+          "acceptanceCriteria": "Hook is not distorted in the throat opening • Max. allowable throat opening is 5% not to exceed 1Ú4 in. (6 mm) or as recommended by the manufacturer.",
+          "referenceStandard": "ASME B30.10 Sec: 10-1.10.5 (f)"
+        },
+        {
+          "itemNo": "2.6.7",
+          "acceptanceCriteria": "Maximum wear in the hook bowl is not exceeding 10% (compared to new hook) or as per manufacturer recommendations",
+          "referenceStandard": "ASME B30.10 Sec: 10-1.10.5 (e)"
+        },
+        {
+          "itemNo": "2.6.8",
+          "acceptanceCriteria": "Hook is not cracked, gouged or shows nicks",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (d)"
+        },
+        {
+          "itemNo": "2.6.9",
+          "acceptanceCriteria": "Hook can lock (if it is a self-locking hook)",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (h)"
+        },
+        {
+          "itemNo": "2.6.10",
+          "acceptanceCriteria": "Inoperative latch (if provided) — any damaged latch or malfunctioning latch that does not close the hook’s throat",
+          "referenceStandard": "ASME B30.10 Sec : 10-1.10.5 (i)"
+        }
+      ]
+    },
+    {
+      "no": "2.7",
+      "title": "INSPECTION POINTS / CONTROLS",
+      "items": [
+        {
+          "itemNo": "2.7.1",
+          "acceptanceCriteria": "All controls are labeled and identified",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.6.1 (a)"
+        },
+        {
+          "itemNo": "2.7.2",
+          "acceptanceCriteria": "All controls are functioning properly",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.6.1 (a)"
+        },
+        {
+          "itemNo": "2.7.3",
+          "acceptanceCriteria": "All control levers return to neutral position when force is removed",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.6.1 (b)"
+        }
+      ]
+    },
+    {
+      "no": "2.8",
+      "title": "INSPECTION POINTS / STABILIZERS",
+      "items": [
+        {
+          "itemNo": "2.8.1",
+          "acceptanceCriteria": "Stabilizer cylinder is not scored, nicked, or dented cylinder rods",
+          "referenceStandard": "ASME B30.22 Sec: 2.1.4 (o-4)"
+        },
+        {
+          "itemNo": "2.8.2",
+          "acceptanceCriteria": "Stabilizer cylinder hoses are not leaking",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (l-1)"
+        },
+        {
+          "itemNo": "2.8.3",
+          "acceptanceCriteria": "Stabilizer cylinder hoses are not deformed",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (l-2)"
+        },
+        {
+          "itemNo": "2.8.4",
+          "acceptanceCriteria": "Stabilizers do not have worn, cracked or distorted parts",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (a)"
+        }
+      ]
+    },
+    {
+      "no": "2.9",
+      "title": "INSPECTION POINTS / ROPE",
+      "items": [
+        {
+          "itemNo": "2.9.1",
+          "acceptanceCriteria": "Rope is free of corrosion, kinking, crushing, bird caging, stranding, main strand displacement or core protrusion",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.4.2 (a-1-a)"
+        },
+        {
+          "itemNo": "2.9.2",
+          "acceptanceCriteria": "Rope end connections are free of corrosion, bends, cracks and wear",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.4.2 (b-2-c)"
+        },
+        {
+          "itemNo": "2.9.3",
+          "acceptanceCriteria": "In running ropes, no more than six randomly distributed broken wires in one lay or three broken wires in one strand in one lay",
+          "referenceStandard": "ASME B30.22 Sec: 22 - 2.4.4 (b-1-a)"
+        },
+        {
+          "itemNo": "2.9.4",
+          "acceptanceCriteria": "In rotation-resistant ropes, no more than two randomly distributed broken wires in six rope diameters or four randomly distributed broken wires in 30-rope diameters",
+          "referenceStandard": "ASME B30.22 Sec: 22 - 2.4.4 (b-1-b)"
+        },
+        {
+          "itemNo": "2.9.5",
+          "acceptanceCriteria": "There are no reductions from nominal rope diameter of more than 5%",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.4.3 (b-6)"
+        }
+      ]
+    },
+    {
+      "no": "2.10",
+      "title": "INSPECTION POINTS / GENERAL INSPECTION POINTS:",
+      "items": [
+        {
+          "itemNo": "2.10.1",
+          "acceptanceCriteria": "Hydraulic/pneumatic motors have no loose bolts or fasteners",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (m-1)"
+        },
+        {
+          "itemNo": "2.10.2",
+          "acceptanceCriteria": "Hydraulic/pneumatic motors have no leaks",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (m-2)"
+        },
+        {
+          "itemNo": "2.10.3",
+          "acceptanceCriteria": "Hydraulic/pneumatic motors are free of unusual noises and vibrations",
+          "referenceStandard": "Sec: 22-2.1.4 (m-4)"
+        },
+        {
+          "itemNo": "2.10.4",
+          "acceptanceCriteria": "Hydraulic/pneumatic motors are not overheating",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (m-6)"
+        },
+        {
+          "itemNo": "2.10.5",
+          "acceptanceCriteria": "Hydraulic/pneumatic motors do not loose pressure",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (m-7)"
+        },
+        {
+          "itemNo": "2.10.6",
+          "acceptanceCriteria": "Hydraulic/pneumatic valves are not leaking",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (n-3)"
+        },
+        {
+          "itemNo": "2.10.7",
+          "acceptanceCriteria": "Hydraulic/pneumatic valve housings are not cracked",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (n-1)"
+        },
+        {
+          "itemNo": "2.10.8",
+          "acceptanceCriteria": "Hydraulic/pneumatic relieve valves are maintaining the set pressure",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (n-5)"
+        },
+        {
+          "itemNo": "2.10.9",
+          "acceptanceCriteria": "Hydraulic/pneumatic cylinder are not leaking at seals",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (o-2)"
+        },
+        {
+          "itemNo": "2.10.10",
+          "acceptanceCriteria": "Hydraulic/pneumatic cylinder are not leaking at welded joints",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (o-3)"
+        },
+        {
+          "itemNo": "2.10.11",
+          "acceptanceCriteria": "Hydraulic/pneumatic cylinder case is free of damage",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (o-4)"
+        },
+        {
+          "itemNo": "2.10.12",
+          "acceptanceCriteria": "Hydraulic/pneumatic cylinders have no loose or deformed rod eyes or connecting joints",
+          "referenceStandard": "ASME B30.22 Sec: 22-2.1.4 (o-6)"
+        },
+        {
+          "itemNo": "2.10.13",
+          "acceptanceCriteria": "An overload protection system or Rated Capacity Limiter shall be provided.",
+          "referenceStandard": "ASME B30.22 Sec: 22-1.8.2.2"
+        }
+      ]
+    }
+  ]
+}

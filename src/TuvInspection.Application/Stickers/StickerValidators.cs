@@ -3,16 +3,6 @@ using TuvInspection.Contracts.Stickers;
 
 namespace TuvInspection.Application.Stickers;
 
-public sealed class CreateStickerRequestValidator : AbstractValidator<CreateStickerRequest>
-{
-    public CreateStickerRequestValidator()
-    {
-        RuleFor(x => x.Color).IsInEnum();
-        RuleFor(x => x.Quantity).InclusiveBetween(1, 500);
-        RuleFor(x => x.Justification).MaximumLength(500);
-    }
-}
-
 public sealed class ProcureStockRequestValidator : AbstractValidator<ProcureStockRequest>
 {
     public ProcureStockRequestValidator()
@@ -40,18 +30,3 @@ public sealed class VoidStickerRequestValidator : AbstractValidator<VoidStickerR
     }
 }
 
-public sealed class RejectStickerRequestBodyValidator : AbstractValidator<RejectStickerRequestBody>
-{
-    public RejectStickerRequestBodyValidator()
-    {
-        RuleFor(x => x.Reason).NotEmpty().MaximumLength(500);
-    }
-}
-
-public sealed class DecisionCommentsBodyValidator : AbstractValidator<DecisionCommentsBody>
-{
-    public DecisionCommentsBodyValidator()
-    {
-        RuleFor(x => x.Comments).MaximumLength(500);
-    }
-}

@@ -31,6 +31,7 @@ import { PhotoGallery } from '../components/photo-gallery.component';
 import { SignaturesPanel } from '../components/signatures-panel.component';
 import { AramcoFormComponent } from '../components/aramco-form.component';
 import { PublicStickerApi } from '../../../core/api/stickers.api';
+import { SaicChecklistsApi } from '../../../core/api/saic-checklists.api';
 import { environment } from '../../../../environments/environment';
 import {
   AvailableTransition,
@@ -124,22 +125,25 @@ import {
           </ul>
         </section>
 
-        <!-- Checklist -->
-        <section class="checklist card">
-          <header class="block-header">
-            <h3>Inspection checklist</h3>
-            <span class="muted" *ngIf="!isMutable()">
-              <i class="pi pi-lock"></i>
-              Read-only — certificate is in {{ stateName(c.state) }} state.
-            </span>
-          </header>
-          <tuv-checklist-editor
-            [value]="c.checklistJson"
-            [equipmentTypeId]="c.equipmentTypeId"
-            [equipmentTypeName]="c.equipmentTypeName"
-            [readonly]="!isMutable()"
-            (save)="saveChecklist($event)" />
-        </section>
+        <!-- Checklist — Third Party Inspection only. Blue Sticker (Aramco) uses
+             the Annex 1 sheet exclusively; no checklist applies. -->
+        @if (!c.isBlueStickerCertificate) {
+          <section class="checklist card">
+            <header class="block-header">
+              <h3>Inspection checklist</h3>
+              <span class="muted" *ngIf="!isMutable()">
+                <i class="pi pi-lock"></i>
+                Read-only — certificate is in {{ stateName(c.state) }} state.
+              </span>
+            </header>
+            <tuv-checklist-editor
+              [value]="c.checklistJson"
+              [equipmentTypeId]="c.equipmentTypeId"
+              [equipmentTypeName]="c.equipmentTypeName"
+              [readonly]="!isMutable()"
+              (save)="saveChecklist($event)" />
+          </section>
+        }
 
         <!-- Aramco Annex 1 — Blue Sticker only (Aramco-categorised equipment).
              Third Party Inspection certs use the per-equipment-type checklist above
@@ -163,7 +167,20 @@ import {
               [canDownloadPdf]="true"
               [aramcoPdfUrl]="aramcoPdfUrl(c.id)"
               [issuedByOptions]="issuedByOptions()"
-              (save)="saveAramcoReport($event)" />
+              (save)="saveAramcoReport($event)"
+              (equipmentSelectionChange)="onAramcoSelection($event, c.checklistJson)"
+              (downloadPdf)="downloadAramcoPdf($event)" />
+
+            <div class="saic-checklist" *ngIf="saicNumber()" style="margin-top: 1.25rem;">
+              <header class="block-header">
+                <h3><i class="pi pi-list-check"></i> Inspection checklist — {{ saicNumber() }}</h3>
+              </header>
+              <tuv-checklist-editor
+                [value]="saicChecklistJson() ?? c.checklistJson"
+                [equipmentTypeName]="c.equipmentTypeName"
+                [readonly]="!isMutable()"
+                (save)="saveChecklist($event)" />
+            </div>
           </section>
         } @else {
           <section class="aramco card tpi-note">
@@ -174,20 +191,23 @@ import {
           </section>
         }
 
-        <!-- Photos -->
-        <section class="photos card">
-          <header class="block-header">
-            <h3>Photos</h3>
-            <span class="muted" *ngIf="!isMutable()">
-              <i class="pi pi-lock"></i>
-              Read-only — certificate is in {{ stateName(c.state) }} state.
-            </span>
-          </header>
-          <tuv-photo-gallery
-            [value]="c.photosJson"
-            [readonly]="!isMutable()"
-            (valueChange)="savePhotos($event)" />
-        </section>
+        <!-- Photos — Third Party Inspection only. Blue Sticker (Aramco) uses
+             the Annex 1 sheet exclusively; no photos section applies. -->
+        @if (!c.isBlueStickerCertificate) {
+          <section class="photos card">
+            <header class="block-header">
+              <h3>Photos</h3>
+              <span class="muted" *ngIf="!isMutable()">
+                <i class="pi pi-lock"></i>
+                Read-only — certificate is in {{ stateName(c.state) }} state.
+              </span>
+            </header>
+            <tuv-photo-gallery
+              [value]="c.photosJson"
+              [readonly]="!isMutable()"
+              (valueChange)="savePhotos($event)" />
+          </section>
+        }
 
         <!-- Signatures -->
         <section class="signatures card">
@@ -324,6 +344,7 @@ export class CertificateDetailPage implements OnInit {
   private api = inject(CertificatesApi);
   private usersApi = inject(UsersApi);
   private stickersApi = inject(PublicStickerApi);
+  private saicApi = inject(SaicChecklistsApi);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private notify = inject(NotifyService);
@@ -336,6 +357,11 @@ export class CertificateDetailPage implements OnInit {
   protected loading = signal(true);
   protected cert = signal<CertificateDetail | null>(null);
   protected previousCertId = signal<string | null>(null);
+
+  // SAIC inspection checklist for Blue Sticker (Aramco) certs, resolved from the
+  // Aramco form's category + equipment-type selection.
+  protected saicNumber = signal<string | null>(null);
+  protected saicChecklistJson = signal<string | null>(null);
 
   // Comment #5: TÜV inspectors/users populate the "Previous Sticker Issued By" dropdown.
   protected inspectors = signal<InspectorLookup[]>([]);
@@ -370,6 +396,7 @@ export class CertificateDetailPage implements OnInit {
   protected comments = '';
   protected firing = signal(false);
   protected downloadingPdf = signal(false);
+  protected downloadingAramcoPdf = signal(false);
 
   protected confirmText = computed(() => {
     const t = this.pendingTrigger();
@@ -463,13 +490,21 @@ export class CertificateDetailPage implements OnInit {
     const c = this.cert();
     if (!c) return;
     this.downloadingPdf.set(true);
-    this.api.pdf(c.id).subscribe({
+    // Blue Sticker (Aramco) certs use the Annex 1 report as their PDF, not the
+    // generic certificate PDF. TPI certs keep the generic one.
+    const pdf$ = c.isBlueStickerCertificate
+      ? this.api.aramcoPdf(c.id)
+      : this.api.pdf(c.id);
+    const fileName = c.isBlueStickerCertificate
+      ? `${c.certificateNo}-Annex1.pdf`
+      : `${c.certificateNo}.pdf`;
+    pdf$.subscribe({
       next: (blob) => {
         this.downloadingPdf.set(false);
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${c.certificateNo}.pdf`;
+        a.download = fileName;
         a.click();
         window.URL.revokeObjectURL(url);
       },
@@ -484,6 +519,33 @@ export class CertificateDetailPage implements OnInit {
     this.partialUpdate({ checklistJson: json }, 'Checklist saved.');
   }
 
+  /** Resolve + load the SAIC checklist for the current Aramco selection into the editor. */
+  onAramcoSelection(sel: { category: string; equipmentType: string }, currentChecklistJson: string | null) {
+    this.saicApi.resolve(sel.category, sel.equipmentType).subscribe((res) => {
+      this.saicNumber.set(res?.saicNumber ?? null);
+      // Don't clobber an already-filled checklist; only seed items when it's empty.
+      if (res && !this.hasChecklistItems(currentChecklistJson)) {
+        this.saicChecklistJson.set(JSON.stringify({
+          items: res.items.map((i) => ({
+            itemNo: i.itemNo,
+            acceptanceCriteria: i.acceptanceCriteria,
+            referenceStandard: i.referenceStandard,
+            result: 'NotSet',
+            remark: '',
+          })),
+          generatedFromTemplateId: res.saicNumber,
+        }));
+      } else {
+        this.saicChecklistJson.set(currentChecklistJson);
+      }
+    });
+  }
+
+  private hasChecklistItems(json: string | null): boolean {
+    if (!json) return false;
+    try { return (JSON.parse(json)?.items?.length ?? 0) > 0; } catch { return false; }
+  }
+
   savePhotos(json: string) {
     this.partialUpdate({ photosJson: json }, 'Photos updated.');
   }
@@ -494,6 +556,49 @@ export class CertificateDetailPage implements OnInit {
 
   saveAramcoReport(json: string) {
     this.partialUpdate({ aramcoReportJson: json }, 'Annex 1 fields saved.');
+  }
+
+  downloadAramcoPdf(json: string) {
+    const c = this.cert();
+    if (!c) return;
+    this.downloadingAramcoPdf.set(true);
+    // First persist the current form data, then fetch and open the PDF blob.
+    this.api.update(c.id, {
+      inspectionDate: c.inspectionDate,
+      reportIssueDate: c.reportIssueDate,
+      nextDueDate: c.nextDueDate,
+      inspectionType: c.inspectionType,
+      loadTest: c.loadTest,
+      result: c.result,
+      standards: c.standards,
+      stickerNo: c.stickerNo,
+      checklistJson: c.checklistJson,
+      findingsJson: c.findingsJson,
+      photosJson: c.photosJson,
+      signaturesJson: c.signaturesJson,
+      aramcoReportJson: json,
+    }).subscribe({
+      next: (updated) => {
+        this.cert.set(updated);
+        this.notify.success('Annex 1 fields saved.');
+        this.api.aramcoPdf(c.id).subscribe({
+          next: (blob) => {
+            this.downloadingAramcoPdf.set(false);
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, '_blank');
+            setTimeout(() => window.URL.revokeObjectURL(url), 60_000);
+          },
+          error: (err) => {
+            this.downloadingAramcoPdf.set(false);
+            showHttpError(this.notify, err);
+          },
+        });
+      },
+      error: (err) => {
+        this.downloadingAramcoPdf.set(false);
+        showHttpError(this.notify, err);
+      },
+    });
   }
 
   aramcoPdfUrl(certId: string): string {

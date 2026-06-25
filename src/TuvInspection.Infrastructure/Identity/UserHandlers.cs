@@ -48,7 +48,8 @@ public sealed class ListUsersHandler : IQueryHandler<ListUsersQuery, IReadOnlyLi
             u.FullName, u.SapNo, u.CertNo,
             u.IsActive,
             IsLockedOut: u.LockoutEnd is not null && u.LockoutEnd > DateTimeOffset.UtcNow,
-            roles.ToList(), clientIds, u.CreatedAtUtc);
+            roles.ToList(), clientIds, u.CreatedAtUtc,
+            HasSignature: !string.IsNullOrEmpty(u.SignaturePng));
     }
 }
 
@@ -118,6 +119,7 @@ public sealed class CreateUserHandler : ICommandHandler<CreateUserCommand, UserL
             IsActive = true,
             CreatedAtUtc = _clock.UtcNow,
             AssignedClientIdsCsv = string.Join(",", command.Body.AssignedClientIds ?? new List<Guid>()),
+            SignaturePng = NormalizeSignature(command.Body.SignaturePng),
         };
 
         var create = await _users.CreateAsync(user, command.Body.Password);
@@ -138,6 +140,17 @@ public sealed class CreateUserHandler : ICommandHandler<CreateUserCommand, UserL
 
     internal static string JoinErrors(IdentityResult r) =>
         string.Join("; ", r.Errors.Select(e => e.Description));
+
+    /// <summary>Treats null/empty as "leave unchanged"; otherwise enforces a PNG data URI shape
+    /// to keep junk out of the column.</summary>
+    internal static string? NormalizeSignature(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return null;
+        var trimmed = raw.Trim();
+        if (!trimmed.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase))
+            throw new ArgumentException("Signature must be a data:image/... URI.");
+        return trimmed;
+    }
 }
 
 public sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, UserListItemDto>
@@ -165,6 +178,10 @@ public sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand, UserL
         u.CertNo = command.Body.CertNo;
         u.IsActive = command.Body.IsActive;
         u.AssignedClientIdsCsv = string.Join(",", command.Body.AssignedClientIds);
+        // Only overwrite the signature when the caller actually supplied one — keeps prior
+        // signature intact for partial admin updates that don't touch this field.
+        var sig = CreateUserHandler.NormalizeSignature(command.Body.SignaturePng);
+        if (sig is not null) u.SignaturePng = sig;
 
         var save = await _users.UpdateAsync(u);
         if (!save.Succeeded) throw new ArgumentException(CreateUserHandler.JoinErrors(save));
@@ -239,6 +256,49 @@ public sealed class GetUserLicenseHandler : IQueryHandler<GetUserLicenseQuery, U
         return new UserLicenseDto(
             u.LicenseNumber, u.LicenseAuthority, u.LicenseScope,
             u.LicenseValidFrom, u.LicenseValidUntil, isValid, days);
+    }
+}
+
+public sealed class GetMyProfileHandler : IQueryHandler<GetMyProfileQuery, ProfileDto?>
+{
+    private readonly UserManager<ApplicationUser> _users;
+    private readonly ITenantContext _tenant;
+    public GetMyProfileHandler(UserManager<ApplicationUser> users, ITenantContext tenant)
+    { _users = users; _tenant = tenant; }
+
+    public async Task<ProfileDto?> Handle(GetMyProfileQuery q, CancellationToken ct)
+    {
+        if (string.IsNullOrEmpty(_tenant.UserId)) return null;
+        var u = await _users.FindByIdAsync(_tenant.UserId);
+        if (u is null) return null;
+        var roles = await _users.GetRolesAsync(u);
+        return new ProfileDto(u.Id, u.Email, u.FullName, u.SapNo, roles.ToList(), u.SignaturePng);
+    }
+}
+
+public sealed class UpdateMySignatureHandler
+    : ICommandHandler<UpdateMySignatureCommand, ProfileDto>
+{
+    private readonly UserManager<ApplicationUser> _users;
+    private readonly ITenantContext _tenant;
+    public UpdateMySignatureHandler(UserManager<ApplicationUser> users, ITenantContext tenant)
+    { _users = users; _tenant = tenant; }
+
+    public async Task<ProfileDto> Handle(UpdateMySignatureCommand command, CancellationToken ct)
+    {
+        if (string.IsNullOrEmpty(_tenant.UserId))
+            throw new UnauthorizedAccessException("Authentication required.");
+
+        var u = await _users.FindByIdAsync(_tenant.UserId)
+            ?? throw new KeyNotFoundException("Current user not found.");
+
+        u.SignaturePng = CreateUserHandler.NormalizeSignature(command.Body.SignaturePng)
+            ?? throw new ArgumentException("Signature is required.");
+        var save = await _users.UpdateAsync(u);
+        if (!save.Succeeded) throw new ArgumentException(CreateUserHandler.JoinErrors(save));
+
+        var roles = await _users.GetRolesAsync(u);
+        return new ProfileDto(u.Id, u.Email, u.FullName, u.SapNo, roles.ToList(), u.SignaturePng);
     }
 }
 

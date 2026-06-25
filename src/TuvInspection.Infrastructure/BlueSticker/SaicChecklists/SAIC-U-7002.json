@@ -1,0 +1,148 @@
+{
+  "saicNumber": "SAIC-U-7002",
+  "title": "Below-the-Hook Lifting Equipment (Lifting/Spreader Beams)",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "The elevating/lifting equipment is painted safety yellow",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "The elevating/lifting equipment is painted safety yellow-and-black stripes on offshore facilities",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Rated capacity of the elevating/lifting equipment is marked (Arabic & English)",
+          "referenceStandard": "SAES-B067 Sec:4.4"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "STRUCTURAL AND MECHANICAL LIFTING DEVICES",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.5"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.3.6"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Preventive Maintenance is established and dated records are maintained",
+          "referenceStandard": "G.I.7.030 Para: 5.5.2"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "Rated load is marked on the main structure or tagged",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.2.1.b.6"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Lifting device has marking/tagging of manufacturer name, address, serial no., lifter weight",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.2.1(B)"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "Values of cold current and rated voltage (when applicable) are correct",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.2.1.b.5"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "Product safety labels are attached and legible",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.2.1(d)"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "All welds are not showing cracks or corrosion",
+          "referenceStandard": "ASME B30.20 Sec: 20-6.3.7 (m-1)"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "Guards for moving parts are fitted where required",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.2.2 (b)"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "External power supply, electrical equipment and wiring is in place and undamaged (when applicable ) Saudi Aramco: Company Saudi Aramco: Company General Use",
+          "referenceStandard": "ASME B30.20 Sec:20-2.2.2 General Use"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "Surface of load is not covered in debris (where applicable )",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.3.2 (a)"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Condition and operation of the controls are correct and functioning well",
+          "referenceStandard": "ASME B30.20 Sec:20-1.3.2(b)"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "Condition and operation of the indicators and meters are correct and functioning well (where applicable)",
+          "referenceStandard": "ASME B30.20 Sec:20-1.3.2(c)"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "Structural members are not deformed, cracked or excessively worn",
+          "referenceStandard": "ASME B30.20 Sec:20-2.3.3(a)"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "There are no loose or missing guards, bolts and fasteners",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.3.3(b)"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "Covers, stops or nameplates are not missing",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.3.3(b)"
+        },
+        {
+          "itemNo": "2.17",
+          "acceptanceCriteria": "Verify operation of mechanisms (where applicable )",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.3.3 (c)"
+        },
+        {
+          "itemNo": "2.18",
+          "acceptanceCriteria": "Automatic hold-and-release mechanisms are adjusted and not interfering with operation (where appropriate )",
+          "referenceStandard": "ASME B30.20 Sec: 20-1.3.3 (c)"
+        },
+        {
+          "itemNo": "2.19",
+          "acceptanceCriteria": "Gears, pulleys and sheaves are not cracked or worn",
+          "referenceStandard": "ASME B30.20 Table 20-1.3.3-1"
+        },
+        {
+          "itemNo": "2.20",
+          "acceptanceCriteria": "Sprockets, bearings, chains or belts are no cracked or worn",
+          "referenceStandard": "ASME B30.20 Table 20-1.3.3-1"
+        },
+        {
+          "itemNo": "2.21",
+          "acceptanceCriteria": "Linkages and other mechanical parts do not have excessive wear",
+          "referenceStandard": "ASME B30.20 Table 20-1.3.3-1"
+        },
+        {
+          "itemNo": "2.22",
+          "acceptanceCriteria": "Hoist hooking points and load support clevises or pins do not have excessive wear",
+          "referenceStandard": "ASME B30.20 Table 20-1.3.3-1"
+        }
+      ]
+    }
+  ]
+}

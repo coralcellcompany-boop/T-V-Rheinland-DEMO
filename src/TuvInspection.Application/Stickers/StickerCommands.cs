@@ -26,17 +26,3 @@ public sealed record AssignStickersToInspectorCommand(
     int Count,
     Guid? FromRequestId) : ICommand<int>;
 
-// ─── Sticker requests ───
-public sealed record ListStickerRequestsQuery(
-    StickerRequestStateDto? State,
-    string? InspectorUserId,
-    int Page,
-    int PageSize) : IQuery<PagedResult<StickerRequestDto>>;
-
-public sealed record CreateStickerRequestCommand(CreateStickerRequest Body) : ICommand<StickerRequestDto>;
-
-public sealed record ApproveStickerRequestCommand(Guid Id, string? Comments) : ICommand<StickerRequestDto>;
-
-public sealed record RejectStickerRequestCommand(Guid Id, string Reason) : ICommand<StickerRequestDto>;
-
-public sealed record CancelStickerRequestCommand(Guid Id) : ICommand<StickerRequestDto>;

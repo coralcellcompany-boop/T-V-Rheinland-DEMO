@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -46,6 +46,7 @@ export interface AramcoFormDoc {
   equipmentLocationOnSite: string | null;
   manufacturer: string | null;
   model: string | null;
+  equipmentType: string | null;
   equipmentSerialNo: string | null;
   stickerExpirationDate: string | null;   // "YYYY-MM-DD"
   receiverName: string | null;
@@ -64,7 +65,7 @@ const EMPTY: AramcoFormDoc = {
   crmNo: null, reportNo: null, departmentContractor: null, inspectionTime: null,
   previousStickerNo: null, previousStickerIssuedBy: null,
   areaOfInspection: null, capacity: null, equipmentLocationOnSite: null,
-  manufacturer: null, model: null, equipmentSerialNo: null, stickerExpirationDate: null,
+  manufacturer: null, model: null, equipmentType: null, equipmentSerialNo: null, stickerExpirationDate: null,
   receiverName: null, receiverBadgeNo: null, receiverTelephone: null,
   inspectorTelephone: null, receivedDate: null, reviewedDate: null,
   deficiencies: null, correctiveActionsTaken: null,
@@ -76,6 +77,44 @@ const SEVERITY_OPTIONS = [
   { label: 'Major', value: DeficiencySeverity.Major },
   { label: 'Critical', value: DeficiencySeverity.Critical },
 ];
+
+// Official Aramco category list — canonical source:
+// "Aramco Category & Equipment Types.xlsx" (Blue Sticker Services). value = the
+// "Aramco Category Number" that prints on the Annex 1 sheet.
+const ARAMCO_CATEGORY_OPTIONS = [
+  { label: 'CR01 — Mobile Crane', value: 'CR01' },
+  { label: 'CR02 — Elevator & Escalator', value: 'CR02' },
+  { label: 'CR03 — Elevation Work Platform', value: 'CR03' },
+  { label: 'CR04 — Marine & Offshore Cranes', value: 'CR04' },
+  { label: 'CR05 — Storage Retrieval Machine', value: 'CR05' },
+  { label: 'CR06 — Articulating Boom Crane', value: 'CR06' },
+  { label: 'CR07 — Lifting / Spreader Beam', value: 'CR07' },
+  { label: 'CR08 — Powered Platform / Sky Climber', value: 'CR08' },
+  { label: 'CR09 — Vehicle Mounted Elevation & Rotating Aerial Device', value: 'CR09' },
+  { label: 'CR10 — Manbasket', value: 'CR10' },
+  { label: 'CR11 — Fixed Cranes & Hoists', value: 'CR11' },
+  { label: 'CR12 — Side Boom Tractor', value: 'CR12' },
+  { label: 'CR13 — A-frame & Mobile Gantry', value: 'CR13' },
+  { label: 'CR14 — Tower Crane', value: 'CR14' },
+];
+
+// Canonical mapping from "Aramco Category & Equipment Types.xlsx"
+const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
+  CR01: ['Mobile Crane - All Terrain', 'Mobile Crane - Rough Terrain', 'Mobile Crane - Truck Mounted Crane', 'Mobile Crane - Boom Truck', 'Crawler Crane'],
+  CR02: ['Elevator', 'Escalator'],
+  CR03: ['Manlift - Boom Supported EWP', 'Scissor Lift - Self Propelled EWP', 'Manually Propelled EWP', 'Mast Climbing Personal Platform'],
+  CR04: ['Pedestal Crane', 'Pedestal Crane - Articulating Boom', 'Floating Crane - Articulating Boom', 'Floating Crane', 'Overhead Crane', 'Monorail Crane', 'Tower Crane', 'Portal Crane'],
+  CR05: ['Storage Retrieval Machine (SRM)'],
+  CR06: ['Articulating Boom Crane'],
+  CR07: ['Lifting Beam', 'Spreader Beam'],
+  CR08: ['Powered Platform / Sky Climber'],
+  CR09: ['Bucket Truck'],
+  CR10: ['Manbasket'],
+  CR11: ['Overhead Crane', 'Monorail Crane', 'Jib Crane'],
+  CR12: ['Side Boom Tractor'],
+  CR13: ['A-frame', 'Gantry Crane'],
+  CR14: ['Tower Crane'],
+};
 
 @Component({
   selector: 'tuv-aramco-form',
@@ -96,7 +135,12 @@ const SEVERITY_OPTIONS = [
         <label>TUV Job Order No. <span class="auto">auto</span>
           <input pInputText [(ngModel)]="form.tuvJobOrderNo" [disabled]="true"
             placeholder="From linked job order" /></label>
-        <label>Aramco Category No.<input pInputText [(ngModel)]="form.aramcoCategoryNo" [disabled]="readonly" /></label>
+        <label>Aramco Category No.
+          <p-select [options]="aramcoCategoryOptions" [(ngModel)]="form.aramcoCategoryNo"
+            optionLabel="label" optionValue="value" appendTo="body" [filter]="true"
+            placeholder="Select Aramco category" [disabled]="readonly"
+            (onChange)="onCategoryChange()" />
+        </label>
         <label>Org. Code<input pInputText [(ngModel)]="form.orgCode" [disabled]="readonly" /></label>
         <label>RPO No.<input pInputText [(ngModel)]="form.rpoNo" [disabled]="readonly" /></label>
         <label>CRM No.<input pInputText [(ngModel)]="form.crmNo" [disabled]="readonly" /></label>
@@ -108,7 +152,7 @@ const SEVERITY_OPTIONS = [
       <fieldset>
         <legend>Site &amp; previous sticker</legend>
         <label>Department / Contractor<input pInputText [(ngModel)]="form.departmentContractor" [disabled]="readonly" /></label>
-        <label>Inspection Time (HH:mm)<input pInputText [(ngModel)]="form.inspectionTime" placeholder="e.g. 09:30" [disabled]="readonly" /></label>
+        <label>Inspection Time<input pInputText type="time" [(ngModel)]="form.inspectionTime" [disabled]="readonly" /></label>
         <label>Previous Sticker No.<input pInputText [(ngModel)]="form.previousStickerNo" [disabled]="readonly" /></label>
         <label>Previous Sticker Issued By
           <p-select [options]="issuedByOptions" [(ngModel)]="form.previousStickerIssuedBy"
@@ -125,6 +169,13 @@ const SEVERITY_OPTIONS = [
         <label>Capacity<input pInputText [(ngModel)]="form.capacity" placeholder="e.g. 5 t" [disabled]="readonly" /></label>
         <label>Manufacturer<input pInputText [(ngModel)]="form.manufacturer" [disabled]="readonly" /></label>
         <label>Model<input pInputText [(ngModel)]="form.model" [disabled]="readonly" /></label>
+        <label>Equipment Type
+          <p-select [options]="equipmentTypeOptions()" [(ngModel)]="form.equipmentType"
+            appendTo="body" [filter]="true"
+            placeholder="Select Aramco category first"
+            [disabled]="readonly || !form.aramcoCategoryNo"
+            (onChange)="emitSelection()" />
+        </label>
         <label>Equipment Serial No.<input pInputText [(ngModel)]="form.equipmentSerialNo" [disabled]="readonly" /></label>
         <label>Sticker Expiration Date<input pInputText type="date" [(ngModel)]="form.stickerExpirationDate" [disabled]="readonly" /></label>
       </fieldset>
@@ -135,7 +186,7 @@ const SEVERITY_OPTIONS = [
         <label>Receiver Badge No.<input pInputText [(ngModel)]="form.receiverBadgeNo" [disabled]="readonly" /></label>
         <label>Receiver Telephone<input pInputText [(ngModel)]="form.receiverTelephone" [disabled]="readonly" /></label>
         <label>Inspector Telephone<input pInputText [(ngModel)]="form.inspectorTelephone" [disabled]="readonly" /></label>
-        <label>Received Date<input pInputText type="date" [(ngModel)]="form.receivedDate" [disabled]="readonly" /></label>
+        <label>Received Date (auto)<input pInputText type="date" [(ngModel)]="form.receivedDate" [disabled]="true" /></label>
         <label>Reviewed Date<input pInputText type="date" [(ngModel)]="form.reviewedDate" [disabled]="readonly" /></label>
       </fieldset>
     </div>
@@ -145,26 +196,15 @@ const SEVERITY_OPTIONS = [
       <table class="def-table" *ngIf="form.deficiencyItems.length > 0; else emptyDefs">
         <thead>
           <tr>
-            <th class="c-code">Code</th>
-            <th>Description</th>
-            <th class="c-sev">Severity</th>
-            <th>Corrective Action</th>
-            <th class="c-due">Deadline</th>
-            <th class="c-done">Resolved</th>
+            <th>Deficiencies / Observations</th>
+            <th>Corrective Action Taken</th>
             <th class="c-act" *ngIf="!readonly"></th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let row of form.deficiencyItems; let i = index">
-            <td><input pInputText [(ngModel)]="row.code" [disabled]="readonly" placeholder="e.g. SAIC-7001-3" /></td>
             <td><input pInputText [(ngModel)]="row.description" [disabled]="readonly" placeholder="What was observed" /></td>
-            <td>
-              <p-select [options]="severityOptions" [(ngModel)]="row.severity"
-                optionLabel="label" optionValue="value" appendTo="body" [disabled]="readonly" />
-            </td>
             <td><input pInputText [(ngModel)]="row.correctiveAction" [disabled]="readonly" placeholder="What was done" /></td>
-            <td><input pInputText type="date" [(ngModel)]="row.deadline" [disabled]="readonly" /></td>
-            <td class="c-done"><p-checkbox [(ngModel)]="row.resolved" [binary]="true" [disabled]="readonly" /></td>
             <td class="c-act" *ngIf="!readonly">
               <p-button icon="pi pi-trash" severity="danger" [text]="true" [rounded]="true"
                 (onClick)="removeDeficiency(i)" />
@@ -178,33 +218,19 @@ const SEVERITY_OPTIONS = [
       <div class="row-add" *ngIf="!readonly">
         <p-button label="Add deficiency row" icon="pi pi-plus" [text]="true" (onClick)="addDeficiency()" />
       </div>
-
-      <details class="legacy-defs">
-        <summary>Free-text notes (legacy)</summary>
-        <div class="two-col">
-          <label>Deficiencies / Observations
-            <textarea pTextarea rows="3" [(ngModel)]="form.deficiencies" [disabled]="readonly"
-              placeholder="Optional free-text notes."></textarea>
-          </label>
-          <label>Corrective Action Taken
-            <textarea pTextarea rows="3" [(ngModel)]="form.correctiveActionsTaken" [disabled]="readonly"
-              placeholder="Optional free-text notes."></textarea>
-          </label>
-        </div>
-      </details>
     </fieldset>
 
     <div class="actions" *ngIf="!readonly">
       <p-button label="Save Annex 1 fields" icon="pi pi-save"
         [loading]="saving()" [disabled]="!dirty()" (onClick)="emit()" />
-      <a *ngIf="canDownloadPdf" class="pdf" [href]="aramcoPdfUrl" target="_blank" rel="noopener">
-        <i class="pi pi-file-pdf"></i> Download Annex 1 PDF
-      </a>
+      <p-button *ngIf="canDownloadPdf" label="Download Annex 1 PDF" icon="pi pi-file-pdf"
+        severity="danger" [text]="true" [disabled]="saving()"
+        (onClick)="emitDownloadPdf()" />
     </div>
     <div class="actions" *ngIf="readonly && canDownloadPdf">
-      <a class="pdf" [href]="aramcoPdfUrl" target="_blank" rel="noopener">
-        <i class="pi pi-file-pdf"></i> Download Annex 1 PDF
-      </a>
+      <p-button label="Download Annex 1 PDF" icon="pi pi-file-pdf"
+        severity="danger" [text]="true"
+        (onClick)="emitDownloadPdf()" />
     </div>
   `,
   styles: [
@@ -261,22 +287,25 @@ const SEVERITY_OPTIONS = [
     `,
   ],
 })
-export class AramcoFormComponent {
+export class AramcoFormComponent implements OnInit {
   @Input() set value(json: string | null | undefined) {
     if (!json) {
       this.form = { ...EMPTY, deficiencyItems: [] };
-      this.original = JSON.stringify(this.form);
-      return;
+    } else {
+      try {
+        const parsed = JSON.parse(json) as Partial<AramcoFormDoc>;
+        this.form = {
+          ...EMPTY,
+          ...parsed,
+          deficiencyItems: Array.isArray(parsed.deficiencyItems) ? parsed.deficiencyItems : [],
+        };
+      } catch {
+        this.form = { ...EMPTY, deficiencyItems: [] };
+      }
     }
-    try {
-      const parsed = JSON.parse(json) as Partial<AramcoFormDoc>;
-      this.form = {
-        ...EMPTY,
-        ...parsed,
-        deficiencyItems: Array.isArray(parsed.deficiencyItems) ? parsed.deficiencyItems : [],
-      };
-    } catch {
-      this.form = { ...EMPTY, deficiencyItems: [] };
+    // Received Date is system-set (the date the report is received) — never typed.
+    if (!this.form.receivedDate) {
+      this.form.receivedDate = new Date().toISOString().slice(0, 10);
     }
     this.original = JSON.stringify(this.form);
   }
@@ -286,13 +315,46 @@ export class AramcoFormComponent {
   /** TÜV inspectors/users for the "Previous Sticker Issued By" dropdown (comment #5). */
   @Input() issuedByOptions: { label: string; value: string }[] = [];
   @Output() save = new EventEmitter<string>();
+  @Output() downloadPdf = new EventEmitter<string>();
+  /** Fires when the equipment selection that drives the SAIC checklist changes. */
+  @Output() equipmentSelectionChange = new EventEmitter<{ category: string; equipmentType: string }>();
 
   protected form: AramcoFormDoc = { ...EMPTY, deficiencyItems: [] };
   protected saving = signal(false);
   protected severityOptions = SEVERITY_OPTIONS;
+  protected aramcoCategoryOptions = ARAMCO_CATEGORY_OPTIONS;
   private original = JSON.stringify(EMPTY);
 
   protected dirty = () => JSON.stringify(this.form) !== this.original;
+
+  protected equipmentTypeOptions = () =>
+    this.form.aramcoCategoryNo
+      ? (CATEGORY_EQUIPMENT_TYPES[this.form.aramcoCategoryNo] ?? [])
+      : [];
+
+  ngOnInit() {
+    // Emit the saved selection on load (after the value setter has populated this.form
+    // and the parent's output binding is established).
+    this.emitSelection();
+  }
+
+  onCategoryChange() {
+    if (
+      this.form.equipmentType &&
+      !this.equipmentTypeOptions().includes(this.form.equipmentType)
+    ) {
+      this.form.equipmentType = null;
+    }
+    this.emitSelection();
+  }
+
+  protected emitSelection() {
+    const category = this.form.aramcoCategoryNo;
+    const equipmentType = this.form.equipmentType;
+    if (category && equipmentType) {
+      this.equipmentSelectionChange.emit({ category, equipmentType });
+    }
+  }
 
   addDeficiency() {
     this.form.deficiencyItems = [
@@ -312,11 +374,19 @@ export class AramcoFormComponent {
     this.form.deficiencyItems = this.form.deficiencyItems.filter((_, i) => i !== index);
   }
 
+  private buildJson(): string {
+    return JSON.stringify(this.form);
+  }
+
   emit() {
     this.saving.set(true);
-    const json = JSON.stringify(this.form);
+    const json = this.buildJson();
     this.original = json;
     this.save.emit(json);
     setTimeout(() => this.saving.set(false), 200);
+  }
+
+  emitDownloadPdf() {
+    this.downloadPdf.emit(this.buildJson());
   }
 }

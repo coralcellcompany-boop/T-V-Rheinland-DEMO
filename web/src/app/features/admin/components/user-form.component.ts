@@ -8,6 +8,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { PasswordModule } from 'primeng/password';
 import { ClientListItem } from '../../../core/models/client.models';
 import { UserListItem } from '../../../core/models/user.models';
+import { SignaturePad } from '../../certificates/components/signature-pad.component';
 
 @Component({
   selector: 'tuv-user-form',
@@ -15,6 +16,7 @@ import { UserListItem } from '../../../core/models/user.models';
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
     InputTextModule, MultiSelectModule, CheckboxModule, PasswordModule, ButtonModule,
+    SignaturePad,
   ],
   template: `
     <form [formGroup]="form" (ngSubmit)="onSave()" class="form">
@@ -70,6 +72,22 @@ import { UserListItem } from '../../../core/models/user.models';
         <small>Empty = none. Managers bypass client scoping regardless.</small>
       </div>
 
+      <!-- ── Signature (auto-applied when this user signs Blue Sticker reports) ── -->
+      <div class="row sig-row">
+        <label>Signature
+          @if (editing?.hasSignature && !pendingSignature()) {
+            <span class="badge ok">on file</span>
+          } @else if (pendingSignature()) {
+            <span class="badge ok">captured</span>
+          } @else {
+            <span class="badge warn">not set</span>
+          }
+        </label>
+        <small>Captured once; applied automatically whenever this user signs a Blue Sticker
+          report. Sign with a finger / stylus.</small>
+        <tuv-signature-pad (commitSignature)="onSignatureCaptured($event)" />
+      </div>
+
       <div class="actions">
         <p-button type="button" severity="secondary" label="Cancel" (onClick)="cancel.emit()" />
         <p-button type="submit" label="{{ editing ? 'Save changes' : 'Create user' }}"
@@ -91,6 +109,11 @@ import { UserListItem } from '../../../core/models/user.models';
       .check { display: flex; align-items: center; gap: 0.55rem; cursor: pointer; }
       small { color: #94a3b8; font-size: 0.75rem; }
       .actions { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 0.5rem; }
+      .sig-row label { display: flex; align-items: center; gap: 0.4rem; }
+      .badge { font-size: 0.7rem; padding: 0.05rem 0.45rem; border-radius: 999px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: 0.05em; }
+      .badge.ok { background: #dcfce7; color: #047857; }
+      .badge.warn { background: #fef3c7; color: #92400e; }
     `,
   ],
 })
@@ -103,6 +126,7 @@ export class UserForm {
   @Output() cancel = new EventEmitter<void>();
 
   protected saving = signal(false);
+  protected pendingSignature = signal<string | null>(null);
 
   private fb = inject(FormBuilder);
   protected form = this.fb.nonNullable.group({
@@ -132,10 +156,23 @@ export class UserForm {
     }
   }
 
+  onSignatureCaptured(dataUrl: string) { this.pendingSignature.set(dataUrl); }
+
   onSave() {
     if (this.form.invalid) return;
     this.saving.set(true);
-    this.save.emit(this.form.getRawValue());
+    const sig = this.pendingSignature();
+    // For new users we require a signature — they need it to sign reports.
+    if (!this.editing && !sig) {
+      this.saving.set(false);
+      alert('Please capture the user\'s signature before creating their account.');
+      return;
+    }
+    this.save.emit({
+      ...this.form.getRawValue(),
+      // null means "leave existing signature untouched" on the backend.
+      signaturePng: sig ?? null,
+    });
     setTimeout(() => this.saving.set(false), 800);
   }
 }

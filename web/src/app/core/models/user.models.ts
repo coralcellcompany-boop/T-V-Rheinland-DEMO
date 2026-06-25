@@ -10,6 +10,7 @@ export interface UserListItem {
   roles: string[];
   assignedClientIds: string[];
   createdAtUtc: string;
+  hasSignature: boolean;
 }
 
 export interface CreateUserRequest {
@@ -20,6 +21,7 @@ export interface CreateUserRequest {
   password: string;
   roles: string[];
   assignedClientIds?: string[] | null;
+  signaturePng?: string | null;
 }
 
 export interface UpdateUserRequest {
@@ -29,4 +31,14 @@ export interface UpdateUserRequest {
   isActive: boolean;
   roles: string[];
   assignedClientIds: string[];
+  signaturePng?: string | null;
+}
+
+export interface Profile {
+  id: string;
+  email: string | null;
+  fullName: string | null;
+  sapNo: string | null;
+  roles: string[];
+  signaturePng: string | null;
 }

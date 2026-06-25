@@ -125,6 +125,7 @@ public sealed record AramcoReportData(
     string? EquipmentLocationOnSite,
     string? Manufacturer,
     string? Model,
+    string? EquipmentType,
     string? EquipmentSerialNo,
     DateOnly? StickerExpirationDate,
     string? ReceiverName,

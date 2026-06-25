@@ -369,6 +369,246 @@ namespace TuvInspection.Infrastructure.Persistence.Migrations
                     b.ToTable("CompetencyCards", (string)null);
                 });
 
+            modelBuilder.Entity("TuvInspection.Domain.BlueSticker.BlueStickerReport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AramcoCategoryNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("AreaOfInspection")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Capacity")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ClientOtpAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ClientOtpExpiresAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ClientOtpHash")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ClientOtpSentToEmail")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("CorrectiveActionsTaken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CrmNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Deficiencies")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DepartmentContractor")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("EquipmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("EquipmentIdNo")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("EquipmentLocation")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("EquipmentSerialNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("EquipmentType")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateOnly?>("InspectionDate")
+                        .HasColumnType("date");
+
+                    b.Property<TimeOnly?>("InspectionTime")
+                        .HasColumnType("time");
+
+                    b.Property<string>("InspectorName")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("InspectorSapNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("InspectorSignaturePng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("InspectorTelephone")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<Guid>("JobOrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Manufacturer")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Model")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("NewStickerNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("OrgCode")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("PreviousStickerIssuedBy")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("PreviousStickerNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<DateOnly?>("ReceivedDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("ReceiverBadgeNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ReceiverName")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ReceiverSignaturePng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReceiverTelephone")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("ReportNo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Result")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("ReviewedDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("RpoNo")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("StickerExpirationDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid?>("StickerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TechnicalReviewerName")
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("TechnicalReviewerSignaturePng")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TuvJobOrderNo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedById")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.HasIndex("JobOrderId");
+
+                    b.HasIndex("ReportNo")
+                        .IsUnique();
+
+                    b.HasIndex("State");
+
+                    b.HasIndex("StickerId")
+                        .IsUnique()
+                        .HasFilter("[StickerId] IS NOT NULL");
+
+                    b.ToTable("BlueStickerReports", (string)null);
+                });
+
+            modelBuilder.Entity("TuvInspection.Domain.BlueSticker.BlueStickerReportStateTransition", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActorRole")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ActorUserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("AtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Comments")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("FromState")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("ReportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ToState")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.ToTable("BlueStickerReportTransitions", (string)null);
+                });
+
             modelBuilder.Entity("TuvInspection.Domain.Certificates.CertificateStateTransition", b =>
                 {
                     b.Property<Guid>("Id")
@@ -964,74 +1204,6 @@ namespace TuvInspection.Infrastructure.Persistence.Migrations
                     b.ToTable("Stickers", (string)null);
                 });
 
-            modelBuilder.Entity("TuvInspection.Domain.Stickers.StickerRequest", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AllocatedCount")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Color")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedById")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("DecidedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DecidedByUserId")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("DecisionComments")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<string>("InspectorUserId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Justification")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequestNo")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<int>("State")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAtUtc")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedById")
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InspectorUserId");
-
-                    b.HasIndex("RequestNo")
-                        .IsUnique();
-
-                    b.HasIndex("State");
-
-                    b.ToTable("StickerRequests", (string)null);
-                });
-
             modelBuilder.Entity("TuvInspection.Domain.Surveys.Survey", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1296,6 +1468,10 @@ namespace TuvInspection.Infrastructure.Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SignaturePng")
+                        .HasMaxLength(131072)
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -1427,6 +1603,15 @@ namespace TuvInspection.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TuvInspection.Domain.BlueSticker.BlueStickerReportStateTransition", b =>
+                {
+                    b.HasOne("TuvInspection.Domain.BlueSticker.BlueStickerReport", null)
+                        .WithMany("Transitions")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("TuvInspection.Domain.Certificates.CertificateStateTransition", b =>
                 {
                     b.HasOne("TuvInspection.Domain.Certificates.InspectionCertificate", null)
@@ -1478,6 +1663,11 @@ namespace TuvInspection.Infrastructure.Persistence.Migrations
                 });
 
             modelBuilder.Entity("TuvInspection.Domain.Assessments.Assessment", b =>
+                {
+                    b.Navigation("Transitions");
+                });
+
+            modelBuilder.Entity("TuvInspection.Domain.BlueSticker.BlueStickerReport", b =>
                 {
                     b.Navigation("Transitions");
                 });

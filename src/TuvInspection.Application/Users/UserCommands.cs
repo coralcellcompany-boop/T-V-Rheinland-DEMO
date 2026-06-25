@@ -18,3 +18,7 @@ public sealed record ResetUserPasswordCommand(string Id, ResetPasswordRequest Bo
 public sealed record GetUserLicenseQuery(string Id) : IQuery<UserLicenseDto?>;
 
 public sealed record UpdateUserLicenseCommand(string Id, UpdateUserLicenseRequest Body) : ICommand<UserLicenseDto>;
+
+public sealed record GetMyProfileQuery() : IQuery<ProfileDto?>;
+
+public sealed record UpdateMySignatureCommand(UpdateProfileSignatureRequest Body) : ICommand<ProfileDto>;

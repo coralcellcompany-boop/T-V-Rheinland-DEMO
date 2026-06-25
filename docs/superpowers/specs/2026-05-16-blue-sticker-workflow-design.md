@@ -137,3 +137,15 @@ Single Angular route `blue-sticker/finalize/:id`, tablet-first (large touch targ
   (likely the SIAC criteria / Aramco category reference docs).
 - Inspector telephone field on the identity/profile model (Name + SAP No. already available
   via existing inspector-context handler).
+
+## 10. Known security follow-up (accepted risk)
+
+The OTP email is delivered via the shared `OutboxMessages` table, which (like every email
+in the system) persists the message payload — including the plaintext one-time code — as
+JSON until/after processing (rows are soft-marked processed, not deleted). Mitigating
+factors accepted for now: the **authoritative** OTP check is the salted SHA-256 hash stored
+on the report (never the plaintext); the code is single-use, expires in 15 minutes, is
+cleared from the report on consumption, and is never logged. Proper remediation
+(retention/pruning or encryption of sensitive outbox payloads) is a **shared-infrastructure**
+change affecting all email and is deliberately out of scope for this feature — tracked as a
+separate follow-up to avoid destabilizing system-wide email delivery mid-feature.

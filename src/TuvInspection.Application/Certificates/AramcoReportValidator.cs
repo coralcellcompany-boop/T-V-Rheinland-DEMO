@@ -65,8 +65,7 @@ public sealed class AramcoReportValidator : AbstractValidator<AramcoReportData>
         return Validate(data);
     }
 
-    private static readonly JsonSerializerOptions JsonOpts = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
+    // Same fault-tolerant options as the PDF renderer: a non-parseable date/time must not
+    // make the whole payload deserialise as empty (which would mask the real field errors).
+    private static readonly JsonSerializerOptions JsonOpts = AramcoJson.Options;
 }

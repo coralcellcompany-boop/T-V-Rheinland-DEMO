@@ -1,0 +1,363 @@
+{
+  "saicNumber": "SAIC-U-7014",
+  "title": "Self Propelled E.W.P.",
+  "sections": [
+    {
+      "no": "1",
+      "title": "GENERAL REQUIREMENTS",
+      "items": [
+        {
+          "itemNo": "1.1",
+          "acceptanceCriteria": "Equipment documentation is available",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.17"
+        },
+        {
+          "itemNo": "1.2",
+          "acceptanceCriteria": "Previous inspection reports are checked",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 6.15.1 (2)"
+        },
+        {
+          "itemNo": "1.3",
+          "acceptanceCriteria": "Daily pre-operational inspection checklists are checked (if applicable)",
+          "referenceStandard": "GI 7.030 Para: 5.1.2"
+        },
+        {
+          "itemNo": "1.4",
+          "acceptanceCriteria": "Preventive Maintenance is established and updated records are maintained",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.6"
+        },
+        {
+          "itemNo": "1.5",
+          "acceptanceCriteria": "Equipment is operated by a qualified operator",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.6"
+        },
+        {
+          "itemNo": "1.6",
+          "acceptanceCriteria": "Warning notice, cautions or restrictions for safe operation and maintenance are clearly displayed and legible",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.13.1(1)"
+        },
+        {
+          "itemNo": "1.7",
+          "acceptanceCriteria": "A sign is posted warning the operator not to rely solely on any automatic device as a substitute for safe operating practice",
+          "referenceStandard": "G.I. 7.030 Para: 5.6.2"
+        },
+        {
+          "itemNo": "1.8",
+          "acceptanceCriteria": "Manufacturer name, address, serial number and model are clearly marked or tagged",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.13.1(2)"
+        },
+        {
+          "itemNo": "1.9",
+          "acceptanceCriteria": "Safe working load and number of persons are clearly marked on the work platform",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.13.1(3)"
+        },
+        {
+          "itemNo": "1.10",
+          "acceptanceCriteria": "Maximum platform height and reach are clearly marked",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.13.1(4)"
+        },
+        {
+          "itemNo": "1.11",
+          "acceptanceCriteria": "Maximum travel height and travel directions are clearly marked",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.13.1(5)"
+        },
+        {
+          "itemNo": "1.12",
+          "acceptanceCriteria": "Power rating are provided and marked (for AC and/or DC)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.13.1 (6)"
+        },
+        {
+          "itemNo": "1.13",
+          "acceptanceCriteria": "Platform and guardrails electrical insulation data are provided",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.13.1 (11)"
+        },
+        {
+          "itemNo": "1.14",
+          "acceptanceCriteria": "Multiple configurations are described on the manual and the platform (if multiple ratings are used)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.13.1 (10)"
+        }
+      ]
+    },
+    {
+      "no": "2",
+      "title": "INSPECTION POINTS",
+      "items": [
+        {
+          "itemNo": "2.1",
+          "acceptanceCriteria": "Platform surfaces are at least 18\" (width & length) and are slip-resistant",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.12.1"
+        },
+        {
+          "itemNo": "2.2",
+          "acceptanceCriteria": "Platform guardrails are provided and secure",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.12.2"
+        },
+        {
+          "itemNo": "2.3",
+          "acceptanceCriteria": "Platform guardrails are 42\" height (+/- 3\")",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.12.2.1"
+        },
+        {
+          "itemNo": "2.4",
+          "acceptanceCriteria": "Platform toeboard is fitted and at least 4\" high",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.12.3"
+        },
+        {
+          "itemNo": "2.5",
+          "acceptanceCriteria": "Moving parts are guarded",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.12.1"
+        },
+        {
+          "itemNo": "2.6",
+          "acceptanceCriteria": "Access to the platform is provided",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.12.4"
+        },
+        {
+          "itemNo": "2.7",
+          "acceptanceCriteria": "Access to the platform and gate inward opening with lock.",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.12.4"
+        },
+        {
+          "itemNo": "2.8",
+          "acceptanceCriteria": "Electrical cables, wiring and components are undamaged",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.18"
+        },
+        {
+          "itemNo": "2.9",
+          "acceptanceCriteria": "Extendable axles function is satisfactory (where fitted)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 8.8 (1)"
+        },
+        {
+          "itemNo": "2.10",
+          "acceptanceCriteria": "Wheels and tires are serviceable and undamaged",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (7)"
+        },
+        {
+          "itemNo": "2.11",
+          "acceptanceCriteria": "Safety harness anchorage is fitted in the platform",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (3)"
+        },
+        {
+          "itemNo": "2.12",
+          "acceptanceCriteria": "Platform controls operate the machine correctly",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.6.1.3"
+        },
+        {
+          "itemNo": "2.13",
+          "acceptanceCriteria": "Platform controls are clearly marked with direction and mode of operation",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.6.1 (6)"
+        },
+        {
+          "itemNo": "2.14",
+          "acceptanceCriteria": "Platform controls accessible to the operator",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.1 (1)"
+        },
+        {
+          "itemNo": "2.15",
+          "acceptanceCriteria": "Platform controls return to \"off\" or \"neutral\" position when released",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.6.1 (4)"
+        },
+        {
+          "itemNo": "2.16",
+          "acceptanceCriteria": "Platform controls are protected against inadvertent operation",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.1 (5)"
+        },
+        {
+          "itemNo": "2.17",
+          "acceptanceCriteria": "Over-ride control for power functions is fitted at ground level control panel",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.6.2 (1)"
+        },
+        {
+          "itemNo": "2.18",
+          "acceptanceCriteria": "Ground controls return to \"off\" or \"neutral\" position when released",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.7.2 (3)"
+        },
+        {
+          "itemNo": "2.19",
+          "acceptanceCriteria": "Ground controls are clearly marked for direction and mode of operation",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.6.2 (5)"
+        },
+        {
+          "itemNo": "2.20",
+          "acceptanceCriteria": "Ground controls do not include drive and steering functions",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.2 (4)"
+        },
+        {
+          "itemNo": "2.21",
+          "acceptanceCriteria": "Ground controls are protected against inadvertent operation",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.6.2 (4)"
+        },
+        {
+          "itemNo": "2.22",
+          "acceptanceCriteria": "Auxiliary (emergency) lowering, retracting and rotating controls are fitted and operable at platform control panel",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.6.4"
+        },
+        {
+          "itemNo": "2.23",
+          "acceptanceCriteria": "Auxiliary (emergency) lowering, retracting and rotating controls are fitted and operable at ground control panel",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.6.4"
+        },
+        {
+          "itemNo": "2.24",
+          "acceptanceCriteria": "Battery is secure, guarded and ventilated",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.15.2"
+        },
+        {
+          "itemNo": "2.25",
+          "acceptanceCriteria": "Outrigger position microswitches and interlocks are fully functional at their control panel",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.8.2"
+        },
+        {
+          "itemNo": "2.26",
+          "acceptanceCriteria": "Safety cables and wiring harness are available",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (4)"
+        },
+        {
+          "itemNo": "2.27",
+          "acceptanceCriteria": "Air, Hydraulic and fuel systems are not leaking",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (3)"
+        },
+        {
+          "itemNo": "2.28",
+          "acceptanceCriteria": "Emergency stop button is available at ground control station",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.6.3"
+        },
+        {
+          "itemNo": "2.29",
+          "acceptanceCriteria": "Emergency stop button is available at platform control station",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.3"
+        },
+        {
+          "itemNo": "2.30",
+          "acceptanceCriteria": "There are no loose nuts, bolts, missing, worn or damaged parts around the structure",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (6)"
+        },
+        {
+          "itemNo": "2.31",
+          "acceptanceCriteria": "The equipment is free of defective and/or corroded members/joints",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:6.6 (6)"
+        },
+        {
+          "itemNo": "2.32",
+          "acceptanceCriteria": "Working environment is hazard free and machine can be safely operated",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:8.9"
+        },
+        {
+          "itemNo": "2.33",
+          "acceptanceCriteria": "An hour meter is fitted",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.16.3"
+        },
+        {
+          "itemNo": "2.34",
+          "acceptanceCriteria": "A fire extinguisher is fitted (type depends on operating location)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:8.9"
+        },
+        {
+          "itemNo": "2.35",
+          "acceptanceCriteria": "All fluid levels for oil, water and hydraulic are adequate",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 6.6 (5)"
+        },
+        {
+          "itemNo": "2.36",
+          "acceptanceCriteria": "All moving parts are lubricated",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 6.6 (5)"
+        },
+        {
+          "itemNo": "2.37",
+          "acceptanceCriteria": "Emergency stop button is operable from platform station",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.3"
+        },
+        {
+          "itemNo": "2.38",
+          "acceptanceCriteria": "Emergency stop button is operable from ground station",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.3"
+        },
+        {
+          "itemNo": "2.39",
+          "acceptanceCriteria": "Lowering/retracting is operable from platform and ground control",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:6.6 (2)"
+        },
+        {
+          "itemNo": "2.40",
+          "acceptanceCriteria": "Lowering/retracting is operable from ground control",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.7.2"
+        },
+        {
+          "itemNo": "2.41",
+          "acceptanceCriteria": "Raise/extend is operable from platform and ground control",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (1)"
+        },
+        {
+          "itemNo": "2.42",
+          "acceptanceCriteria": "Boom raise/extend is operable from ground control",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.7.2 (2)"
+        },
+        {
+          "itemNo": "2.43",
+          "acceptanceCriteria": "Fluid systems are leak-free with platform raised",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 7.3.3 (4)"
+        },
+        {
+          "itemNo": "2.44",
+          "acceptanceCriteria": "Tilt alarm is operable (5 degrees out of level) (manually depress the edge of the tilt switch to cause alarm condition)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.6.6"
+        },
+        {
+          "itemNo": "2.45",
+          "acceptanceCriteria": "Tilt alarm is not combined with boom raise cut-out (dependent on machine manufacturer)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.7.6"
+        },
+        {
+          "itemNo": "2.46",
+          "acceptanceCriteria": "Steering is properly working when moving forward and in reverse directions",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (1)"
+        },
+        {
+          "itemNo": "2.47",
+          "acceptanceCriteria": "Brakes are in good working condition and can hold the machine on any slope (parking and moving)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.14, 7.9 (1)"
+        },
+        {
+          "itemNo": "2.48",
+          "acceptanceCriteria": "Travel alarm is operable",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:7.3.3 (2)"
+        },
+        {
+          "itemNo": "2.49",
+          "acceptanceCriteria": "Platform lowering alarm is operable",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.11.2"
+        },
+        {
+          "itemNo": "2.50",
+          "acceptanceCriteria": "Machine is safely drivable from the platform when raised (fast, slow, forward and reverse modes)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.8.1"
+        },
+        {
+          "itemNo": "2.51",
+          "acceptanceCriteria": "The platform does not descend when in raised position and the power is off",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.10.2.1"
+        },
+        {
+          "itemNo": "2.52",
+          "acceptanceCriteria": "Used ancillary equipment are in good condition, free of damages and do not create any hazardous condition (e.g. power sockets, extension cables and mechanical brackets)",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.15.1"
+        },
+        {
+          "itemNo": "2.53",
+          "acceptanceCriteria": "Engine powered machines fuel lines are supported to minimize chafing",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec:4.15.1"
+        },
+        {
+          "itemNo": "2.54",
+          "acceptanceCriteria": "Engine powered machines fuel lines are positioned to minimize exposure to engine and exhaust heat",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.15.1"
+        },
+        {
+          "itemNo": "2.55",
+          "acceptanceCriteria": "Engine powered machines exhaust system is provided with muffler",
+          "referenceStandard": "ANSI/SAIA A92.6 Sec: 4.15.1"
+        }
+      ]
+    }
+  ]
+}

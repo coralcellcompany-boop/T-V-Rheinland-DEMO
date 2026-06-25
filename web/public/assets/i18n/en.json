@@ -12,7 +12,6 @@
     "equipment": "Equipment",
     "clients": "Clients",
     "stickers": "Stickers",
-    "stickerRequests": "Sticker requests",
     "candidates": "Candidates",
     "assessments": "Assessments",
     "jobRequests": "Job Requests",
@@ -30,9 +29,8 @@
       "operations": "Operations",
       "administration": "Administration"
     },
-    "myStickers": "My stickers",
     "tpiCertificates": "TPI inspections",
-    "blueStickerCertificates": "Blue Sticker inspections"
+    "blueStickerInspections": "Blue Sticker Inspections"
   },
   "topbar": {
     "search": "Search certificates, equipment, clients…",
