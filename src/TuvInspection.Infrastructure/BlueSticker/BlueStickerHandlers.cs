@@ -31,12 +31,14 @@ internal static class BlueStickerMapper
         r.Transitions.OrderBy(t => t.AtUtc).Select(t => new BlueStickerTransitionDto(
             t.FromState.ToString(), t.ToState.ToString(), t.ActorUserId, t.ActorRole,
             t.Comments, t.AtUtc)).ToList(),
-        InspectionChecklistNumber: ChecklistFor(r.AramcoCategoryNo));
+        InspectionChecklistNumber: SaicChecklistMap.Resolve(r.AramcoCategoryNo, r.EquipmentType)
+            ?? AramcoCategoryShortCodeFallback(r.AramcoCategoryNo));
 
-    /// <summary>Map "CR##" back to the SAIC-U-70## checklist. Reverse of
+    /// <summary>Category-level fallback: maps "CR##" back to the SAIC-U-70## checklist when the
+    /// specific equipment type isn't in <see cref="SaicChecklistMap"/>. Reverse of
     /// <c>AramcoCategoryInfo.ChecklistNumber</c> — we store the short code on the report so the
     /// lookup is purely string-driven here.</summary>
-    private static string? ChecklistFor(string? shortCode) => shortCode switch
+    private static string? AramcoCategoryShortCodeFallback(string? shortCode) => shortCode switch
     {
         "CR01" => "SAIC-U-7007",
         "CR02" => "SAIC-U-7005",
