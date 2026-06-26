@@ -24,6 +24,7 @@ public class BlueStickerReportTemplateFillerTests
         Assert.Contains("SAIC-U-7007", body.InnerText);                 // heading text
         Assert.Contains(checklist!.Items[0].ItemNo, tables[1].InnerText);
         Assert.Contains(checklist.Items[0].AcceptanceCriteria, tables[1].InnerText);
+        Assert.Contains(checklist.Items[^1].ItemNo, tables[1].InnerText);
     }
 
     [Fact]

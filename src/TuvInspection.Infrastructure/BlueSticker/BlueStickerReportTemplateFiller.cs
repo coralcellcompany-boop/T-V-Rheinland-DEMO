@@ -150,6 +150,7 @@ public sealed class BlueStickerReportTemplateFiller
 
     // Checklist column widths in twips (landscape A4 ≈ 14400 usable). #, Criteria, Reference, Result, Remark.
     private static readonly int[] ChecklistCols = { 720, 5760, 3600, 1440, 2880 };
+    private static readonly string ChecklistTableWidthTwips = ChecklistCols.Sum().ToString();
 
     /// <summary>Appends a page break, a heading and the SAIC checklist table to the body,
     /// keeping them inside the document's existing (landscape) section.</summary>
@@ -186,7 +187,7 @@ public sealed class BlueStickerReportTemplateFiller
     {
         var table = new Table(
             new TableProperties(
-                new TableWidth { Width = "14400", Type = TableWidthUnitValues.Dxa },
+                new TableWidth { Width = ChecklistTableWidthTwips, Type = TableWidthUnitValues.Dxa },
                 new TableBorders(
                     new TopBorder { Val = BorderValues.Single, Size = 4U, Color = "999999" },
                     new LeftBorder { Val = BorderValues.Single, Size = 4U, Color = "999999" },
@@ -228,9 +229,9 @@ public sealed class BlueStickerReportTemplateFiller
 
     private static TableCell MakeChecklistCell(string? text, int widthTwips, bool bold, string? shade)
     {
-        var runProps = new RunProperties();
-        if (bold) runProps.AppendChild(new Bold());
-        runProps.AppendChild(new FontSize { Val = "16" });  // 8pt
+        var runProps = bold
+            ? new RunProperties(new Bold(), new FontSize { Val = "16" })   // 8pt
+            : new RunProperties(new FontSize { Val = "16" });              // 8pt
 
         var paragraph = new Paragraph(
             new Run(runProps, new Text(text ?? string.Empty) { Space = SpaceProcessingModeValues.Preserve }));
@@ -252,7 +253,7 @@ public sealed class BlueStickerReportTemplateFiller
 
         var cell = new TableCell(
             new TableCellProperties(
-                new TableCellWidth { Width = "14400", Type = TableWidthUnitValues.Dxa },
+                new TableCellWidth { Width = ChecklistTableWidthTwips, Type = TableWidthUnitValues.Dxa },
                 new GridSpan { Val = 5 },
                 new Shading { Val = ShadingPatternValues.Clear, Color = "auto", Fill = "EFEFEF" }),
             paragraph);
