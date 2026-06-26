@@ -19,7 +19,7 @@ public sealed class BlueStickerReportTemplateFiller
     private const string TemplateResourceName =
         "TuvInspection.Infrastructure.Certificates.Templates.Annex1.docx";
 
-    public byte[] Fill(BlueStickerReportDetailDto r)
+    public byte[] Fill(BlueStickerReportDetailDto r, SaicChecklistDto? checklist = null)
     {
         using var output = new MemoryStream();
         using (var template = Assembly.GetExecutingAssembly()
@@ -67,6 +67,9 @@ public sealed class BlueStickerReportTemplateFiller
             PlaceSignature(doc, sigCells.ElementAtOrDefault(0), r.ReceiverSignaturePng, 1u);
             PlaceSignature(doc, sigCells.ElementAtOrDefault(1), r.InspectorSignaturePng, 2u);
             PlaceSignature(doc, sigCells.ElementAtOrDefault(2), r.TechnicalReviewerSignaturePng, 3u);
+
+            if (checklist is { Items.Count: > 0 })
+                AppendChecklist(body, checklist);
 
             doc.MainDocumentPart.Document.Save();
         }
@@ -144,4 +147,116 @@ public sealed class BlueStickerReportTemplateFiller
         BlueStickerResultDto.Fail => "FAIL",
         _ => "—",
     };
+
+    // Checklist column widths in twips (landscape A4 ≈ 14400 usable). #, Criteria, Reference, Result, Remark.
+    private static readonly int[] ChecklistCols = { 720, 5760, 3600, 1440, 2880 };
+
+    /// <summary>Appends a page break, a heading and the SAIC checklist table to the body,
+    /// keeping them inside the document's existing (landscape) section.</summary>
+    private static void AppendChecklist(Body body, SaicChecklistDto checklist)
+    {
+        var sectPr = body.Elements<SectionProperties>().LastOrDefault();
+
+        var pageBreak = new Paragraph(new Run(new Break { Type = BreakValues.Page }));
+
+        var heading = new Paragraph(
+            new ParagraphProperties(new SpacingBetweenLines { After = "120" }),
+            new Run(
+                new RunProperties(new Bold(), new FontSize { Val = "24" }),  // 12pt
+                new Text($"Inspection Checklist — {checklist.SaicNumber} — {checklist.Title}")
+                    { Space = SpaceProcessingModeValues.Preserve }));
+
+        var table = BuildChecklistTable(checklist);
+
+        if (sectPr is not null)
+        {
+            body.InsertBefore(pageBreak, sectPr);
+            body.InsertBefore(heading, sectPr);
+            body.InsertBefore(table, sectPr);
+        }
+        else
+        {
+            body.Append(pageBreak);
+            body.Append(heading);
+            body.Append(table);
+        }
+    }
+
+    private static Table BuildChecklistTable(SaicChecklistDto checklist)
+    {
+        var table = new Table(
+            new TableProperties(
+                new TableWidth { Width = "14400", Type = TableWidthUnitValues.Dxa },
+                new TableBorders(
+                    new TopBorder { Val = BorderValues.Single, Size = 4U, Color = "999999" },
+                    new LeftBorder { Val = BorderValues.Single, Size = 4U, Color = "999999" },
+                    new BottomBorder { Val = BorderValues.Single, Size = 4U, Color = "999999" },
+                    new RightBorder { Val = BorderValues.Single, Size = 4U, Color = "999999" },
+                    new InsideHorizontalBorder { Val = BorderValues.Single, Size = 4U, Color = "BBBBBB" },
+                    new InsideVerticalBorder { Val = BorderValues.Single, Size = 4U, Color = "BBBBBB" }),
+                new TableLayout { Type = TableLayoutValues.Fixed }),
+            new TableGrid(ChecklistCols.Select(w => new GridColumn { Width = w.ToString() }).ToArray()));
+
+        // Header row — repeats on every page (TableHeader).
+        var header = new TableRow(new TableRowProperties(new TableHeader()));
+        string[] heads = { "#", "Acceptance criteria", "Reference", "Result", "Remark" };
+        for (var i = 0; i < heads.Length; i++)
+            header.Append(MakeChecklistCell(heads[i], ChecklistCols[i], bold: true, shade: "D9D9D9"));
+        table.Append(header);
+
+        string? currentSection = null;
+        foreach (var item in checklist.Items)
+        {
+            var sectionKey = $"{item.SectionNo} {item.SectionTitle}".Trim();
+            if (sectionKey.Length > 0 && sectionKey != currentSection)
+            {
+                currentSection = sectionKey;
+                table.Append(MakeSectionRow(sectionKey));
+            }
+
+            var row = new TableRow();
+            row.Append(MakeChecklistCell(item.ItemNo, ChecklistCols[0], bold: false, shade: null));
+            row.Append(MakeChecklistCell(item.AcceptanceCriteria, ChecklistCols[1], bold: false, shade: null));
+            row.Append(MakeChecklistCell(item.ReferenceStandard, ChecklistCols[2], bold: false, shade: null));
+            row.Append(MakeChecklistCell("", ChecklistCols[3], bold: false, shade: null));  // Result (blank)
+            row.Append(MakeChecklistCell("", ChecklistCols[4], bold: false, shade: null));  // Remark (blank)
+            table.Append(row);
+        }
+
+        return table;
+    }
+
+    private static TableCell MakeChecklistCell(string? text, int widthTwips, bool bold, string? shade)
+    {
+        var runProps = new RunProperties();
+        if (bold) runProps.AppendChild(new Bold());
+        runProps.AppendChild(new FontSize { Val = "16" });  // 8pt
+
+        var paragraph = new Paragraph(
+            new Run(runProps, new Text(text ?? string.Empty) { Space = SpaceProcessingModeValues.Preserve }));
+
+        var cellProps = new TableCellProperties(
+            new TableCellWidth { Width = widthTwips.ToString(), Type = TableWidthUnitValues.Dxa });
+        if (shade is not null)
+            cellProps.AppendChild(new Shading { Val = ShadingPatternValues.Clear, Color = "auto", Fill = shade });
+
+        return new TableCell(cellProps, paragraph);
+    }
+
+    private static TableRow MakeSectionRow(string title)
+    {
+        var paragraph = new Paragraph(
+            new Run(
+                new RunProperties(new Bold(), new FontSize { Val = "16" }),
+                new Text(title) { Space = SpaceProcessingModeValues.Preserve }));
+
+        var cell = new TableCell(
+            new TableCellProperties(
+                new TableCellWidth { Width = "14400", Type = TableWidthUnitValues.Dxa },
+                new GridSpan { Val = 5 },
+                new Shading { Val = ShadingPatternValues.Clear, Color = "auto", Fill = "EFEFEF" }),
+            paragraph);
+
+        return new TableRow(cell);
+    }
 }
