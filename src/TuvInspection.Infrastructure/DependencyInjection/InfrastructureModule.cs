@@ -148,6 +148,7 @@ public static class InfrastructureModule
         services.AddHttpClient<GotenbergClient>();
         services.AddScoped<AramcoReportPdfRenderer>();
         services.AddSingleton<TuvInspection.Infrastructure.BlueSticker.BlueStickerReportTemplateFiller>();
+        services.AddSingleton<TuvInspection.Infrastructure.BlueSticker.SaicChecklistCatalog>();
         services.AddScoped<TuvInspection.Infrastructure.BlueSticker.BlueStickerReportPdfRenderer>();
         services.AddScoped<TuvInspection.Infrastructure.BlueSticker.BlueStickerReportNoGenerator>();
         services.AddScoped<TuvInspection.Application.BlueSticker.IOtpService,

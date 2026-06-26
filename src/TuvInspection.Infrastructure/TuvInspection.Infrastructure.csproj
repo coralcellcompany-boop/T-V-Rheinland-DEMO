@@ -37,4 +37,8 @@
     <EmbeddedResource Include="BlueSticker\SaicChecklists\*.json" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="TuvInspection.UnitTests" />
+  </ItemGroup>
+
 </Project>
