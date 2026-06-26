@@ -132,9 +132,9 @@ const CATEGORY_EQUIPMENT_TYPES: Record<string, string[]> = {
     <div class="grid">
       <fieldset>
         <legend>Job order &amp; references</legend>
-        <label>TUV Job Order No. <span class="auto">auto</span>
-          <input pInputText [(ngModel)]="form.tuvJobOrderNo" [disabled]="true"
-            placeholder="From linked job order" /></label>
+        <label>TUV Job Order No. <span class="auto" *ngIf="jobOrderNoLocked">auto</span>
+          <input pInputText [(ngModel)]="form.tuvJobOrderNo" [disabled]="readonly || jobOrderNoLocked"
+            [placeholder]="jobOrderNoLocked ? 'From linked job order' : 'Enter TUV Job Order No.'" /></label>
         <label>Aramco Category No.
           <p-select [options]="aramcoCategoryOptions" [(ngModel)]="form.aramcoCategoryNo"
             optionLabel="label" optionValue="value" appendTo="body" [filter]="true"
@@ -307,6 +307,11 @@ export class AramcoFormComponent implements OnInit {
     if (!this.form.receivedDate) {
       this.form.receivedDate = new Date().toISOString().slice(0, 10);
     }
+    // TUV Job Order No. is auto-filled & locked when the cert is linked to a job order (the
+    // value arrives pre-populated). When there's no linked job order it loads blank — let the
+    // inspector type it, otherwise a job-order-less Blue Sticker cert can never satisfy the
+    // "TUV Job Order No. is required" submit validation.
+    this.jobOrderNoLocked = !!this.form.tuvJobOrderNo?.trim();
     this.original = JSON.stringify(this.form);
   }
   @Input() readonly = false;
@@ -320,6 +325,8 @@ export class AramcoFormComponent implements OnInit {
   @Output() equipmentSelectionChange = new EventEmitter<{ category: string; equipmentType: string }>();
 
   protected form: AramcoFormDoc = { ...EMPTY, deficiencyItems: [] };
+  /** True when TUV Job Order No. came pre-filled from a linked job order → read-only. */
+  protected jobOrderNoLocked = false;
   protected saving = signal(false);
   protected severityOptions = SEVERITY_OPTIONS;
   protected aramcoCategoryOptions = ARAMCO_CATEGORY_OPTIONS;
