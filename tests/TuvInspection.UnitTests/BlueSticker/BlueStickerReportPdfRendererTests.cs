@@ -6,16 +6,20 @@ namespace TuvInspection.UnitTests.BlueSticker;
 public class BlueStickerReportPdfRendererTests
 {
     [Fact]
-    public void Fallback_renders_valid_pdf_including_checklist_pages()
+    public void Fallback_with_checklist_adds_pages_beyond_the_plain_report()
     {
         var checklist = new SaicChecklistCatalog().Get("SAIC-U-7007");
         Assert.NotNull(checklist);
 
-        var bytes = BlueStickerReportPdfRenderer.RenderFallback(
+        var withChecklist = BlueStickerReportPdfRenderer.RenderFallback(
             BlueStickerTestData.SampleReport(), checklist);
+        var plain = BlueStickerReportPdfRenderer.RenderFallback(
+            BlueStickerTestData.SampleReport(checklistNumber: null), checklist: null);
 
-        Assert.Equal("%PDF", Encoding.ASCII.GetString(bytes, 0, 4));
-        Assert.True(bytes.Length > 3000, $"expected a multi-page PDF, got {bytes.Length} bytes");
+        Assert.Equal("%PDF", Encoding.ASCII.GetString(withChecklist, 0, 4));
+        // A 90+ item checklist page adds substantial content — far more than any single-page variation.
+        Assert.True(withChecklist.Length > plain.Length + 1000,
+            $"expected checklist render ({withChecklist.Length} bytes) to dwarf the plain report ({plain.Length} bytes)");
     }
 
     [Fact]
